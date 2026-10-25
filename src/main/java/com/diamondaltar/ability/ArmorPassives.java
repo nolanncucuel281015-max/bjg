@@ -1,17 +1,18 @@
 package com.diamondaltar.ability;
 
 import com.diamondaltar.ModComponents;
-import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 
 /**
@@ -24,22 +25,23 @@ public final class ArmorPassives {
 	private ArmorPassives() {
 	}
 
-	public static void register() {
-		ServerTickEvents.END_SERVER_TICK.register(server -> {
-			if (server.getTickCount() % 20 != 0) {
-				return;
+	/** À appeler à chaque tick serveur : applique les passifs une fois par seconde. */
+	public static void tick(MinecraftServer server) {
+		if (server.getTickCount() % 20 != 0) {
+			return;
+		}
+		for (ServerLevel level : server.getAllLevels()) {
+			for (ServerPlayer player : level.players()) {
+				tickPlayer(level, player);
 			}
-			for (ServerLevel level : server.getAllLevels()) {
-				for (ServerPlayer player : level.players()) {
-					tickPlayer(level, player);
-				}
-			}
-		});
+		}
+	}
 
-		ServerLivingEntityEvents.ALLOW_DAMAGE.register((entity, source, amount) ->
-				!(entity instanceof Player player
-						&& source.is(DamageTypeTags.IS_FALL)
-						&& ModComponents.isInfused(player.getItemBySlot(EquipmentSlot.FEET))));
+	/** Les bottes infusées annulent les dégâts de chute. */
+	public static boolean cancelsDamage(LivingEntity entity, DamageSource source) {
+		return entity instanceof Player player
+				&& source.is(DamageTypeTags.IS_FALL)
+				&& ModComponents.isInfused(player.getItemBySlot(EquipmentSlot.FEET));
 	}
 
 	private static void tickPlayer(ServerLevel level, ServerPlayer player) {

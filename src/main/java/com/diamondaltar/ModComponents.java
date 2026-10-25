@@ -63,6 +63,15 @@ public final class ModComponents {
 		return !stack.isEmpty() && Boolean.TRUE.equals(stack.get(INFUSED));
 	}
 
+	public static int getSelected(ItemStack stack) {
+		Integer i = stack.get(SELECTED_ABILITY);
+		return i == null ? 0 : i;
+	}
+
+	public static void setSelected(ItemStack stack, int index) {
+		stack.set(SELECTED_ABILITY, index);
+	}
+
 	public static boolean canInfuse(ItemStack stack) {
 		return INFUSABLE.contains(stack.getItem()) && !isInfused(stack);
 	}

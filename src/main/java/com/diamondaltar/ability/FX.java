@@ -1,6 +1,5 @@
 package com.diamondaltar.ability;
 
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -86,7 +85,7 @@ final class FX {
 		for (ServerPlayer p : level.players()) {
 			double d = Math.sqrt(p.distanceToSqr(center));
 			if (d <= radius) {
-				ServerPlayNetworking.send(p, new FlashPayload(color, (float) (strength * (1 - d / (radius * 1.3))), ticks));
+				Net.flash(p, color, (float) (strength * (1 - d / (radius * 1.3))), ticks);
 			}
 		}
 	}
@@ -97,7 +96,7 @@ final class FX {
 			double d = Math.sqrt(p.distanceToSqr(center));
 			if (d <= radius) {
 				float s = (float) (strength * (1 - d / (radius * 1.2)));
-				ServerPlayNetworking.send(p, new ShakePayload(s, ticks));
+				Net.shake(p, s, ticks);
 			}
 		}
 	}

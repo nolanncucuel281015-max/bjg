@@ -1,12 +1,11 @@
 package com.diamondaltar.ability;
 
-import com.diamondaltar.ModParticles;
 import com.diamondaltar.effect.EffectManager;
 import com.diamondaltar.effect.TimedEffect;
 import com.diamondaltar.effect.Visuals;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -28,19 +27,19 @@ import java.util.UUID;
 final class Glow {
 	/** Couleurs : verre teinté pour le halo + couleur du contour lumineux. */
 	enum Tint {
-		WHITE(Blocks.WHITE_STAINED_GLASS, 0xFFFFFF, ModParticles.GLOW_WHITE),
-		ICE(Blocks.LIGHT_BLUE_STAINED_GLASS, 0xBFF6FF, ModParticles.GLOW_ICE),
-		NEBULA(Blocks.PURPLE_STAINED_GLASS, 0xC080FF, ModParticles.GLOW_NEBULA),
-		PINK(Blocks.MAGENTA_STAINED_GLASS, 0xFF80E0, ModParticles.GLOW_PINK),
-		GOLD(Blocks.YELLOW_STAINED_GLASS, 0xFFE070, ModParticles.GLOW_GOLD),
-		FIRE(Blocks.ORANGE_STAINED_GLASS, 0xFFA040, ModParticles.GLOW_FIRE),
-		VOID(Blocks.BLACK_STAINED_GLASS, 0x9050FF, ModParticles.GLOW_NEBULA);
+		WHITE(Blocks.WHITE_STAINED_GLASS, 0xFFFFFF, Halos.WHITE),
+		ICE(Blocks.LIGHT_BLUE_STAINED_GLASS, 0xBFF6FF, Halos.ICE),
+		NEBULA(Blocks.PURPLE_STAINED_GLASS, 0xC080FF, Halos.NEBULA),
+		PINK(Blocks.MAGENTA_STAINED_GLASS, 0xFF80E0, Halos.PINK),
+		GOLD(Blocks.YELLOW_STAINED_GLASS, 0xFFE070, Halos.GOLD),
+		FIRE(Blocks.ORANGE_STAINED_GLASS, 0xFFA040, Halos.FIRE),
+		VOID(Blocks.BLACK_STAINED_GLASS, 0x9050FF, Halos.NEBULA);
 
 		final Block glass;
 		final int color;
-		final SimpleParticleType halo;
+		final ParticleOptions halo;
 
-		Tint(Block glass, int color, SimpleParticleType halo) {
+		Tint(Block glass, int color, ParticleOptions halo) {
 			this.glass = glass;
 			this.color = color;
 			this.halo = halo;
@@ -104,13 +103,13 @@ final class Glow {
 		double len = a.distanceTo(b);
 		for (double d = 0; d <= len; d += step) {
 			Vec3 p = a.lerp(b, len == 0 ? 0 : d / len);
-			level.sendParticles(d % (step * 3) < step ? ModParticles.GLOW_WHITE : tint.halo, true, true, p.x, p.y, p.z, 1, 0.05, 0.05, 0.05, 0);
+			level.sendParticles(d % (step * 3) < step ? Halos.WHITE : tint.halo, true, true, p.x, p.y, p.z, 1, 0.05, 0.05, 0.05, 0);
 		}
 	}
 
 	static void halo(ServerLevel level, Vec3 p, int count, double spread, Tint tint) {
 		level.sendParticles(tint.halo, true, true, p.x, p.y, p.z, count, spread, spread, spread, 0.01);
-		level.sendParticles(ModParticles.GLOW_WHITE, true, true, p.x, p.y, p.z, Math.max(1, count / 2), spread * 0.5, spread * 0.5, spread * 0.5, 0.005);
+		level.sendParticles(Halos.WHITE, true, true, p.x, p.y, p.z, Math.max(1, count / 2), spread * 0.5, spread * 0.5, spread * 0.5, 0.005);
 	}
 
 	private static boolean full() {

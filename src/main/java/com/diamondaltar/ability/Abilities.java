@@ -3,9 +3,6 @@ package com.diamondaltar.ability;
 import com.diamondaltar.ModComponents;
 import com.diamondaltar.effect.EffectManager;
 import com.diamondaltar.effect.TimedEffect;
-import net.fabricmc.fabric.api.event.player.UseItemCallback;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.core.particles.ParticleTypes;
@@ -15,7 +12,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -104,8 +100,7 @@ public final class Abilities {
 			a("armor_gravity", 10, 0, GravityShieldEffect::new));
 
 	public static int armorIndex(ItemStack chest) {
-		Integer i = chest.get(ModComponents.SELECTED_ABILITY);
-		return Math.floorMod(i == null ? 0 : i, ARMOR.size());
+		return Math.floorMod(ModComponents.getSelected(chest), ARMOR.size());
 	}
 
 	/** Recharges par joueur et par capacité : fin de recharge en ticks de jeu. */
@@ -123,8 +118,7 @@ public final class Abilities {
 		if (list.isEmpty()) {
 			return 0;
 		}
-		Integer i = stack.get(ModComponents.SELECTED_ABILITY);
-		return Math.floorMod(i == null ? 0 : i, list.size());
+		return Math.floorMod(ModComponents.getSelected(stack), list.size());
 	}
 
 	public static Ability selected(ItemStack stack) {
@@ -136,68 +130,68 @@ public final class Abilities {
 		return stack.is(Items.DIAMOND_SWORD) || stack.is(Items.DIAMOND_SPEAR);
 	}
 
-	public static void register() {
-		PayloadTypeRegistry.playC2S().register(SlashPayload.ID, SlashPayload.CODEC);
-		PayloadTypeRegistry.playC2S().register(SwitchAbilityPayload.ID, SwitchAbilityPayload.CODEC);
-		PayloadTypeRegistry.playC2S().register(ArmorActionPayload.ID, ArmorActionPayload.CODEC);
-		PayloadTypeRegistry.playS2C().register(ShakePayload.ID, ShakePayload.CODEC);
-		PayloadTypeRegistry.playS2C().register(FlashPayload.ID, FlashPayload.CODEC);
+	/** Touche « changer de capacité » (K) : capacité suivante de l'objet en main. */
+	public static void switchTool(ServerPlayer player) {
+		ItemStack stack = player.getMainHandItem();
+		List<Ability> list = of(stack.getItem());
+		if (list.isEmpty() || !ModComponents.isInfused(stack)) {
+			return;
+		}
+		int next = (selectedIndex(stack) + 1) % list.size();
+		ModComponents.setSelected(stack, next);
+		announce(player, list.get(next), next, list.size());
+	}
 
-		// Touches J / H : capacités de l'armure (stockées sur le plastron infusé).
-		ServerPlayNetworking.registerGlobalReceiver(ArmorActionPayload.ID, (payload, context) -> {
-			ServerPlayer player = context.player();
-			ItemStack chest = player.getItemBySlot(EquipmentSlot.CHEST);
-			if (!ModComponents.isInfused(chest)) {
-				player.displayClientMessage(Component.translatable("diamondaltar.ability.need_chestplate").withStyle(ChatFormatting.RED), true);
-				return;
-			}
-			int index = armorIndex(chest);
-			if (payload.activate()) {
-				activate(player, chest, ARMOR.get(index), EquipmentSlot.CHEST);
-				return;
-			}
-			int next = (index + 1) % ARMOR.size();
-			chest.set(ModComponents.SELECTED_ABILITY, next);
-			announce(player, ARMOR.get(next), next, ARMOR.size());
-		});
+	/** Touche « changer la capacité d'armure » (J). */
+	public static void switchArmor(ServerPlayer player) {
+		ItemStack chest = player.getItemBySlot(EquipmentSlot.CHEST);
+		if (!requireChest(player, chest)) {
+			return;
+		}
+		int next = (armorIndex(chest) + 1) % ARMOR.size();
+		ModComponents.setSelected(chest, next);
+		announce(player, ARMOR.get(next), next, ARMOR.size());
+	}
 
-		// Clic gauche avec l'épée infusée.
-		ServerPlayNetworking.registerGlobalReceiver(SlashPayload.ID, (payload, context) -> {
-			ServerPlayer player = context.player();
-			ItemStack stack = player.getMainHandItem();
-			if (isLeftClick(stack)) {
-				tryActivate(player, stack, InteractionHand.MAIN_HAND);
-			}
-		});
+	/** Shift + clic droit : lance la capacité d'armure choisie. */
+	public static void useArmor(ServerPlayer player) {
+		ItemStack chest = player.getItemBySlot(EquipmentSlot.CHEST);
+		if (requireChest(player, chest)) {
+			activate(player, chest, ARMOR.get(armorIndex(chest)), EquipmentSlot.CHEST);
+		}
+	}
 
-		// Touche K : capacité suivante.
-		ServerPlayNetworking.registerGlobalReceiver(SwitchAbilityPayload.ID, (payload, context) -> {
-			ServerPlayer player = context.player();
-			ItemStack stack = player.getMainHandItem();
-			List<Ability> list = of(stack.getItem());
-			if (list.isEmpty() || !ModComponents.isInfused(stack)) {
-				return;
-			}
-			int next = (selectedIndex(stack) + 1) % list.size();
-			stack.set(ModComponents.SELECTED_ABILITY, next);
-			announce(player, list.get(next), next, list.size());
-		});
+	public static boolean wearsInfusedChest(ServerPlayer player) {
+		return ModComponents.isInfused(player.getItemBySlot(EquipmentSlot.CHEST));
+	}
 
-		// Clic droit avec les autres objets infusés.
-		UseItemCallback.EVENT.register((player, level, hand) -> {
-			ItemStack stack = player.getItemInHand(hand);
-			if (of(stack.getItem()).isEmpty() || isLeftClick(stack) || !ModComponents.isInfused(stack) || player.isSpectator()) {
-				return InteractionResult.PASS;
-			}
-			// Shift + clic droit est réservé à l'armure (envoyé par le client) : l'outil ne fait rien.
-			if (player.isShiftKeyDown() && ModComponents.isInfused(player.getItemBySlot(EquipmentSlot.CHEST))) {
-				return InteractionResult.SUCCESS;
-			}
-			if (player instanceof ServerPlayer serverPlayer) {
-				tryActivate(serverPlayer, stack, hand);
-			}
-			return InteractionResult.SUCCESS;
-		});
+	private static boolean requireChest(ServerPlayer player, ItemStack chest) {
+		if (!ModComponents.isInfused(chest)) {
+			player.displayClientMessage(Component.translatable("diamondaltar.ability.need_chestplate").withStyle(ChatFormatting.RED), true);
+			return false;
+		}
+		return true;
+	}
+
+	/** Clic gauche : capacité de l'épée / de la lance infusée en main. */
+	public static void leftClick(ServerPlayer player) {
+		ItemStack stack = player.getMainHandItem();
+		if (isLeftClick(stack)) {
+			tryActivate(player, stack, InteractionHand.MAIN_HAND);
+		}
+	}
+
+	/** Est-ce que cet objet lance une capacité au clic droit ? */
+	public static boolean usesRightClick(ItemStack stack) {
+		return !of(stack.getItem()).isEmpty() && !isLeftClick(stack) && ModComponents.isInfused(stack);
+	}
+
+	/** Clic droit avec un outil infusé (pas l'épée / la lance). */
+	public static void rightClick(ServerPlayer player, InteractionHand hand) {
+		ItemStack stack = player.getItemInHand(hand);
+		if (usesRightClick(stack) && !player.isSpectator()) {
+			tryActivate(player, stack, hand);
+		}
 	}
 
 	private static void announce(ServerPlayer player, Ability ability, int index, int count) {
