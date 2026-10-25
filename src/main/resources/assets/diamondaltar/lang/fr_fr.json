@@ -97,5 +97,15 @@
 	"diamondaltar.ability.mace_supernova.name": "✺ Supernova",
 	"diamondaltar.ability.mace_supernova.desc": "Une étoile naît au-dessus de toi puis explose en supernova de 14 blocs.",
 	"diamondaltar.ability.armor_astral.name": "◎ Saut Astral",
-	"diamondaltar.ability.armor_astral.desc": "Un vortex galactique te téléporte jusqu'à 40 blocs là où tu regardes."
+	"diamondaltar.ability.armor_astral.desc": "Un vortex galactique te téléporte jusqu'à 40 blocs là où tu regardes.",
+	"diamondaltar.ability.spear_whirl.name": "✺ Tourbillon Galactique",
+	"diamondaltar.ability.spear_whirl.desc": "Ta lance dessine une galaxie qui aspire et déchiquette les ennemis.",
+	"diamondaltar.ability.spear_polar.name": "❄ Lance Polaire",
+	"diamondaltar.ability.spear_polar.desc": "Des pics de glace jaillissent en étoile à 6 branches et gèlent les ennemis.",
+	"diamondaltar.ability.pickaxe_geode.name": "◆ Géode Céleste",
+	"diamondaltar.ability.pickaxe_geode.desc": "Emprisonne les ennemis dans des géodes de cristal, puis les fait éclater.",
+	"diamondaltar.ability.shovel_crater.name": "◯ Cratère Lunaire",
+	"diamondaltar.ability.shovel_crater.desc": "Bondis puis écrase-toi : le sol devient un cratère de lune.",
+	"diamondaltar.ability.hoe_garden.name": "❀ Jardin d'Étoiles",
+	"diamondaltar.ability.hoe_garden.desc": "10 fleurs d'étoile poussent autour de toi puis explosent en lumière."
 }

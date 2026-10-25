@@ -97,5 +97,15 @@
 	"diamondaltar.ability.mace_supernova.name": "✺ Supernova",
 	"diamondaltar.ability.mace_supernova.desc": "A star is born above you, then explodes into a 14-block supernova.",
 	"diamondaltar.ability.armor_astral.name": "◎ Astral Leap",
-	"diamondaltar.ability.armor_astral.desc": "A galactic vortex teleports you up to 40 blocks where you look."
+	"diamondaltar.ability.armor_astral.desc": "A galactic vortex teleports you up to 40 blocks where you look.",
+	"diamondaltar.ability.spear_whirl.name": "✺ Galactic Whirl",
+	"diamondaltar.ability.spear_whirl.desc": "Your spear draws a galaxy that pulls in and shreds enemies.",
+	"diamondaltar.ability.spear_polar.name": "❄ Polar Lance",
+	"diamondaltar.ability.spear_polar.desc": "Ice spikes burst out in a 6-pointed star, freezing enemies.",
+	"diamondaltar.ability.pickaxe_geode.name": "◆ Celestial Geode",
+	"diamondaltar.ability.pickaxe_geode.desc": "Traps enemies in crystal geodes, then shatters them.",
+	"diamondaltar.ability.shovel_crater.name": "◯ Lunar Crater",
+	"diamondaltar.ability.shovel_crater.desc": "Leap and crash down: the ground becomes a moon crater.",
+	"diamondaltar.ability.hoe_garden.name": "❀ Star Garden",
+	"diamondaltar.ability.hoe_garden.desc": "10 star flowers bloom around you, then burst into light."
 }

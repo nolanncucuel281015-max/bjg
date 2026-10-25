@@ -50,13 +50,16 @@ public final class Abilities {
 			Items.DIAMOND_SPEAR, List.of(
 					a("spear_comet", 10, 3, CometLanceEffect::new),
 					a("spear_charge", 10, 3, StellarChargeEffect::new),
-					a("spear_constellation", 10, 5, ConstellationEffect::new)),
+					a("spear_constellation", 10, 5, ConstellationEffect::new),
+					a("spear_whirl", 10, 4, GalacticWhirlEffect::new),
+					a("spear_polar", 10, 4, PolarLanceEffect::new)),
 			Items.DIAMOND_PICKAXE, List.of(
 					a("pickaxe_drill", 10, 8, PickaxeDrillEffect::new),
 					a("pickaxe_sphere", 10, 6, CrystalSphereEffect::new),
 					a("pickaxe_ores", 10, 2, OreSightEffect::new),
 					a("pickaxe_eruption", 10, 4, CrystalEruptionEffect::new),
-					a("pickaxe_beam", 10, 6, StellarBeamEffect::new)),
+					a("pickaxe_beam", 10, 6, StellarBeamEffect::new),
+					a("pickaxe_geode", 10, 5, CelestialGeodeEffect::new)),
 			Items.DIAMOND_AXE, List.of(
 					a("axe_cyclone", 10, 6, AxeCycloneEffect::new),
 					a("axe_boomerang", 10, 3, BoomerangAxeEffect::new),
@@ -67,12 +70,14 @@ public final class Abilities {
 					a("shovel_quake", 10, 5, ShovelQuakeEffect::new),
 					a("shovel_quicksand", 10, 4, QuicksandEffect::new),
 					a("shovel_excavate", 10, 8, ExcavateEffect::new),
-					a("shovel_gravity", 10, 5, LunarGravityEffect::new)),
+					a("shovel_gravity", 10, 5, LunarGravityEffect::new),
+					a("shovel_crater", 10, 5, LunarCraterEffect::new)),
 			Items.DIAMOND_HOE, List.of(
 					a("hoe_reap", 10, 5, HoeReapEffect::new),
 					a("hoe_vines", 10, 4, VinesEffect::new),
 					a("hoe_bloom", 10, 4, BloomEffect::new),
-					a("hoe_scythe", 10, 5, CelestialScytheEffect::new)),
+					a("hoe_scythe", 10, 5, CelestialScytheEffect::new),
+					a("hoe_garden", 10, 4, StarGardenEffect::new)),
 			Items.MACE, List.of(
 					a("mace_meteor", 10, 6, MaceMeteorEffect::new),
 					a("mace_gravity", 10, 5, GravityWellEffect::new),
