@@ -28,6 +28,7 @@ public class SwordSlashEffect extends TimedEffect {
 	private static final int DURATION = 8;
 	private static final double RANGE = 10.0;
 	private static final double HALF_ANGLE = Math.toRadians(65);
+	private static final double TILT = Math.toRadians(18);
 	private static final float DAMAGE = 30.0f;
 	private static final DustParticleOptions CYAN = new DustParticleOptions(0x66F2FF, 2.0f);
 	private static final DustParticleOptions WHITE = new DustParticleOptions(0xFFFFFF, 1.5f);
@@ -55,6 +56,8 @@ public class SwordSlashEffect extends TimedEffect {
 				SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.PLAYERS, 2.0f, 0.5f);
 		level.playSound(null, player.getX(), player.getY(), player.getZ(),
 				SoundEvents.WARDEN_SONIC_BOOM, SoundSource.PLAYERS, 0.6f, 1.8f);
+		level.playSound(null, player.getX(), player.getY(), player.getZ(),
+				SoundEvents.AMETHYST_BLOCK_RESONATE, SoundSource.PLAYERS, 1.5f, 1.6f);
 	}
 
 	private Vec3 dirAt(double a) {
@@ -80,22 +83,16 @@ public class SwordSlashEffect extends TimedEffect {
 		double sweep = -HALF_ANGLE + 2 * HALF_ANGLE * Math.min(1.0, (age + 1) / (double) (DURATION - 2));
 		Visuals.transform(blade, bladeOffset(sweep, distance), bladeRotation(sweep), (float) (distance * 0.85), 1);
 
-		// Le croissant : arc horizontal légèrement incliné (comme un vrai coup d'épée en diagonale).
-		double arcLength = 2 * HALF_ANGLE * distance;
-		int points = (int) Math.max(8, arcLength / 0.55);
-		for (int i = 0; i <= points; i++) {
-			double a = -HALF_ANGLE + 2 * HALF_ANGLE * i / points;
-			Vec3 dir = forward.scale(Math.cos(a)).add(right.scale(Math.sin(a)));
-			double tilt = Math.sin(a) * distance * 0.18;
-			Vec3 p = origin.add(dir.scale(distance)).add(0, tilt, 0);
-			level.sendParticles(ParticleTypes.SWEEP_ATTACK, p.x, p.y, p.z, 1, 0, 0, 0, 0);
-			if (i % 2 == 0) {
-				level.sendParticles(CYAN, p.x, p.y + 0.15, p.z, 1, 0.05, 0.05, 0.05, 0);
-				level.sendParticles(WHITE, p.x, p.y - 0.15, p.z, 1, 0.05, 0.05, 0.05, 0);
-			}
-			if (i % 4 == 0) {
-				level.sendParticles(ParticleTypes.CRIT, p.x, p.y, p.z, 2, 0.1, 0.1, 0.1, 0.2);
-			}
+		// Le croissant de lune : bord argenté, intérieur qui vire au violet nébuleuse, légèrement incliné.
+		Vec3 up = new Vec3(0, 1, 0);
+		Vec3 tiltedRight = right.scale(Math.cos(TILT)).add(up.scale(Math.sin(TILT)));
+		Cosmic.crescent(level, origin, tiltedRight, forward, distance, HALF_ANGLE, Math.max(0.6, distance * 0.28));
+		if (age % 2 == 0) {
+			Cosmic.starfield(level, origin.add(forward.scale(distance * 0.8)), distance * 0.5, 10);
+		}
+		if (age == DURATION - 1) {
+			// Les éclats de lune retombent en poussière d'étoiles.
+			Cosmic.nebula(level, origin.add(forward.scale(distance)), 2.0, 30);
 		}
 
 		// Dégâts : tout ce qui est dans le cône, jusqu'à la distance atteinte par le croissant.

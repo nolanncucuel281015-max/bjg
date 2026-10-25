@@ -51,7 +51,7 @@ public final class ModComponents {
 	public static final Set<Item> INFUSABLE = Set.of(
 			Items.DIAMOND_HELMET, Items.DIAMOND_CHESTPLATE, Items.DIAMOND_LEGGINGS, Items.DIAMOND_BOOTS,
 			Items.DIAMOND_SWORD, Items.DIAMOND_PICKAXE, Items.DIAMOND_AXE, Items.DIAMOND_SHOVEL,
-			Items.DIAMOND_HOE, Items.MACE);
+			Items.DIAMOND_HOE, Items.MACE, Items.DIAMOND_SPEAR);
 
 	private ModComponents() {
 	}
@@ -100,8 +100,11 @@ public final class ModComponents {
 		stack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
 		stack.set(DataComponents.RARITY, Rarity.EPIC);
 		// Texture animée spéciale : assets/diamondaltar/items/infused_<objet>.json
-		String path = BuiltInRegistries.ITEM.getKey(stack.getItem()).getPath();
-		stack.set(DataComponents.ITEM_MODEL, DiamondAltar.id("infused_" + path));
+		// (la lance garde son modèle 3D d'origine, avec la brillance)
+		if (!stack.is(Items.DIAMOND_SPEAR)) {
+			String path = BuiltInRegistries.ITEM.getKey(stack.getItem()).getPath();
+			stack.set(DataComponents.ITEM_MODEL, DiamondAltar.id("infused_" + path));
+		}
 		Equippable equippable = stack.get(DataComponents.EQUIPPABLE);
 		if (equippable != null && equippable.assetId().isPresent()) {
 			stack.set(DataComponents.EQUIPPABLE, Equippable.builder(equippable.slot())

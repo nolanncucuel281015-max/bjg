@@ -34,8 +34,8 @@ public class DiamondAltarClient implements ClientModInitializer {
 	private static final KeyMapping ARMOR_SWITCH_KEY = KeyBindingHelper.registerKeyBinding(new KeyMapping(
 			"key.diamondaltar.switch_armor", InputConstants.Type.KEYSYM, InputConstants.KEY_J, CATEGORY));
 
-	private static final KeyMapping ARMOR_USE_KEY = KeyBindingHelper.registerKeyBinding(new KeyMapping(
-			"key.diamondaltar.use_armor", InputConstants.Type.KEYSYM, InputConstants.KEY_H, CATEGORY));
+	/** Pour détecter le moment où le clic droit est enfoncé (Shift + clic droit = capacité d'armure). */
+	private static boolean useWasDown;
 
 	@Override
 	public void onInitializeClient() {
@@ -49,17 +49,19 @@ public class DiamondAltarClient implements ClientModInitializer {
 					ClientPlayNetworking.send(new SwitchAbilityPayload());
 				}
 			}
-			// Touche J : changer la capacité de l'armure. Touche H : la lancer.
+			// Touche J : changer la capacité de l'armure. Shift + clic droit : la lancer.
 			while (ARMOR_SWITCH_KEY.consumeClick()) {
 				if (client.player != null) {
 					ClientPlayNetworking.send(new ArmorActionPayload(false));
 				}
 			}
-			while (ARMOR_USE_KEY.consumeClick()) {
-				if (client.player != null) {
-					ClientPlayNetworking.send(new ArmorActionPayload(true));
-				}
+			boolean useDown = client.options.keyUse.isDown();
+			if (useDown && !useWasDown && client.player != null && client.screen == null
+					&& client.player.isShiftKeyDown()
+					&& ModComponents.isInfused(client.player.getItemBySlot(EquipmentSlot.CHEST))) {
+				ClientPlayNetworking.send(new ArmorActionPayload(true));
 			}
+			useWasDown = useDown;
 		});
 
 		// Clic gauche avec l'épée infusée : on demande au serveur de lancer la capacité choisie.
@@ -117,8 +119,7 @@ public class DiamondAltarClient implements ClientModInitializer {
 									.withStyle(ChatFormatting.GRAY));
 						}
 					}
-					lines.add(Component.translatable("diamondaltar.ability.armor_keys",
-							ARMOR_USE_KEY.getTranslatedKeyMessage(), ARMOR_SWITCH_KEY.getTranslatedKeyMessage())
+					lines.add(Component.translatable("diamondaltar.ability.armor_keys", ARMOR_SWITCH_KEY.getTranslatedKeyMessage())
 							.withStyle(ChatFormatting.DARK_AQUA));
 				}
 			}

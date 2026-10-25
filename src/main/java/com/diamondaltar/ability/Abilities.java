@@ -43,37 +43,50 @@ public final class Abilities {
 					a("sword_blades", 10, 2, PhantomBladesEffect::new),
 					a("sword_shadow", 10, 2, ShadowStepEffect::new),
 					a("sword_judgement", 10, 4, CelestialJudgementEffect::new),
-					a("sword_void", 10, 5, VoidRiftEffect::new)),
+					a("sword_void", 10, 5, VoidRiftEffect::new),
+					a("sword_crescent", 10, 2, LunarCrescentEffect::new),
+					a("sword_starfall", 10, 4, StarfallEffect::new),
+					a("sword_eclipse", 10, 5, EclipseEffect::new)),
+			Items.DIAMOND_SPEAR, List.of(
+					a("spear_comet", 10, 3, CometLanceEffect::new),
+					a("spear_charge", 10, 3, StellarChargeEffect::new),
+					a("spear_constellation", 10, 5, ConstellationEffect::new)),
 			Items.DIAMOND_PICKAXE, List.of(
 					a("pickaxe_drill", 10, 8, PickaxeDrillEffect::new),
 					a("pickaxe_sphere", 10, 6, CrystalSphereEffect::new),
 					a("pickaxe_ores", 10, 2, OreSightEffect::new),
-					a("pickaxe_eruption", 10, 4, CrystalEruptionEffect::new)),
+					a("pickaxe_eruption", 10, 4, CrystalEruptionEffect::new),
+					a("pickaxe_beam", 10, 6, StellarBeamEffect::new)),
 			Items.DIAMOND_AXE, List.of(
 					a("axe_cyclone", 10, 6, AxeCycloneEffect::new),
 					a("axe_boomerang", 10, 3, BoomerangAxeEffect::new),
 					a("axe_timber", 10, 6, TimberEffect::new),
-					a("axe_fissure", 10, 4, FissureEffect::new)),
+					a("axe_fissure", 10, 4, FissureEffect::new),
+					a("axe_orbit", 10, 5, LunarOrbitEffect::new)),
 			Items.DIAMOND_SHOVEL, List.of(
 					a("shovel_quake", 10, 5, ShovelQuakeEffect::new),
 					a("shovel_quicksand", 10, 4, QuicksandEffect::new),
-					a("shovel_excavate", 10, 8, ExcavateEffect::new)),
+					a("shovel_excavate", 10, 8, ExcavateEffect::new),
+					a("shovel_gravity", 10, 5, LunarGravityEffect::new)),
 			Items.DIAMOND_HOE, List.of(
 					a("hoe_reap", 10, 5, HoeReapEffect::new),
 					a("hoe_vines", 10, 4, VinesEffect::new),
-					a("hoe_bloom", 10, 4, BloomEffect::new)),
+					a("hoe_bloom", 10, 4, BloomEffect::new),
+					a("hoe_scythe", 10, 5, CelestialScytheEffect::new)),
 			Items.MACE, List.of(
 					a("mace_meteor", 10, 6, MaceMeteorEffect::new),
 					a("mace_gravity", 10, 5, GravityWellEffect::new),
-					a("mace_thunder", 10, 6, ThunderEffect::new)));
+					a("mace_thunder", 10, 6, ThunderEffect::new),
+					a("mace_supernova", 10, 8, SupernovaEffect::new)));
 
-	/** Capacités de l'armure infusée (il faut porter le plastron infusé). J pour changer, H pour lancer. */
+	/** Capacités de l'armure infusée (il faut porter le plastron infusé). J pour changer, Shift + clic droit pour lancer. */
 	public static final List<Ability> ARMOR = List.of(
 			a("armor_barrier", 10, 0, CrystalBarrierEffect::new),
 			a("armor_dash", 10, 0, DiamondDashEffect::new),
 			a("armor_nova", 10, 0, PrismNovaEffect::new),
 			a("armor_wings", 10, 0, DiamondWingsEffect::new),
-			a("armor_avatar", 10, 0, AvatarEffect::new));
+			a("armor_avatar", 10, 0, AvatarEffect::new),
+			a("armor_astral", 10, 0, AstralJumpEffect::new));
 
 	public static int armorIndex(ItemStack chest) {
 		Integer i = chest.get(ModComponents.SELECTED_ABILITY);
@@ -105,7 +118,7 @@ public final class Abilities {
 	}
 
 	public static boolean isLeftClick(ItemStack stack) {
-		return stack.is(Items.DIAMOND_SWORD);
+		return stack.is(Items.DIAMOND_SWORD) || stack.is(Items.DIAMOND_SPEAR);
 	}
 
 	public static void register() {
@@ -158,6 +171,10 @@ public final class Abilities {
 			ItemStack stack = player.getItemInHand(hand);
 			if (of(stack.getItem()).isEmpty() || isLeftClick(stack) || !ModComponents.isInfused(stack) || player.isSpectator()) {
 				return InteractionResult.PASS;
+			}
+			// Shift + clic droit est réservé à l'armure (envoyé par le client) : l'outil ne fait rien.
+			if (player.isShiftKeyDown() && ModComponents.isInfused(player.getItemBySlot(EquipmentSlot.CHEST))) {
+				return InteractionResult.SUCCESS;
 			}
 			if (player instanceof ServerPlayer serverPlayer) {
 				tryActivate(serverPlayer, stack, hand);
