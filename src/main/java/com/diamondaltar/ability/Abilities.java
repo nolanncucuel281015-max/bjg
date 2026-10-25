@@ -67,6 +67,19 @@ public final class Abilities {
 					a("mace_gravity", 10, 5, GravityWellEffect::new),
 					a("mace_thunder", 10, 6, ThunderEffect::new)));
 
+	/** Capacités de l'armure infusée (il faut porter le plastron infusé). J pour changer, H pour lancer. */
+	public static final List<Ability> ARMOR = List.of(
+			a("armor_barrier", 10, 0, CrystalBarrierEffect::new),
+			a("armor_dash", 10, 0, DiamondDashEffect::new),
+			a("armor_nova", 10, 0, PrismNovaEffect::new),
+			a("armor_wings", 10, 0, DiamondWingsEffect::new),
+			a("armor_avatar", 10, 0, AvatarEffect::new));
+
+	public static int armorIndex(ItemStack chest) {
+		Integer i = chest.get(ModComponents.SELECTED_ABILITY);
+		return Math.floorMod(i == null ? 0 : i, ARMOR.size());
+	}
+
 	/** Recharges par joueur et par capacité : fin de recharge en ticks de jeu. */
 	private static final Map<UUID, Map<String, Long>> COOLDOWNS = new HashMap<>();
 
@@ -98,6 +111,25 @@ public final class Abilities {
 	public static void register() {
 		PayloadTypeRegistry.playC2S().register(SlashPayload.ID, SlashPayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(SwitchAbilityPayload.ID, SwitchAbilityPayload.CODEC);
+		PayloadTypeRegistry.playC2S().register(ArmorActionPayload.ID, ArmorActionPayload.CODEC);
+
+		// Touches J / H : capacités de l'armure (stockées sur le plastron infusé).
+		ServerPlayNetworking.registerGlobalReceiver(ArmorActionPayload.ID, (payload, context) -> {
+			ServerPlayer player = context.player();
+			ItemStack chest = player.getItemBySlot(EquipmentSlot.CHEST);
+			if (!ModComponents.isInfused(chest)) {
+				player.displayClientMessage(Component.translatable("diamondaltar.ability.need_chestplate").withStyle(ChatFormatting.RED), true);
+				return;
+			}
+			int index = armorIndex(chest);
+			if (payload.activate()) {
+				activate(player, chest, ARMOR.get(index), EquipmentSlot.CHEST);
+				return;
+			}
+			int next = (index + 1) % ARMOR.size();
+			chest.set(ModComponents.SELECTED_ABILITY, next);
+			announce(player, ARMOR.get(next), next, ARMOR.size());
+		});
 
 		// Clic gauche avec l'épée infusée.
 		ServerPlayNetworking.registerGlobalReceiver(SlashPayload.ID, (payload, context) -> {
@@ -118,10 +150,7 @@ public final class Abilities {
 			}
 			int next = (selectedIndex(stack) + 1) % list.size();
 			stack.set(ModComponents.SELECTED_ABILITY, next);
-			player.displayClientMessage(Component.translatable("diamondaltar.ability.switched",
-					Component.translatable("diamondaltar.ability." + list.get(next).key() + ".name").withStyle(ChatFormatting.GOLD),
-					next + 1, list.size()).withStyle(ChatFormatting.AQUA), true);
-			player.level().playSound(null, player.blockPosition(), SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 1.0f, 1.2f + next * 0.15f);
+			announce(player, list.get(next), next, list.size());
 		});
 
 		// Clic droit avec les autres objets infusés.
@@ -137,10 +166,23 @@ public final class Abilities {
 		});
 	}
 
+	private static void announce(ServerPlayer player, Ability ability, int index, int count) {
+		player.displayClientMessage(Component.translatable("diamondaltar.ability.switched",
+				Component.translatable("diamondaltar.ability." + ability.key() + ".name").withStyle(ChatFormatting.GOLD),
+				index + 1, count).withStyle(ChatFormatting.AQUA), true);
+		player.level().playSound(null, player.blockPosition(), SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 1.0f, 1.2f + index * 0.15f);
+	}
+
 	private static void tryActivate(ServerPlayer player, ItemStack stack, InteractionHand hand) {
 		Ability ability = selected(stack);
-		if (ability == null || !ModComponents.isInfused(stack) || player.isSpectator()
-				|| !(player.level() instanceof ServerLevel level)) {
+		if (ability != null && ModComponents.isInfused(stack)) {
+			activate(player, stack, ability, hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
+			player.swing(hand, true);
+		}
+	}
+
+	private static void activate(ServerPlayer player, ItemStack stack, Ability ability, EquipmentSlot slot) {
+		if (player.isSpectator() || !(player.level() instanceof ServerLevel level)) {
 			return;
 		}
 		long now = level.getGameTime();
@@ -153,8 +195,8 @@ public final class Abilities {
 		}
 		mine.put(ability.key(), now + ability.cooldown());
 		EffectManager.start(ability.factory().apply(level, player));
-		stack.hurtAndBreak(ability.durabilityCost(), player,
-				hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
-		player.swing(hand, true);
+		if (ability.durabilityCost() > 0) {
+			stack.hurtAndBreak(ability.durabilityCost(), player, slot);
+		}
 	}
 }

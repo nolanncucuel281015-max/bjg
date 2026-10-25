@@ -37,11 +37,15 @@ Chaque objet infusé a sa propre texture animée (reflet de diamant qui passe + 
 | Pelle | **Onde Sismique** · **Sables Mouvants** (piège les ennemis 5 s) · **Excavation** (creuse 5x5x3) |
 | Houe | **Moisson des Âmes** · **Lianes Étrangleuses** (immobilise les ennemis 4 s) · **Floraison** (soigne et fait pousser) |
 | Masse | **Chute Météore** · **Puits de Gravité** (soulève puis écrase) · **Colère du Tonnerre** (foudre sur 10 monstres) |
-| Casque | Vision nocturne + respiration aquatique |
-| Plastron | Résistance |
-| Jambières | Vitesse II |
-| Bottes | Saut II + aucun dégât de chute |
-| Armure complète | Régénération + Force + aura de lumière |
+| Casque | Vision nocturne + respiration aquatique + force des conduits |
+| Plastron | Résistance II + résistance au feu |
+| Jambières | Vitesse II + célérité II |
+| Bottes | Saut II + grâce du dauphin + aucun dégât de chute |
+| Armure complète | Régénération II + Force II + saturation + aura de lumière |
+| Armure (plastron, **H** pour lancer, **J** pour changer) | **Bouclier de Cristal** · **Ruée de Diamant** · **Nova Prismatique** · **Ailes de Diamant** · **Avatar de Diamant** |
+
+L'armure infusée est incassable et très solide : armure 6/12/9/6, robustesse +5 et +6 PV par pièce,
+résistance au recul.
 
 Quand tu portes l'armure infusée, elle a sa propre texture de diamant infusé (liserés dorés,
 gemmes violettes) :

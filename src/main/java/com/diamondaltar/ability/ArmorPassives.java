@@ -16,8 +16,9 @@ import net.minecraft.world.entity.player.Player;
 
 /**
  * Capacités passives de l'armure infusée :
- * casque = vision nocturne + respiration aquatique, plastron = résistance,
- * jambières = vitesse, bottes = saut + aucune chute. Armure complète = régénération + force + aura.
+ * casque = vision nocturne + respiration + force des conduits, plastron = résistance II + feu,
+ * jambières = vitesse II + célérité II, bottes = saut II + grâce du dauphin + aucune chute.
+ * Armure complète = régénération II + force II + saturation + aura.
  */
 public final class ArmorPassives {
 	private ArmorPassives() {
@@ -42,6 +43,10 @@ public final class ArmorPassives {
 	}
 
 	private static void tickPlayer(ServerLevel level, ServerPlayer player) {
+		// Les objets infusés avec une ancienne version du mod reçoivent les nouveautés.
+		for (EquipmentSlot slot : EquipmentSlot.values()) {
+			ModComponents.upgradeIfOld(player.getItemBySlot(slot));
+		}
 		boolean head = ModComponents.isInfused(player.getItemBySlot(EquipmentSlot.HEAD));
 		boolean chest = ModComponents.isInfused(player.getItemBySlot(EquipmentSlot.CHEST));
 		boolean legs = ModComponents.isInfused(player.getItemBySlot(EquipmentSlot.LEGS));
@@ -50,19 +55,24 @@ public final class ArmorPassives {
 		if (head) {
 			give(player, MobEffects.NIGHT_VISION, 0, 300);
 			give(player, MobEffects.WATER_BREATHING, 0, 60);
+			give(player, MobEffects.CONDUIT_POWER, 0, 60);
 		}
 		if (chest) {
-			give(player, MobEffects.RESISTANCE, 0, 60);
+			give(player, MobEffects.RESISTANCE, 1, 60);
+			give(player, MobEffects.FIRE_RESISTANCE, 0, 60);
 		}
 		if (legs) {
 			give(player, MobEffects.SPEED, 1, 60);
+			give(player, MobEffects.HASTE, 1, 60);
 		}
 		if (feet) {
 			give(player, MobEffects.JUMP_BOOST, 1, 60);
+			give(player, MobEffects.DOLPHINS_GRACE, 0, 60);
 		}
 		if (head && chest && legs && feet) {
-			give(player, MobEffects.REGENERATION, 0, 60);
-			give(player, MobEffects.STRENGTH, 0, 60);
+			give(player, MobEffects.REGENERATION, 1, 60);
+			give(player, MobEffects.STRENGTH, 1, 60);
+			give(player, MobEffects.SATURATION, 0, 2);
 			for (int i = 0; i < 12; i++) {
 				double a = Math.PI * 2 * i / 12;
 				level.sendParticles(ParticleTypes.END_ROD,

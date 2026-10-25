@@ -3,6 +3,7 @@ package com.diamondaltar.client;
 import com.diamondaltar.DiamondAltar;
 import com.diamondaltar.ModComponents;
 import com.diamondaltar.ability.Abilities;
+import com.diamondaltar.ability.ArmorActionPayload;
 import com.diamondaltar.ability.SlashPayload;
 import com.diamondaltar.ability.SwitchAbilityPayload;
 import com.diamondaltar.block.ModBlocks;
@@ -18,6 +19,7 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.equipment.Equippable;
 
@@ -29,6 +31,12 @@ public class DiamondAltarClient implements ClientModInitializer {
 	private static final KeyMapping SWITCH_KEY = KeyBindingHelper.registerKeyBinding(new KeyMapping(
 			"key.diamondaltar.switch_ability", InputConstants.Type.KEYSYM, InputConstants.KEY_K, CATEGORY));
 
+	private static final KeyMapping ARMOR_SWITCH_KEY = KeyBindingHelper.registerKeyBinding(new KeyMapping(
+			"key.diamondaltar.switch_armor", InputConstants.Type.KEYSYM, InputConstants.KEY_J, CATEGORY));
+
+	private static final KeyMapping ARMOR_USE_KEY = KeyBindingHelper.registerKeyBinding(new KeyMapping(
+			"key.diamondaltar.use_armor", InputConstants.Type.KEYSYM, InputConstants.KEY_H, CATEGORY));
+
 	@Override
 	public void onInitializeClient() {
 		BlockEntityRenderers.register(ModBlocks.INFUSION_ALTAR_ENTITY, InfusionAltarRenderer::new);
@@ -39,6 +47,17 @@ public class DiamondAltarClient implements ClientModInitializer {
 				if (client.player != null && ModComponents.isInfused(client.player.getMainHandItem())
 						&& !Abilities.of(client.player.getMainHandItem().getItem()).isEmpty()) {
 					ClientPlayNetworking.send(new SwitchAbilityPayload());
+				}
+			}
+			// Touche J : changer la capacité de l'armure. Touche H : la lancer.
+			while (ARMOR_SWITCH_KEY.consumeClick()) {
+				if (client.player != null) {
+					ClientPlayNetworking.send(new ArmorActionPayload(false));
+				}
+			}
+			while (ARMOR_USE_KEY.consumeClick()) {
+				if (client.player != null) {
+					ClientPlayNetworking.send(new ArmorActionPayload(true));
 				}
 			}
 		});
@@ -85,6 +104,23 @@ public class DiamondAltarClient implements ClientModInitializer {
 				lines.add(Component.translatable("diamondaltar.ability." + key + ".name").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD));
 				lines.add(Component.translatable("diamondaltar.ability." + key + ".desc").withStyle(ChatFormatting.GRAY));
 				lines.add(Component.translatable("diamondaltar.ability.armor_set").withStyle(ChatFormatting.DARK_AQUA));
+				if (equippable.slot() == EquipmentSlot.CHEST) {
+					int selected = Abilities.armorIndex(stack);
+					for (int i = 0; i < Abilities.ARMOR.size(); i++) {
+						boolean on = i == selected;
+						String k = Abilities.ARMOR.get(i).key();
+						lines.add(Component.literal(on ? "▶ " : "  ")
+								.append(Component.translatable("diamondaltar.ability." + k + ".name"))
+								.withStyle(on ? ChatFormatting.GOLD : ChatFormatting.DARK_GRAY));
+						if (on) {
+							lines.add(Component.literal("    ").append(Component.translatable("diamondaltar.ability." + k + ".desc"))
+									.withStyle(ChatFormatting.GRAY));
+						}
+					}
+					lines.add(Component.translatable("diamondaltar.ability.armor_keys",
+							ARMOR_USE_KEY.getTranslatedKeyMessage(), ARMOR_SWITCH_KEY.getTranslatedKeyMessage())
+							.withStyle(ChatFormatting.DARK_AQUA));
+				}
 			}
 		});
 	}
