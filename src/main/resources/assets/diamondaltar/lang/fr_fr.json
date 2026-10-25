@@ -121,5 +121,7 @@
 	"diamondaltar.ability.mace_pulsar.name": "◉ Pulsar",
 	"diamondaltar.ability.mace_pulsar.desc": "Deux jets de lumière et 5 pulsations d'énergie repoussent tout autour de toi.",
 	"diamondaltar.ability.armor_gravity.name": "◍ Bouclier Gravitationnel",
-	"diamondaltar.ability.armor_gravity.desc": "Pendant 8 s, tous les projectiles sont renvoyés à leur tireur."
+	"diamondaltar.ability.armor_gravity.desc": "Pendant 8 s, tous les projectiles sont renvoyés à leur tireur.",
+	"diamondaltar.ability.sword_edge.name": "✧ Tranchant Céleste",
+	"diamondaltar.ability.sword_edge.desc": "Un trait de lumière éblouissant traverse les ennemis et les illumine."
 }

@@ -9,6 +9,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Matrix3f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -64,6 +65,31 @@ public final class Visuals {
 
 	public static void transform(Display d, Vector3f translation, Quaternionf rotation, float scale, int ticks) {
 		transform(d, translation, rotation, new Vector3f(scale), ticks);
+	}
+
+	/**
+	 * Une bande de lumière (ruban) : un bloc très fin et très long, orienté le long de {@code dir}
+	 * et tourné face à {@code facing} (en général le regard du joueur). Brille d'un contour coloré.
+	 */
+	public static Display.BlockDisplay ribbon(ServerLevel level, Vec3 center, BlockState state, int glowColor) {
+		Display.BlockDisplay d = block(level, center, state);
+		if (glowColor >= 0) {
+			d.setGlowingTag(true);
+			d.setGlowColorOverride(glowColor);
+		}
+		return d;
+	}
+
+	/** Oriente / redimensionne un ruban : longueur {@code length} le long de dir, épaisseur {@code width}. */
+	public static void ribbonShape(Display d, Vec3 dir, Vec3 facing, float length, float width, int ticks) {
+		Vector3f x = dir.normalize().toVector3f();
+		Vector3f z = facing.normalize().toVector3f();
+		Vector3f y = new Vector3f(z).cross(x).normalize();
+		z = new Vector3f(x).cross(y).normalize();
+		Quaternionf q = new Quaternionf().setFromNormalized(new Matrix3f(x, y, z));
+		float depth = 0.04f;
+		Vector3f t = new Vector3f(-length / 2, -width / 2, -depth / 2).rotate(q);
+		transform(d, t, q, new Vector3f(Math.max(0.001f, length), Math.max(0.001f, width), depth), ticks);
 	}
 
 	/** Rotation d'un objet posé à plat qui tourne sur lui-même (axe vertical). */

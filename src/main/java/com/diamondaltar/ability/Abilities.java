@@ -42,6 +42,7 @@ public final class Abilities {
 	public static final Map<Item, List<Ability>> ABILITIES = Map.of(
 			Items.DIAMOND_SWORD, List.of(
 					a("sword_slash", 0, 1, SwordSlashEffect::new),
+					a("sword_edge", 10, 1, CelestialEdgeEffect::new),
 					a("sword_blades", 10, 2, PhantomBladesEffect::new),
 					a("sword_shadow", 10, 2, ShadowStepEffect::new),
 					a("sword_judgement", 10, 4, CelestialJudgementEffect::new),

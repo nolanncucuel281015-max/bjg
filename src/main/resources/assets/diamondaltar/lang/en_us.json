@@ -121,5 +121,7 @@
 	"diamondaltar.ability.mace_pulsar.name": "◉ Pulsar",
 	"diamondaltar.ability.mace_pulsar.desc": "Two light jets and 5 energy pulses blast everything around you.",
 	"diamondaltar.ability.armor_gravity.name": "◍ Gravity Shield",
-	"diamondaltar.ability.armor_gravity.desc": "For 8s, every projectile is sent back to its shooter."
+	"diamondaltar.ability.armor_gravity.desc": "For 8s, every projectile is sent back to its shooter.",
+	"diamondaltar.ability.sword_edge.name": "✧ Celestial Edge",
+	"diamondaltar.ability.sword_edge.desc": "A blinding streak of light cuts through enemies and lights them up."
 }
