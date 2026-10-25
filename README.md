@@ -24,23 +24,29 @@ Chaque objet infusé a sa propre texture animée (reflet de diamant qui passe + 
 2. Clic droit avec un objet en diamant (casque, plastron, jambières, bottes, épée, pioche,
    hache, pelle, houe) ou une **masse** → l'objet est posé et l'infusion démarre (5 s).
 3. Quand l'éclair tombe, clic droit pour récupérer ton objet **Infusé** (brillant, nom en cyan).
-4. Avec l'épée infusée : **clic gauche** pour la Tranche de la Volonté (sans recharge). Avec les autres outils infusés : **clic droit** pour lancer leur capacité.
+4. Avec un objet infusé en main : appuie sur **K** pour changer de capacité (touche modifiable
+   dans Options → Commandes). L'épée se lance au **clic gauche**, les autres objets au **clic droit**.
 
 ## Capacités
 
-| Objet | Capacité | Effet |
-|---|---|---|
-| Épée | **Tranche de la Volonté** | Un coup balayé comme le coup normal, mais en croissant géant qui s'étend jusqu'à **10 blocs**. 16 dégâts. **Clic gauche**, sans recharge. |
-| Pioche | **Foreuse de Diamant** | Creuse un tunnel 3x3 de 8 blocs dans la direction du regard. |
-| Hache | **Cyclone d'Acier** | Tourbillon de lames pendant 2 s, aspire puis éjecte les ennemis. |
-| Pelle | **Onde Sismique** | Onde de choc de 8 blocs qui projette les ennemis en l'air. |
-| Houe | **Moisson des Âmes** | Faux spectrale autour de toi, vol de vie, fait pousser les cultures. |
-| Masse | **Chute Météore** | Tu t'envoles puis t'écrases comme une météorite (impact enflammé, sans dégâts de chute). |
-| Casque | Regard de Cristal | Vision nocturne + respiration aquatique. |
-| Plastron | Cœur de Diamant | Résistance. |
-| Jambières | Foulée Éclair | Vitesse II. |
-| Bottes | Pas Céleste | Saut II + aucun dégât de chute. |
-| Armure complète | Aura de Diamant | Régénération + Force + aura de lumière. |
+| Objet | Capacités (touche K pour changer) |
+|---|---|
+| Épée (clic gauche) | **Tranche de la Volonté** (slash géant de 10 blocs, 30 dégâts, sans recharge) · **Lames Fantômes** (5 lames qui transpercent sur 24 blocs) · **Pas de l'Ombre** (téléportation de 10 blocs qui tranche) · **Jugement Céleste** (pilier de lumière du ciel, 40 dégâts) · **Faille du Néant** (trou noir qui aspire puis implose) |
+| Pioche | **Foreuse de Diamant** (tunnel 3x3) · **Sphère de Cristal** (sphère de 5 blocs minée) · **Vision des Minerais** (les minerais brillent 10 s) · **Éruption de Cristaux** (pics de cristal sur 16 blocs) |
+| Hache | **Cyclone d'Acier** · **Hache Boomerang** (part et revient) · **Bûcheron Titanesque** (abat l'arbre entier) · **Fissure** (fend le sol sur 14 blocs) |
+| Pelle | **Onde Sismique** · **Sables Mouvants** (piège les ennemis 5 s) · **Excavation** (creuse 5x5x3) |
+| Houe | **Moisson des Âmes** · **Lianes Étrangleuses** (immobilise les ennemis 4 s) · **Floraison** (soigne et fait pousser) |
+| Masse | **Chute Météore** · **Puits de Gravité** (soulève puis écrase) · **Colère du Tonnerre** (foudre sur 10 monstres) |
+| Casque | Vision nocturne + respiration aquatique |
+| Plastron | Résistance |
+| Jambières | Vitesse II |
+| Bottes | Saut II + aucun dégât de chute |
+| Armure complète | Régénération + Force + aura de lumière |
+
+Quand tu portes l'armure infusée, elle a sa propre texture de diamant infusé (liserés dorés,
+gemmes violettes) :
+
+![Armure](docs/armor.png)
 
 ## Compiler
 
