@@ -89,6 +89,7 @@ public class EclipseEffect extends TimedEffect {
 		}
 		level.playSound(null, player.blockPosition(), SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.PLAYERS, 1.5f, 1.6f);
 		FX.shake(level, player.position(), 26, 1.1f, 10);
+		FX.flash(level, player.position(), 30, 0xFFFFFF, 0.55f, 12);
 		level.playSound(null, player.blockPosition(), SoundEvents.AMETHYST_BLOCK_RESONATE, SoundSource.PLAYERS, 2.0f, 0.5f);
 		Cosmic.sphere(level, Cosmic.MOON_TO_NEBULA, sky, 4, 120);
 		return true;

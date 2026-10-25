@@ -75,6 +75,7 @@ public class MeteoriteEffect extends TimedEffect {
 		level.playSound(null, c, SoundEvents.DRAGON_FIREBALL_EXPLODE, SoundSource.PLAYERS, 3.0f, 0.4f);
 		level.playSound(null, c, SoundEvents.MACE_SMASH_GROUND_HEAVY, SoundSource.PLAYERS, 3.0f, 0.4f);
 		FX.shake(level, target, 36, 2.0f, 16);
+		FX.flash(level, target, 36, 0xFFC080, 0.45f, 10);
 		return true;
 	}
 }

@@ -69,6 +69,7 @@ public class SupernovaEffect extends TimedEffect {
 			level.playSound(null, player.blockPosition(), SoundEvents.DRAGON_FIREBALL_EXPLODE, SoundSource.PLAYERS, 3.0f, 0.5f);
 			level.playSound(null, player.blockPosition(), SoundEvents.WARDEN_SONIC_BOOM, SoundSource.PLAYERS, 3.0f, 0.5f);
 			FX.shake(level, core, 40, 2.4f, 22);
+			FX.flash(level, core, 48, 0xFFF0D0, 0.75f, 18);
 			Glow.rays(level, core, 20, 18, Glow.Tint.FIRE);
 			Glow.rays(level, core.add(0, 0.5, 0), 14, 14, Glow.Tint.NEBULA);
 			Glow.pillar(level, core.add(0, -6, 0), 30, 1.0f, Glow.Tint.GOLD);

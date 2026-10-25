@@ -89,6 +89,7 @@ public class TitanAxeEffect extends TimedEffect {
 		level.playSound(null, player.blockPosition(), SoundEvents.MACE_SMASH_GROUND_HEAVY, SoundSource.PLAYERS, 2.5f, 0.3f);
 		level.playSound(null, player.blockPosition(), SoundEvents.ZOMBIE_BREAK_WOODEN_DOOR, SoundSource.PLAYERS, 1.5f, 0.5f);
 		FX.shake(level, base, 30, 1.8f, 14);
+		FX.flash(level, base, 30, 0xE8F8FF, 0.4f, 9);
 		Glow.slash(level, base.add(forward.scale(8.5)).add(0, 0.2, 0), forward, new Vec3(0, 1, 0), 15f, 0.5f, Glow.Tint.ICE);
 		Glow.rays(level, base.add(forward.scale(2)).add(0, 0.5, 0), 10, 7, Glow.Tint.ICE);
 	}

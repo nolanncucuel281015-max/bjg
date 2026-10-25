@@ -103,6 +103,7 @@ public class CelestialEdgeEffect extends TimedEffect {
 				}
 			}
 			level.sendParticles(ParticleTypes.FIREWORK, center.x, center.y, center.z, 20, LENGTH * 0.25, 0.4, LENGTH * 0.25, 0.05);
+			Glow.haloLine(level, center.subtract(dir.scale(LENGTH / 2.0)), center.add(dir.scale(LENGTH / 2.0)), 0.35, Glow.Tint.ICE);
 
 			for (LivingEntity t : FX.livingAround(level, player, center, LENGTH / 2.0 + 1)) {
 				Vec3 mid = t.position().add(0, t.getBbHeight() * 0.5, 0);
@@ -132,6 +133,7 @@ public class CelestialEdgeEffect extends TimedEffect {
 		// Éclair de lumière sur la cible.
 		level.sendParticles(ParticleTypes.END_ROD, mid.x, mid.y, mid.z, 25, 0.3, 0.5, 0.3, 0.25);
 		level.sendParticles(WHITE, mid.x, mid.y, mid.z, 20, 0.4, 0.6, 0.4, 0);
+		Glow.halo(level, mid, 18, 0.5, Glow.Tint.WHITE);
 		// Colonne de lumière qui jaillit.
 		for (double y = 0; y < 5; y += 0.3) {
 			level.sendParticles(y < 2 ? WHITE : ICE, t.getX(), t.getY() + y, t.getZ(), 1, 0.08, 0, 0.08, 0);
@@ -146,6 +148,7 @@ public class CelestialEdgeEffect extends TimedEffect {
 		}
 		level.playSound(null, t.blockPosition(), SoundEvents.AMETHYST_BLOCK_BREAK, SoundSource.PLAYERS, 1.5f, 1.8f);
 		FX.shake(level, mid, 10, 0.35f, 4);
+		FX.flash(level, player.position(), 16, 0xFFFFFF, 0.32f, 6);
 	}
 
 	private double distanceToLine(Vec3 p) {

@@ -141,6 +141,7 @@ public final class Abilities {
 		PayloadTypeRegistry.playC2S().register(SwitchAbilityPayload.ID, SwitchAbilityPayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(ArmorActionPayload.ID, ArmorActionPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(ShakePayload.ID, ShakePayload.CODEC);
+		PayloadTypeRegistry.playS2C().register(FlashPayload.ID, FlashPayload.CODEC);
 
 		// Touches J / H : capacités de l'armure (stockées sur le plastron infusé).
 		ServerPlayNetworking.registerGlobalReceiver(ArmorActionPayload.ID, (payload, context) -> {

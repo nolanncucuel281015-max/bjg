@@ -2,6 +2,8 @@ package com.diamondaltar.client;
 
 import com.diamondaltar.DiamondAltar;
 import com.diamondaltar.ModComponents;
+import com.diamondaltar.ModParticles;
+import com.diamondaltar.ability.FlashPayload;
 import com.diamondaltar.ability.Abilities;
 import com.diamondaltar.ability.ArmorActionPayload;
 import com.diamondaltar.ability.ShakePayload;
@@ -14,6 +16,9 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.fabricmc.fabric.api.event.client.player.ClientPreAttackCallback;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
@@ -42,12 +47,27 @@ public class DiamondAltarClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		BlockEntityRenderers.register(ModBlocks.INFUSION_ALTAR_ENTITY, InfusionAltarRenderer::new);
 
+		// Halos lumineux (une couleur par type de particule).
+		ParticleFactoryRegistry particles = ParticleFactoryRegistry.getInstance();
+		particles.register(ModParticles.GLOW_WHITE, s -> new GlowOrbParticle.Provider(s, 0xFFFFFF));
+		particles.register(ModParticles.GLOW_ICE, s -> new GlowOrbParticle.Provider(s, 0xA8EEFF));
+		particles.register(ModParticles.GLOW_NEBULA, s -> new GlowOrbParticle.Provider(s, 0xB070FF));
+		particles.register(ModParticles.GLOW_PINK, s -> new GlowOrbParticle.Provider(s, 0xFF70D8));
+		particles.register(ModParticles.GLOW_GOLD, s -> new GlowOrbParticle.Provider(s, 0xFFD860));
+		particles.register(ModParticles.GLOW_FIRE, s -> new GlowOrbParticle.Provider(s, 0xFF8A30));
+
+		// Flash d'écran (surexposition) lors des grosses attaques.
+		ClientPlayNetworking.registerGlobalReceiver(FlashPayload.ID, (payload, context) ->
+				ScreenFlash.start(payload.color(), payload.strength(), payload.ticks()));
+		HudElementRegistry.attachElementBefore(VanillaHudElements.CHAT, DiamondAltar.id("flash"), ScreenFlash::render);
+
 		ClientPlayNetworking.registerGlobalReceiver(ShakePayload.ID, (payload, context) ->
 				ScreenShake.start(payload.strength(), payload.ticks()));
 
 		// Touche K : changer de capacité.
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			ScreenShake.tick(client);
+			ScreenFlash.tick();
 			while (SWITCH_KEY.consumeClick()) {
 				if (client.player != null && ModComponents.isInfused(client.player.getMainHandItem())
 						&& !Abilities.of(client.player.getMainHandItem().getItem()).isEmpty()) {

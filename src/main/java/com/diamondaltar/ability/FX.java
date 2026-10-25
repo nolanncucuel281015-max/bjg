@@ -81,6 +81,16 @@ final class FX {
 		}
 	}
 
+	/** Flash lumineux plein écran pour les joueurs proches (plus fort quand on est près). */
+	static void flash(ServerLevel level, Vec3 center, double radius, int color, float strength, int ticks) {
+		for (ServerPlayer p : level.players()) {
+			double d = Math.sqrt(p.distanceToSqr(center));
+			if (d <= radius) {
+				ServerPlayNetworking.send(p, new FlashPayload(color, (float) (strength * (1 - d / (radius * 1.3))), ticks));
+			}
+		}
+	}
+
 	/** Fait trembler l'écran des joueurs à moins de {@code radius} blocs. */
 	static void shake(ServerLevel level, Vec3 center, double radius, float strength, int ticks) {
 		for (ServerPlayer p : level.players()) {

@@ -20,6 +20,7 @@ public class DiamondAltar implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		ModComponents.register();
+		ModParticles.register();
 		ModBlocks.register();
 		EffectManager.register();
 		Abilities.register();
