@@ -1,0 +1,14 @@
+{
+	"layers": {
+		"humanoid": [
+			{
+				"texture": "diamondaltar:infused_diamond"
+			}
+		],
+		"humanoid_leggings": [
+			{
+				"texture": "diamondaltar:infused_diamond"
+			}
+		]
+	}
+}

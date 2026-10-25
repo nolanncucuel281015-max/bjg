@@ -51,7 +51,7 @@ public class AxeCycloneEffect extends TimedEffect {
 			level.playSound(null, player.blockPosition(), SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.PLAYERS,
 					0.9f, 0.8f + age / 80f);
 			for (LivingEntity target : FX.livingAround(level, player, c, RADIUS)) {
-				FX.hit(level, player, target, 5.0f);
+				FX.hit(level, player, target, 9.0f);
 				Vec3 pull = c.subtract(target.position()).normalize().scale(0.25);
 				FX.push(target, pull.x, 0.1, pull.z);
 			}
@@ -59,7 +59,7 @@ public class AxeCycloneEffect extends TimedEffect {
 		if (age == DURATION - 1) {
 			// Coup final : les ennemis sont projetés vers l'extérieur.
 			for (LivingEntity target : FX.livingAround(level, player, c, RADIUS + 1)) {
-				FX.hit(level, player, target, 8.0f);
+				FX.hit(level, player, target, 18.0f);
 				Vec3 out = target.position().subtract(c).normalize().scale(1.4);
 				FX.push(target, out.x, 0.6, out.z);
 			}

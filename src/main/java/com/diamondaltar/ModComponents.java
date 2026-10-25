@@ -8,6 +8,10 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.equipment.EquipmentAsset;
+import net.minecraft.world.item.equipment.EquipmentAssets;
+import net.minecraft.world.item.equipment.Equippable;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -21,6 +25,15 @@ public final class ModComponents {
 			BuiltInRegistries.DATA_COMPONENT_TYPE,
 			DiamondAltar.id("infused"),
 			DataComponentType.<Boolean>builder().persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL).build());
+
+	/** Index de la capacité choisie avec la touche K. */
+	public static final DataComponentType<Integer> SELECTED_ABILITY = Registry.register(
+			BuiltInRegistries.DATA_COMPONENT_TYPE,
+			DiamondAltar.id("selected_ability"),
+			DataComponentType.<Integer>builder().persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT).build());
+
+	/** Apparence de l'armure infusée quand on la porte : assets/diamondaltar/equipment/infused_diamond.json */
+	public static final ResourceKey<EquipmentAsset> INFUSED_ARMOR = ResourceKey.create(EquipmentAssets.ROOT_ID, DiamondAltar.id("infused_diamond"));
 
 	public static final Set<Item> INFUSABLE = Set.of(
 			Items.DIAMOND_HELMET, Items.DIAMOND_CHESTPLATE, Items.DIAMOND_LEGGINGS, Items.DIAMOND_BOOTS,
@@ -49,6 +62,13 @@ public final class ModComponents {
 		// Texture animée spéciale : assets/diamondaltar/items/infused_<objet>.json
 		String path = BuiltInRegistries.ITEM.getKey(stack.getItem()).getPath();
 		stack.set(DataComponents.ITEM_MODEL, DiamondAltar.id("infused_" + path));
+		Equippable equippable = stack.get(DataComponents.EQUIPPABLE);
+		if (equippable != null && equippable.assetId().isPresent()) {
+			stack.set(DataComponents.EQUIPPABLE, Equippable.builder(equippable.slot())
+					.setEquipSound(equippable.equipSound())
+					.setAsset(INFUSED_ARMOR)
+					.build());
+		}
 		stack.set(DataComponents.ITEM_NAME, Component.translatable("diamondaltar.infused_name", baseName)
 				.withStyle(ChatFormatting.AQUA));
 	}

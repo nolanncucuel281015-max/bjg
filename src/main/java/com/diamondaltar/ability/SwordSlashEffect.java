@@ -22,7 +22,7 @@ public class SwordSlashEffect extends TimedEffect {
 	private static final int DURATION = 8;
 	private static final double RANGE = 10.0;
 	private static final double HALF_ANGLE = Math.toRadians(65);
-	private static final float DAMAGE = 16.0f;
+	private static final float DAMAGE = 30.0f;
 	private static final DustParticleOptions CYAN = new DustParticleOptions(0x66F2FF, 2.0f);
 	private static final DustParticleOptions WHITE = new DustParticleOptions(0xFFFFFF, 1.5f);
 

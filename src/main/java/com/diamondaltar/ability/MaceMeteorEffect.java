@@ -81,8 +81,8 @@ public class MaceMeteorEffect extends TimedEffect {
 
 		for (LivingEntity target : FX.livingAround(level, player, c, IMPACT_RADIUS)) {
 			double dist = Math.sqrt(target.distanceToSqr(c));
-			float damage = (float) (22.0 * (1.0 - dist / (IMPACT_RADIUS + 1)));
-			FX.hit(level, player, target, Math.max(4.0f, damage));
+			float damage = (float) (45.0 * (1.0 - dist / (IMPACT_RADIUS + 1)));
+			FX.hit(level, player, target, Math.max(10.0f, damage));
 			Vec3 out = target.position().subtract(c).multiply(1, 0, 1).normalize().scale(1.6);
 			FX.push(target, out.x, 0.9, out.z);
 			target.igniteForSeconds(3);

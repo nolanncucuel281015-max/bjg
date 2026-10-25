@@ -9,7 +9,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
@@ -60,7 +59,7 @@ public class PickaxeDrillEffect extends TimedEffect {
 				}
 				level.sendParticles(ParticleTypes.END_ROD, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
 						3, 0.3, 0.3, 0.3, 0.02);
-				if (canBreak(pos, state)) {
+				if (FX.canMine(level, player, pos, state)) {
 					level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, state),
 							pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 12, 0.3, 0.3, 0.3, 0.1);
 					level.destroyBlock(pos, true, player);
@@ -69,12 +68,5 @@ public class PickaxeDrillEffect extends TimedEffect {
 		}
 		level.playSound(null, center, SoundEvents.AMETHYST_BLOCK_BREAK, SoundSource.PLAYERS, 1.0f, 0.6f + layer * 0.1f);
 		return layer >= DEPTH - 1;
-	}
-
-	private boolean canBreak(BlockPos pos, BlockState state) {
-		float hardness = state.getDestroySpeed(level, pos);
-		return hardness >= 0 && hardness < 50
-				&& (state.is(BlockTags.MINEABLE_WITH_PICKAXE) || state.is(BlockTags.MINEABLE_WITH_SHOVEL))
-				&& player.mayBuild() && level.mayInteract(player, pos);
 	}
 }

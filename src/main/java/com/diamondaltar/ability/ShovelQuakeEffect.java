@@ -54,7 +54,7 @@ public class ShovelQuakeEffect extends TimedEffect {
 		}
 		for (LivingEntity target : FX.livingAround(level, player, center, radius + 0.5)) {
 			if (alreadyHit.add(target.getUUID())) {
-				FX.hit(level, player, target, 7.0f);
+				FX.hit(level, player, target, 14.0f);
 				Vec3 out = target.position().subtract(center).multiply(1, 0, 1).normalize().scale(0.5);
 				FX.push(target, out.x, 1.0, out.z);
 			}

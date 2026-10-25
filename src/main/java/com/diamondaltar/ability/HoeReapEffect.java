@@ -63,7 +63,7 @@ public class HoeReapEffect extends TimedEffect {
 			Vec3 d = target.position().subtract(c);
 			double diff = Math.abs(wrap(Math.atan2(d.z, d.x) - angle));
 			if (diff < 0.55 && alreadyHit.add(target.getUUID())) {
-				FX.hit(level, player, target, 9.0f);
+				FX.hit(level, player, target, 16.0f);
 				player.heal(2.0f);
 				level.sendParticles(ParticleTypes.SCULK_SOUL, target.getX(), target.getY(0.6), target.getZ(),
 						6, 0.2, 0.3, 0.2, 0.05);

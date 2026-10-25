@@ -2,11 +2,16 @@ package com.diamondaltar.ability;
 
 import com.diamondaltar.ModComponents;
 import com.diamondaltar.effect.EffectManager;
+import com.diamondaltar.effect.TimedEffect;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -14,70 +19,142 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.function.BiFunction;
 
-/** Capacités actives des outils infusés : clic gauche pour l'épée, clic droit pour les autres. */
+/**
+ * Capacités actives des objets infusés. Chaque objet en a plusieurs : la touche K change
+ * la capacité choisie. L'épée se lance au clic gauche, les autres objets au clic droit.
+ */
 public final class Abilities {
-	public record Ability(String key, int cooldown, int durabilityCost, boolean leftClick, Factory factory) {
-		Ability(String key, int cooldown, int durabilityCost, Factory factory) {
-			this(key, cooldown, durabilityCost, false, factory);
-		}
+	public record Ability(String key, int cooldown, int durabilityCost, BiFunction<ServerLevel, ServerPlayer, TimedEffect> factory) {
 	}
 
-	@FunctionalInterface
-	public interface Factory {
-		void start(ServerLevel level, ServerPlayer player);
+	private static Ability a(String key, int cooldown, int durability, BiFunction<ServerLevel, ServerPlayer, TimedEffect> factory) {
+		return new Ability(key, cooldown, durability, factory);
 	}
 
-	public static final Map<Item, Ability> ABILITIES = Map.of(
-			Items.DIAMOND_SWORD, new Ability("sword", 0, 1, true,
-					(l, p) -> EffectManager.start(new SwordSlashEffect(l, p))),
-			Items.DIAMOND_PICKAXE, new Ability("pickaxe", 80, 10,
-					(l, p) -> EffectManager.start(new PickaxeDrillEffect(l, p))),
-			Items.DIAMOND_AXE, new Ability("axe", 120, 8,
-					(l, p) -> EffectManager.start(new AxeCycloneEffect(l, p))),
-			Items.DIAMOND_SHOVEL, new Ability("shovel", 100, 6,
-					(l, p) -> EffectManager.start(new ShovelQuakeEffect(l, p))),
-			Items.DIAMOND_HOE, new Ability("hoe", 100, 6,
-					(l, p) -> EffectManager.start(new HoeReapEffect(l, p))),
-			Items.MACE, new Ability("mace", 160, 8,
-					(l, p) -> EffectManager.start(new MaceMeteorEffect(l, p))));
+	public static final Map<Item, List<Ability>> ABILITIES = Map.of(
+			Items.DIAMOND_SWORD, List.of(
+					a("sword_slash", 0, 1, SwordSlashEffect::new),
+					a("sword_blades", 20, 2, PhantomBladesEffect::new),
+					a("sword_shadow", 40, 2, ShadowStepEffect::new),
+					a("sword_judgement", 100, 4, CelestialJudgementEffect::new),
+					a("sword_void", 160, 5, VoidRiftEffect::new)),
+			Items.DIAMOND_PICKAXE, List.of(
+					a("pickaxe_drill", 60, 8, PickaxeDrillEffect::new),
+					a("pickaxe_sphere", 40, 6, CrystalSphereEffect::new),
+					a("pickaxe_ores", 200, 2, OreSightEffect::new),
+					a("pickaxe_eruption", 80, 4, CrystalEruptionEffect::new)),
+			Items.DIAMOND_AXE, List.of(
+					a("axe_cyclone", 100, 6, AxeCycloneEffect::new),
+					a("axe_boomerang", 40, 3, BoomerangAxeEffect::new),
+					a("axe_timber", 40, 6, TimberEffect::new),
+					a("axe_fissure", 60, 4, FissureEffect::new)),
+			Items.DIAMOND_SHOVEL, List.of(
+					a("shovel_quake", 80, 5, ShovelQuakeEffect::new),
+					a("shovel_quicksand", 160, 4, QuicksandEffect::new),
+					a("shovel_excavate", 40, 8, ExcavateEffect::new)),
+			Items.DIAMOND_HOE, List.of(
+					a("hoe_reap", 80, 5, HoeReapEffect::new),
+					a("hoe_vines", 160, 4, VinesEffect::new),
+					a("hoe_bloom", 300, 4, BloomEffect::new)),
+			Items.MACE, List.of(
+					a("mace_meteor", 140, 6, MaceMeteorEffect::new),
+					a("mace_gravity", 160, 5, GravityWellEffect::new),
+					a("mace_thunder", 200, 6, ThunderEffect::new)));
+
+	/** Recharges par joueur et par capacité : fin de recharge en ticks de jeu. */
+	private static final Map<UUID, Map<String, Long>> COOLDOWNS = new HashMap<>();
 
 	private Abilities() {
 	}
 
+	public static List<Ability> of(Item item) {
+		return ABILITIES.getOrDefault(item, List.of());
+	}
+
+	public static int selectedIndex(ItemStack stack) {
+		List<Ability> list = of(stack.getItem());
+		if (list.isEmpty()) {
+			return 0;
+		}
+		Integer i = stack.get(ModComponents.SELECTED_ABILITY);
+		return Math.floorMod(i == null ? 0 : i, list.size());
+	}
+
+	public static Ability selected(ItemStack stack) {
+		List<Ability> list = of(stack.getItem());
+		return list.isEmpty() ? null : list.get(selectedIndex(stack));
+	}
+
+	public static boolean isLeftClick(ItemStack stack) {
+		return stack.is(Items.DIAMOND_SWORD);
+	}
+
 	public static void register() {
-		// Clic gauche avec l'épée infusée : Tranche de la Volonté, sans recharge.
 		PayloadTypeRegistry.playC2S().register(SlashPayload.ID, SlashPayload.CODEC);
+		PayloadTypeRegistry.playC2S().register(SwitchAbilityPayload.ID, SwitchAbilityPayload.CODEC);
+
+		// Clic gauche avec l'épée infusée.
 		ServerPlayNetworking.registerGlobalReceiver(SlashPayload.ID, (payload, context) -> {
 			ServerPlayer player = context.player();
 			ItemStack stack = player.getMainHandItem();
-			Ability ability = ABILITIES.get(stack.getItem());
-			if (ability == null || !ability.leftClick() || !ModComponents.isInfused(stack) || player.isSpectator()
-					|| !(player.level() instanceof ServerLevel server)) {
-				return;
+			if (isLeftClick(stack)) {
+				tryActivate(player, stack, InteractionHand.MAIN_HAND);
 			}
-			ability.factory().start(server, player);
-			stack.hurtAndBreak(ability.durabilityCost(), player, EquipmentSlot.MAINHAND);
 		});
 
+		// Touche K : capacité suivante.
+		ServerPlayNetworking.registerGlobalReceiver(SwitchAbilityPayload.ID, (payload, context) -> {
+			ServerPlayer player = context.player();
+			ItemStack stack = player.getMainHandItem();
+			List<Ability> list = of(stack.getItem());
+			if (list.isEmpty() || !ModComponents.isInfused(stack)) {
+				return;
+			}
+			int next = (selectedIndex(stack) + 1) % list.size();
+			stack.set(ModComponents.SELECTED_ABILITY, next);
+			player.displayClientMessage(Component.translatable("diamondaltar.ability.switched",
+					Component.translatable("diamondaltar.ability." + list.get(next).key() + ".name").withStyle(ChatFormatting.GOLD),
+					next + 1, list.size()).withStyle(ChatFormatting.AQUA), true);
+			player.level().playSound(null, player.blockPosition(), SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 1.0f, 1.2f + next * 0.15f);
+		});
+
+		// Clic droit avec les autres objets infusés.
 		UseItemCallback.EVENT.register((player, level, hand) -> {
 			ItemStack stack = player.getItemInHand(hand);
-			Ability ability = ABILITIES.get(stack.getItem());
-			if (ability == null || ability.leftClick() || !ModComponents.isInfused(stack) || player.isSpectator()) {
+			if (of(stack.getItem()).isEmpty() || isLeftClick(stack) || !ModComponents.isInfused(stack) || player.isSpectator()) {
 				return InteractionResult.PASS;
 			}
-			if (player.getCooldowns().isOnCooldown(stack)) {
-				return InteractionResult.FAIL;
-			}
-			if (level instanceof ServerLevel server && player instanceof ServerPlayer serverPlayer) {
-				ability.factory().start(server, serverPlayer);
-				player.getCooldowns().addCooldown(stack, ability.cooldown());
-				stack.hurtAndBreak(ability.durabilityCost(), player,
-						hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
-				player.swing(hand, true);
+			if (player instanceof ServerPlayer serverPlayer) {
+				tryActivate(serverPlayer, stack, hand);
 			}
 			return InteractionResult.SUCCESS;
 		});
+	}
+
+	private static void tryActivate(ServerPlayer player, ItemStack stack, InteractionHand hand) {
+		Ability ability = selected(stack);
+		if (ability == null || !ModComponents.isInfused(stack) || player.isSpectator()
+				|| !(player.level() instanceof ServerLevel level)) {
+			return;
+		}
+		long now = level.getGameTime();
+		Map<String, Long> mine = COOLDOWNS.computeIfAbsent(player.getUUID(), u -> new HashMap<>());
+		long readyAt = mine.getOrDefault(ability.key(), 0L);
+		if (now < readyAt) {
+			player.displayClientMessage(Component.translatable("diamondaltar.ability.cooldown",
+					String.format("%.1f", (readyAt - now) / 20.0)).withStyle(ChatFormatting.RED), true);
+			return;
+		}
+		mine.put(ability.key(), now + ability.cooldown());
+		EffectManager.start(ability.factory().apply(level, player));
+		stack.hurtAndBreak(ability.durabilityCost(), player,
+				hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
+		player.swing(hand, true);
 	}
 }
