@@ -38,7 +38,7 @@ vite, des arcs électriques partent des piliers, puis un éclair le frappe.
 
 ## Compiler
 
-Il faut Java 21 :
+Il faut Java 25 pour compiler (le mod tourne avec Java 21+) :
 
 ```
 ./gradlew build
