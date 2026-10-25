@@ -58,6 +58,7 @@ public class CelestialScytheEffect extends TimedEffect {
 			Cosmic.at(level, k < 3 ? Cosmic.MOON : Cosmic.MOON_TO_NEBULA, p);
 		}
 		Cosmic.star(level, at.add(tangent.scale(-0.5)));
+		Glow.ribbon(level, at, tangent, out, 3.0f, 0.6f, net.minecraft.world.level.block.Blocks.PURPLE_STAINED_GLASS, 0xC080FF, 1, 1, 6);
 		Cosmic.nebula(level, at, 0.3, 2);
 		for (LivingEntity target : FX.livingAround(level, player, at, 2.2)) {
 			Integer last = lastHit.get(target.getUUID());

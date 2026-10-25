@@ -59,6 +59,10 @@ public class HoeReapEffect extends TimedEffect {
 		scythe.setPos(c.add(0, 1.0, 0));
 		Visuals.transform(scythe, out.scale(RADIUS * 0.45).toVector3f(), Visuals.pointing(out, (float) (Math.PI / 2)), (float) (RADIUS * 0.8), 1);
 
+		if (age % 2 == 0) {
+			Vec3 tg = new Vec3(-Math.sin(sweep), 0, Math.cos(sweep));
+			Glow.ribbon(level, c.add(out.scale(RADIUS * 0.75)).add(0, 1, 0), tg, out, 3.5f, 0.6f, net.minecraft.world.level.block.Blocks.PURPLE_STAINED_GLASS, 0x80FFD0, 1, 1, 6);
+		}
 		// La lame de la faux : un rayon de flammes d'âmes qui balaie un tour complet.
 		double angle = startAngle + Math.PI * 2 * age / (DURATION - 1);
 		for (double r = 0.8; r <= RADIUS; r += 0.35) {

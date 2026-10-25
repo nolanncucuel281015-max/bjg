@@ -58,6 +58,9 @@ public class StellarChargeEffect extends TimedEffect {
 			level.sendParticles(k < 5 ? Cosmic.MOON : Cosmic.NEBULA, b.x, b.y, b.z, 2, s, s, s, 0);
 		}
 		Cosmic.starfield(level, p, 1.5, 4);
+		if (age % 2 == 0) {
+			Glow.beam(level, p.subtract(dir.scale(4)), p.add(dir.scale(2)), 0.3f, Glow.Tint.ICE, 1);
+		}
 		for (LivingEntity target : FX.livingAround(level, player, p.add(dir.scale(1.5)), 2.5)) {
 			if (hit.add(target.getUUID())) {
 				FX.hit(level, player, target, 28.0f);
@@ -71,6 +74,7 @@ public class StellarChargeEffect extends TimedEffect {
 			player.hurtMarked = true;
 			FX.ring(level, Cosmic.MOON, p, 3, 40);
 			FX.ring(level, Cosmic.NEBULA, p, 4.5, 50);
+			Glow.rays(level, p, 10, 8, Glow.Tint.ICE);
 			for (LivingEntity target : FX.livingAround(level, player, p, 4.5)) {
 				FX.hit(level, player, target, 10.0f);
 			}

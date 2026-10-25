@@ -88,5 +88,6 @@ public class LunarCraterEffect extends TimedEffect {
 		level.playSound(null, player.blockPosition(), SoundEvents.MACE_SMASH_GROUND_HEAVY, SoundSource.PLAYERS, 2.0f, 0.4f);
 		level.playSound(null, player.blockPosition(), SoundEvents.DRAGON_FIREBALL_EXPLODE, SoundSource.PLAYERS, 1.5f, 0.6f);
 		FX.shake(level, c, 26, 1.6f, 12);
+		Glow.rays(level, c.add(0, 0.4, 0), 14, (float) RADIUS + 2, Glow.Tint.ICE);
 	}
 }

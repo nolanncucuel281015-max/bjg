@@ -64,6 +64,9 @@ public class ConstellationEffect extends TimedEffect {
 				if (age % 2 == 0) {
 					Cosmic.line(level, Cosmic.STARLIGHT, top, next, 0.5);
 				}
+				if (age == 4) {
+					Glow.beam(level, top, next, 0.08f, Glow.Tint.ICE, HOLD - 2);
+				}
 			}
 			if (age % 5 == 0) {
 				level.playSound(null, player.blockPosition(), SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 1.5f, 0.6f + age * 0.04f);
@@ -83,6 +86,7 @@ public class ConstellationEffect extends TimedEffect {
 				level.sendParticles(ParticleTypes.EXPLOSION, t.x, t.y + 0.5, t.z, 1, 0, 0, 0, 0);
 				level.sendParticles(ParticleTypes.FIREWORK, t.x, t.y + 0.5, t.z, 30, 0.3, 0.3, 0.3, 0.3);
 				FX.ring(level, Cosmic.MOON, t.add(0, 0.2, 0), 2.0, 24);
+				Glow.pillar(level, t, 8, 0.4f, Glow.Tint.ICE);
 				for (LivingEntity target : FX.livingAround(level, player, t, 2.8)) {
 					FX.hit(level, player, target, 28.0f);
 					FX.push(target, 0, 0.6, 0);

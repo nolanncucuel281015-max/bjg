@@ -51,6 +51,8 @@ public class PulsarEffect extends TimedEffect {
 			level.playSound(null, player.blockPosition(), SoundEvents.BEACON_POWER_SELECT, SoundSource.PLAYERS, 2.0f, 1.8f);
 			level.playSound(null, player.blockPosition(), SoundEvents.WARDEN_HEARTBEAT, SoundSource.PLAYERS, 2.0f, 1.0f);
 			FX.shake(level, c, 16, 0.5f, 4);
+			Glow.pillar(level, c, 16, 0.5f, Glow.Tint.ICE);
+			Glow.rays(level, c.add(0, -0.6, 0), 12, (float) RADIUS, Glow.Tint.ICE);
 		}
 		if (phase < 6) {
 			double r = (phase + 1) * RADIUS / 6;

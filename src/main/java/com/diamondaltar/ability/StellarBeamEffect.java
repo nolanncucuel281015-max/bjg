@@ -57,6 +57,9 @@ public class StellarBeamEffect extends TimedEffect {
 			Cosmic.at(level, Cosmic.NEBULA, p.add(a.scale(Math.cos(ang) * 0.35)).add(b.scale(Math.sin(ang) * 0.35)));
 		}
 		Vec3 tip = from.add(dir.scale(reach));
+		if (age % 3 == 0) {
+			Glow.beam(level, from, from.add(dir.scale(reach)), 0.22f, Glow.Tint.NEBULA, 2);
+		}
 		level.sendParticles(ParticleTypes.END_ROD, tip.x, tip.y, tip.z, 4, 0.2, 0.2, 0.2, 0.08);
 		Cosmic.nebula(level, tip, 0.4, 4);
 

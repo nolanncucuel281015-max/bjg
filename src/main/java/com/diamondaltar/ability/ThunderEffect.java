@@ -44,6 +44,7 @@ public class ThunderEffect extends TimedEffect {
 				bolt.setPos(t.getX(), t.getY(), t.getZ());
 				bolt.setVisualOnly(true);
 				level.addFreshEntity(bolt);
+				Glow.pillar(level, t.position(), 24, 0.55f, Glow.Tint.ICE);
 				FX.hit(level, player, t, DAMAGE);
 				t.igniteForSeconds(2);
 				level.sendParticles(ParticleTypes.ELECTRIC_SPARK, t.getX(), t.getY(0.5), t.getZ(), 30, 0.4, 0.8, 0.4, 0.4);

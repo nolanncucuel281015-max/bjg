@@ -66,6 +66,8 @@ public class PrismNovaEffect extends TimedEffect {
 			level.playSound(null, player.blockPosition(), SoundEvents.TOTEM_USE, SoundSource.PLAYERS, 1.5f, 1.4f);
 			level.playSound(null, player.blockPosition(), SoundEvents.WARDEN_SONIC_BOOM, SoundSource.PLAYERS, 2.0f, 1.5f);
 			FX.shake(level, c, 24, 1.2f, 10);
+			Glow.rays(level, c.add(0, 3.5, 0), 16, 12, Glow.Tint.PINK);
+			Glow.rays(level, c.add(0, 1, 0), 12, 10, Glow.Tint.ICE);
 		}
 		// Onde arc-en-ciel qui s'étend.
 		double r = (age - CHARGE + 1) * RADIUS / 8.0;

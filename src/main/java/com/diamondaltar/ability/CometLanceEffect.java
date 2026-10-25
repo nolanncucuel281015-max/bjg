@@ -46,6 +46,7 @@ public class CometLanceEffect extends TimedEffect {
 		}
 		level.sendParticles(ParticleTypes.SOUL_FIRE_FLAME, pos.x, pos.y, pos.z, 3, 0.1, 0.1, 0.1, 0.02);
 		Cosmic.star(level, pos.add((level.getRandom().nextDouble() - 0.5) * 0.8, (level.getRandom().nextDouble() - 0.5) * 0.8, (level.getRandom().nextDouble() - 0.5) * 0.8));
+		Glow.beam(level, pos.subtract(dir.scale(3)), next, 0.25f, Glow.Tint.ICE, 1);
 		lance.setPos(next);
 		Visuals.transform(lance, new org.joml.Vector3f(), Visuals.pointing(dir, age * 0.5f), 2.5f, 1);
 
@@ -64,6 +65,7 @@ public class CometLanceEffect extends TimedEffect {
 		level.sendParticles(ParticleTypes.FIREWORK, p.x, p.y, p.z, 60, 0.3, 0.3, 0.3, 0.4);
 		Cosmic.sphere(level, Cosmic.MOON_TO_NEBULA, p, 3.5, 140);
 		Cosmic.nebula(level, p, 1.5, 30);
+		Glow.rays(level, p, 14, 9, Glow.Tint.ICE);
 		for (LivingEntity target : FX.livingAround(level, player, p, 4.0)) {
 			FX.hit(level, player, target, 34.0f);
 			Vec3 out = target.position().subtract(p).normalize().scale(1.5);

@@ -41,6 +41,7 @@ public class ShovelQuakeEffect extends TimedEffect {
 		this.center = player.position();
 		level.playSound(null, player.blockPosition(), SoundEvents.MACE_SMASH_GROUND_HEAVY, SoundSource.PLAYERS, 1.5f, 0.7f);
 		FX.shake(level, center, 20, 1.0f, 10);
+		Glow.rays(level, center.add(0, 0.3, 0), 12, (float) RANGE, Glow.Tint.GOLD);
 	}
 
 	@Override

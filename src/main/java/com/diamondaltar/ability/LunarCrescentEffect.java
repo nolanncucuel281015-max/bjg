@@ -54,6 +54,9 @@ public class LunarCrescentEffect extends TimedEffect {
 			Vec3 c = center.add(dir.scale(layer * 0.25));
 			drawVertical(c, radius);
 		}
+		if (age % 2 == 0) {
+			Glow.crescent(level, center, up, dir, side, radius, Math.toRadians(70), Glow.Tint.NEBULA);
+		}
 		Cosmic.starfield(level, pos.subtract(dir.scale(2)), 1.8, 6);
 		for (LivingEntity target : FX.livingAround(level, player, pos, radius)) {
 			if (hit.add(target.getUUID())) {

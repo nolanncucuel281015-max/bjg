@@ -61,6 +61,9 @@ public class AxeCycloneEffect extends TimedEffect {
 					c.x + Math.cos(a) * RADIUS * 0.7, c.y + 1.0, c.z + Math.sin(a) * RADIUS * 0.7, 1, 0, 0, 0, 0);
 		}
 		level.sendParticles(ParticleTypes.CLOUD, c.x, c.y + 0.1, c.z, 3, 1.5, 0.05, 1.5, 0.05);
+		if (age % 3 == 0) {
+			Glow.crescent(level, c.add(0, 1.0, 0), new Vec3(Math.cos(spin), 0, Math.sin(spin)), new Vec3(-Math.sin(spin), 0, Math.cos(spin)), null, RADIUS * 0.8, Math.toRadians(50), Glow.Tint.ICE);
+		}
 
 		if (age % 5 == 0) {
 			level.playSound(null, player.blockPosition(), SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.PLAYERS,

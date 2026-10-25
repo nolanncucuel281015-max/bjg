@@ -77,6 +77,7 @@ final class FX {
 			level.sendParticles(ParticleTypes.CRIT, target.getX(), y, target.getZ(), 8, 0.3, 0.3, 0.3, 0.3);
 			level.sendParticles(Cosmic.MOON_TO_NEBULA, target.getX(), y, target.getZ(), 6, 0.35, 0.4, 0.35, 0);
 			level.sendParticles(ParticleTypes.END_ROD, target.getX(), y, target.getZ(), 3, 0.2, 0.2, 0.2, 0.08);
+			Glow.hitFlash(level, player, target);
 		}
 	}
 

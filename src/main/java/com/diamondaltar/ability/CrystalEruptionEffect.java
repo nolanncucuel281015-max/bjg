@@ -71,6 +71,7 @@ public class CrystalEruptionEffect extends TimedEffect {
 			}
 		}
 		level.sendParticles(ParticleTypes.END_ROD, p.x, p.y + 3.1, p.z, 2, 0.05, 0.1, 0.05, 0.05);
+		Glow.pillar(level, p, 4.5f, 0.25f, Glow.Tint.NEBULA);
 		level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.AMETHYST_BLOCK.defaultBlockState()),
 				p.x, p.y + 0.2, p.z, 12, 0.4, 0.2, 0.4, 0.2);
 		for (LivingEntity target : FX.livingAround(level, player, p.add(0, 1, 0), 1.8)) {

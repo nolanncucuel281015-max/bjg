@@ -46,6 +46,9 @@ public class DiamondDashEffect extends TimedEffect {
 		level.sendParticles(CYAN, p.x, p.y, p.z, 10, 0.4, 0.6, 0.4, 0);
 		level.sendParticles(ParticleTypes.END_ROD, p.x, p.y, p.z, 4, 0.3, 0.5, 0.3, 0.05);
 		level.sendParticles(ParticleTypes.CLOUD, p.x, p.y - 0.5, p.z, 2, 0.2, 0.1, 0.2, 0.02);
+		if (age % 2 == 0) {
+			Glow.beam(level, p.subtract(dir.scale(4)), p, 0.3f, Glow.Tint.ICE, 1);
+		}
 		for (LivingEntity target : FX.livingAround(level, player, p, 2.2)) {
 			if (hit.add(target.getUUID())) {
 				FX.hit(level, player, target, 22.0f);

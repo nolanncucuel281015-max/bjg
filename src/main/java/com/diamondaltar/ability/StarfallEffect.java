@@ -79,6 +79,7 @@ public class StarfallEffect extends TimedEffect {
 			Star s = it.next();
 			Vec3 next = s.pos.add(s.vel);
 			Cosmic.line(level, Cosmic.MOON_TO_NEBULA, s.pos, next, 0.4);
+			Glow.beam(level, s.pos, next, 0.15f, Glow.Tint.NEBULA, 1);
 			level.sendParticles(ParticleTypes.END_ROD, next.x, next.y, next.z, 2, 0.1, 0.1, 0.1, 0.02);
 			s.pos = next;
 			s.display.setPos(next);
@@ -103,5 +104,6 @@ public class StarfallEffect extends TimedEffect {
 		}
 		level.playSound(null, BlockPos.containing(p), SoundEvents.FIREWORK_ROCKET_LARGE_BLAST, SoundSource.PLAYERS, 1.5f, 0.6f);
 		FX.shake(level, p, 14, 0.4f, 5);
+		Glow.pillar(level, p, 6, 0.35f, Glow.Tint.NEBULA);
 	}
 }

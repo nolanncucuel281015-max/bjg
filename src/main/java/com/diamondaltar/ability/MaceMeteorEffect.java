@@ -117,6 +117,8 @@ public class MaceMeteorEffect extends TimedEffect {
 		level.playSound(null, player.blockPosition(), SoundEvents.MACE_SMASH_GROUND_HEAVY, SoundSource.PLAYERS, 2.0f, 0.5f);
 		level.playSound(null, player.blockPosition(), SoundEvents.DRAGON_FIREBALL_EXPLODE, SoundSource.PLAYERS, 1.5f, 0.7f);
 		FX.shake(level, c, 32, 2.0f, 16);
+		Glow.rays(level, c.add(0, 0.5, 0), 14, 10, Glow.Tint.FIRE);
+		Glow.pillar(level, c, 20, 0.7f, Glow.Tint.FIRE);
 
 		for (LivingEntity target : FX.livingAround(level, player, c, IMPACT_RADIUS)) {
 			double dist = Math.sqrt(target.distanceToSqr(c));

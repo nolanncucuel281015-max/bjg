@@ -54,6 +54,7 @@ public class ShadowStepEffect extends TimedEffect {
 				level.sendParticles(ParticleTypes.SWEEP_ATTACK, target.getX(), target.getY(0.5), target.getZ(), 2, 0.2, 0.2, 0.2, 0);
 			}
 		}
+		Glow.beam(level, start.add(0, 1, 0), end.add(0, 1, 0), 0.35f, Glow.Tint.NEBULA, 4);
 		player.teleportTo(end.x, end.y, end.z);
 		player.fallDistance = 0;
 		level.playSound(null, BlockPos.containing(start), SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1.0f, 0.6f);

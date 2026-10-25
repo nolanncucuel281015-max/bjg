@@ -81,6 +81,7 @@ public class ZodiacBladesEffect extends TimedEffect {
 			}
 			Vec3 next = pos[i].add(vel[i]);
 			Cosmic.line(level, Cosmic.MOON_TO_NEBULA, pos[i], next, 0.4);
+			Glow.beam(level, pos[i], next, 0.12f, Glow.Tint.ICE, 1);
 			pos[i] = next;
 			blades[i].setPos(next);
 			Visuals.transform(blades[i], new org.joml.Vector3f(), Visuals.pointing(vel[i], 0f), 1.3f, 1);

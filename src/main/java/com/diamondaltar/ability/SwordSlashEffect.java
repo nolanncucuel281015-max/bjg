@@ -87,6 +87,9 @@ public class SwordSlashEffect extends TimedEffect {
 		Vec3 up = new Vec3(0, 1, 0);
 		Vec3 tiltedRight = right.scale(Math.cos(TILT)).add(up.scale(Math.sin(TILT)));
 		Cosmic.crescent(level, origin, tiltedRight, forward, distance, HALF_ANGLE, Math.max(0.6, distance * 0.28));
+		if (age == 1 || age == 4) {
+			Glow.crescent(level, origin, tiltedRight, forward, null, distance, HALF_ANGLE, Glow.Tint.ICE);
+		}
 		if (age % 2 == 0) {
 			Cosmic.starfield(level, origin.add(forward.scale(distance * 0.8)), distance * 0.5, 10);
 		}

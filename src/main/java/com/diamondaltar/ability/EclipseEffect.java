@@ -81,6 +81,7 @@ public class EclipseEffect extends TimedEffect {
 			}
 			Vec3 to = target.position().add(0, target.getBbHeight() * 0.5, 0);
 			Cosmic.line(level, Cosmic.MOON, sky, to, 0.3);
+			Glow.beam(level, sky, to, 0.35f, Glow.Tint.ICE, 4);
 			Cosmic.line(level, ParticleTypes.END_ROD, sky, to, 1.0);
 			level.sendParticles(ParticleTypes.END_ROD, to.x, to.y, to.z, 14, 0.2, 0.2, 0.2, 0.2);
 			FX.hit(level, player, target, 34.0f);

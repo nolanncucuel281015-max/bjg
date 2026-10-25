@@ -64,6 +64,7 @@ public class BoomerangAxeEffect extends TimedEffect {
 			pos = pos.add(dir.scale(SPEED));
 		}
 
+		Glow.ribbon(level, pos, returning ? pos.subtract(home) : dir, new Vec3(0, 1, 0), 2.2f, 0.35f, net.minecraft.world.level.block.Blocks.LIGHT_BLUE_STAINED_GLASS, 0xBFF6FF, 1, 1, 5);
 		axe.setPos(pos);
 		Visuals.transform(axe, new Vector3f(), Visuals.flatSpin(-age * 1.1f), 2.2f, 1);
 
