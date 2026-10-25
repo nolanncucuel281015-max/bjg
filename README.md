@@ -4,6 +4,12 @@ Un **Autel d'Infusion** (blanc, 4 piliers à bobines dorées) qui transforme ton
 en diamant en armes légendaires, avec une animation : l'objet flotte, tourne de plus en plus
 vite, des arcs électriques partent des piliers, puis un éclair le frappe.
 
+## Textures des objets infusés
+
+Chaque objet infusé a sa propre texture animée (reflet de diamant qui passe + gemme violette qui pulse) :
+
+![Textures](docs/textures.png)
+
 ## Craft de l'autel
 
 ```

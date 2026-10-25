@@ -46,6 +46,9 @@ public final class ModComponents {
 		stack.set(INFUSED, true);
 		stack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
 		stack.set(DataComponents.RARITY, Rarity.EPIC);
+		// Texture animée spéciale : assets/diamondaltar/items/infused_<objet>.json
+		String path = BuiltInRegistries.ITEM.getKey(stack.getItem()).getPath();
+		stack.set(DataComponents.ITEM_MODEL, DiamondAltar.id("infused_" + path));
 		stack.set(DataComponents.ITEM_NAME, Component.translatable("diamondaltar.infused_name", baseName)
 				.withStyle(ChatFormatting.AQUA));
 	}
