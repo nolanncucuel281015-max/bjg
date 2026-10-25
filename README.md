@@ -55,6 +55,13 @@ gemmes violettes) :
 
 ![Armure](docs/armor.png)
 
+## Version plugin (serveur Paper)
+
+Un 2ᵉ téléchargement, **`diamond-altar-plugin`**, contient un plugin pour serveur **Paper 1.21.11**
+et son **pack de ressources** : les joueurs n'ont pas besoin du mod. Voir `plugin/LISEZMOI.txt`.
+Commandes : clic gauche (épée/lance), clic droit (outils), **F** pour changer de capacité,
+**accroupi + clic droit** pour l'armure, **accroupi + F** pour changer la capacité d'armure.
+
 ## Compiler
 
 Il faut Java 25 pour compiler (le mod tourne avec Java 21+) :

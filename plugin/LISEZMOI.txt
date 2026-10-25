@@ -1,0 +1,31 @@
+DIAMOND ALTAR — PLUGIN SERVEUR (Paper 1.21.11)
+==============================================
+
+Ce téléchargement contient :
+  - diamond-altar-plugin-1.0.0.jar  -> le plugin
+  - DiamondAltar-ResourcePack.zip   -> le pack de ressources (textures, modèles, traductions)
+
+INSTALLATION SUR LE SERVEUR
+1. Le serveur doit être PAPER 1.21.11 (pas Spigot).
+2. Mets diamond-altar-plugin-1.0.0.jar dans le dossier plugins/ du serveur, puis redémarre.
+3. Pack de ressources (obligatoire pour les textures) :
+   - soit chaque joueur le met dans .minecraft/resourcepacks et l'active,
+   - soit tu l'héberges en ligne et tu mets le lien dans server.properties :
+       resource-pack=<lien direct vers le .zip>
+       require-resource-pack=true
+
+LES JOUEURS N'ONT PAS BESOIN DU MOD !
+
+COMMANDES EN JEU (le plugin ne peut pas ajouter de touches) :
+  - Épée / lance infusée ......... clic gauche
+  - Autres outils infusés ........ clic droit
+  - Changer de capacité .......... F (touche « échanger les mains »)
+  - Capacité d'armure ............ accroupi + clic droit (plastron infusé porté)
+  - Changer la capacité d'armure . accroupi + F
+  - Autel : clic droit pour poser/reprendre un objet, accroupi + clic gauche pour le ramasser.
+  - /diamondaltar (op) ........... donne un Autel d'Infusion
+
+Craft de l'autel : étoile du Nether au milieu, 3 blocs de netherite en dessous.
+
+Différences avec le mod : pas de tremblement d'écran, halos lumineux plus simples ;
+le flash d'écran passe par un « titre » du pack de ressources.

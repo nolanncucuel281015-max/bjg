@@ -1,0 +1,6 @@
+{
+	"providers": [
+		{"type": "bitmap", "file": "diamondaltar:font/flash.png", "ascent": 140, "height": 320, "chars": [""]},
+		{"type": "bitmap", "file": "diamondaltar:font/flash_soft.png", "ascent": 140, "height": 320, "chars": [""]}
+	]
+}

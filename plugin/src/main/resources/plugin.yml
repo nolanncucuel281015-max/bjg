@@ -1,0 +1,14 @@
+name: DiamondAltar
+version: '${version}'
+main: com.diamondaltar.plugin.DiamondAltarPlugin
+api-version: '1.21.11'
+description: Autel d'infusion, objets en diamant célestes et plus de 50 capacités animées.
+authors: [bjg]
+commands:
+  diamondaltar:
+    description: Donne un Autel d'Infusion (op).
+    usage: /diamondaltar
+    permission: diamondaltar.give
+permissions:
+  diamondaltar.give:
+    default: op

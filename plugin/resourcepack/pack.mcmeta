@@ -1,0 +1,9 @@
+{
+	"pack": {
+		"description": "Diamond Altar — textures célestes",
+		"pack_format": 75,
+		"supported_formats": [64, 99],
+		"min_format": 64,
+		"max_format": 99
+	}
+}
