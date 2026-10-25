@@ -1,6 +1,10 @@
 package com.diamondaltar.ability;
 
 import com.diamondaltar.effect.TimedEffect;
+import com.diamondaltar.effect.Visuals;
+import net.minecraft.world.entity.Display;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
@@ -27,6 +31,9 @@ public class ShovelQuakeEffect extends TimedEffect {
 	private final ServerPlayer player;
 	private final Vec3 center;
 	private final Set<UUID> alreadyHit = new HashSet<>();
+	private final java.util.List<Display.BlockDisplay> wave = new java.util.ArrayList<>();
+	private final java.util.List<Integer> born = new java.util.ArrayList<>();
+	private static final Quaternionf NONE = new Quaternionf();
 
 	public ShovelQuakeEffect(ServerLevel level, ServerPlayer player) {
 		super(level);
@@ -37,6 +44,20 @@ public class ShovelQuakeEffect extends TimedEffect {
 
 	@Override
 	protected boolean tick() {
+		// Chaque bloc de la vague monte, puis redescend et disparaît.
+		for (int i = 0; i < wave.size(); i++) {
+			int life = age - born.get(i);
+			if (life == 1) {
+				Visuals.transform(wave.get(i), new Vector3f(-0.5f, -0.2f, -0.5f), NONE, 1f, 2);
+			} else if (life == 4) {
+				Visuals.transform(wave.get(i), new Vector3f(-0.5f, -1.05f, -0.5f), NONE, 1f, 3);
+			} else if (life == 8) {
+				wave.get(i).discard();
+			}
+		}
+		if (age >= DURATION) {
+			return age >= DURATION + 9;
+		}
 		double radius = 1.0 + (RANGE - 1.0) * (age / (double) (DURATION - 1));
 		int points = (int) (radius * 7);
 		for (int i = 0; i < points; i++) {
@@ -44,6 +65,12 @@ public class ShovelQuakeEffect extends TimedEffect {
 			double x = center.x + Math.cos(a) * radius;
 			double z = center.z + Math.sin(a) * radius;
 			BlockState state = level.getBlockState(BlockPos.containing(x, center.y - 0.5, z));
+			if (!state.isAir() && i % 2 == 0) {
+				Display.BlockDisplay b = track(Visuals.block(level, new Vec3(Math.floor(x) + 0.5, Math.floor(center.y - 0.5) + 1, Math.floor(z) + 0.5), state));
+				Visuals.transform(b, new Vector3f(-0.5f, -1.05f, -0.5f), NONE, 1f, 0);
+				wave.add(b);
+				born.add(age);
+			}
 			if (!state.isAir()) {
 				level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, state),
 						x, center.y + 0.1, z, 4, 0.2, 0.4, 0.2, 0.15);
@@ -62,6 +89,6 @@ public class ShovelQuakeEffect extends TimedEffect {
 		if (age % 3 == 0) {
 			level.playSound(null, BlockPos.containing(center), SoundEvents.ROOTED_DIRT_BREAK, SoundSource.PLAYERS, 1.5f, 0.5f);
 		}
-		return age >= DURATION - 1;
+		return false;
 	}
 }

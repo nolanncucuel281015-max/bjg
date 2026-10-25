@@ -1,6 +1,10 @@
 package com.diamondaltar.ability;
 
 import com.diamondaltar.effect.TimedEffect;
+import com.diamondaltar.effect.Visuals;
+import net.minecraft.world.entity.Display;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -20,10 +24,15 @@ public class AxeCycloneEffect extends TimedEffect {
 	private static final DustParticleOptions STEEL = new DustParticleOptions(0xBFE6FF, 1.6f);
 
 	private final ServerPlayer player;
+	private final Display.ItemDisplay[] axes = new Display.ItemDisplay[3];
 
 	public AxeCycloneEffect(ServerLevel level, ServerPlayer player) {
 		super(level);
 		this.player = player;
+		for (int i = 0; i < axes.length; i++) {
+			axes[i] = track(Visuals.item(level, player.position(), player.getMainHandItem()));
+			Visuals.transform(axes[i], new Vector3f(), new Quaternionf(), 0.5f, 0);
+		}
 		level.playSound(null, player.blockPosition(), SoundEvents.EVOKER_CAST_SPELL, SoundSource.PLAYERS, 1.0f, 1.4f);
 	}
 
@@ -34,6 +43,12 @@ public class AxeCycloneEffect extends TimedEffect {
 		}
 		Vec3 c = player.position();
 		double spin = age * 0.7;
+		for (int i = 0; i < axes.length; i++) {
+			double a = spin + i * (Math.PI * 2 / 3);
+			Vec3 out = new Vec3(Math.cos(a), 0, Math.sin(a));
+			axes[i].setPos(c.add(0, 0.6 + i * 0.5, 0));
+			Visuals.transform(axes[i], out.scale(2.4).toVector3f(), Visuals.pointing(out, age * 0.9f), 2.0f, 1);
+		}
 		// 3 lames qui tournent autour du joueur sur des hauteurs différentes.
 		for (int blade = 0; blade < 3; blade++) {
 			double a = spin + blade * (Math.PI * 2 / 3);

@@ -1,6 +1,9 @@
 package com.diamondaltar.ability;
 
 import com.diamondaltar.effect.TimedEffect;
+import com.diamondaltar.effect.Visuals;
+import net.minecraft.world.entity.Display;
+import org.joml.Vector3f;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -29,6 +32,7 @@ public class PhantomBladesEffect extends TimedEffect {
 	private final Vec3[] dir = new Vec3[BLADES];
 	private final boolean[] alive = new boolean[BLADES];
 	private final Set<UUID> hit = new HashSet<>();
+	private final Display.ItemDisplay[] swords = new Display.ItemDisplay[BLADES];
 
 	public PhantomBladesEffect(ServerLevel level, ServerPlayer player) {
 		super(level);
@@ -40,6 +44,8 @@ public class PhantomBladesEffect extends TimedEffect {
 			dir[i] = look.add(right.scale(spread)).normalize();
 			pos[i] = player.getEyePosition().subtract(0, 0.3, 0);
 			alive[i] = true;
+			swords[i] = track(Visuals.item(level, pos[i], player.getMainHandItem()));
+			Visuals.transform(swords[i], new Vector3f(), Visuals.pointing(dir[i], 0f), 1.4f, 0);
 		}
 		level.playSound(null, player.blockPosition(), SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.PLAYERS, 1.5f, 1.6f);
 		level.playSound(null, player.blockPosition(), SoundEvents.ILLUSIONER_CAST_SPELL, SoundSource.PLAYERS, 1.0f, 1.6f);
@@ -53,6 +59,16 @@ public class PhantomBladesEffect extends TimedEffect {
 				continue;
 			}
 			any = true;
+			// Tête chercheuse : la lame se tourne un peu vers l'ennemi le plus proche.
+			Vec3 here = pos[i];
+			LivingEntity prey = FX.livingAround(level, player, here, 6).stream()
+					.filter(e -> !hit.contains(e.getUUID()))
+					.min(java.util.Comparator.comparingDouble(e -> e.distanceToSqr(here)))
+					.orElse(null);
+			if (prey != null) {
+				Vec3 want = prey.position().add(0, prey.getBbHeight() * 0.5, 0).subtract(here).normalize();
+				dir[i] = dir[i].scale(0.7).add(want.scale(0.3)).normalize();
+			}
 			Vec3 from = pos[i];
 			Vec3 to = from.add(dir[i].scale(SPEED));
 			for (int s = 0; s < 4; s++) {
@@ -74,6 +90,11 @@ public class PhantomBladesEffect extends TimedEffect {
 				level.sendParticles(ParticleTypes.CRIT, to.x, to.y, to.z, 10, 0.2, 0.2, 0.2, 0.3);
 			}
 			pos[i] = to;
+			swords[i].setPos(to);
+			Visuals.transform(swords[i], new Vector3f(), Visuals.pointing(dir[i], age * 0.6f), 1.4f, 1);
+			if (!alive[i]) {
+				swords[i].discard();
+			}
 		}
 		return !any || age >= DURATION;
 	}

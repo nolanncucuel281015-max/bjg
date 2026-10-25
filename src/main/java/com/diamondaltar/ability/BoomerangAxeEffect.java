@@ -1,6 +1,10 @@
 package com.diamondaltar.ability;
 
 import com.diamondaltar.effect.TimedEffect;
+import com.diamondaltar.effect.Visuals;
+import net.minecraft.world.entity.Display;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -27,12 +31,15 @@ public class BoomerangAxeEffect extends TimedEffect {
 	private Vec3 pos;
 	private boolean returning;
 	private final Set<UUID> hit = new HashSet<>();
+	private final Display.ItemDisplay axe;
 
 	public BoomerangAxeEffect(ServerLevel level, ServerPlayer player) {
 		super(level);
 		this.player = player;
 		this.dir = player.getLookAngle();
 		this.pos = player.getEyePosition().subtract(0, 0.2, 0);
+		this.axe = track(Visuals.item(level, pos, player.getMainHandItem()));
+		Visuals.transform(axe, new Vector3f(), Visuals.flatSpin(0), 2.2f, 0);
 		level.playSound(null, player.blockPosition(), SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.PLAYERS, 1.2f, 1.5f);
 	}
 
@@ -56,6 +63,9 @@ public class BoomerangAxeEffect extends TimedEffect {
 		} else {
 			pos = pos.add(dir.scale(SPEED));
 		}
+
+		axe.setPos(pos);
+		Visuals.transform(axe, new Vector3f(), Visuals.flatSpin(-age * 1.1f), 2.2f, 1);
 
 		// Lame qui tourne : deux arcs opposés en rotation rapide.
 		double spin = age * 1.3;

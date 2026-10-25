@@ -12,6 +12,7 @@
 		"main": ["com.diamondaltar.DiamondAltar"],
 		"client": ["com.diamondaltar.client.DiamondAltarClient"]
 	},
+	"accessWidener": "diamondaltar.classtweaker",
 	"depends": {
 		"fabricloader": ">=0.18.0",
 		"minecraft": "~1.21.11",

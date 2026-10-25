@@ -1,6 +1,10 @@
 package com.diamondaltar.ability;
 
 import com.diamondaltar.effect.TimedEffect;
+import com.diamondaltar.effect.Visuals;
+import net.minecraft.world.entity.Display;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -31,12 +35,15 @@ public class HoeReapEffect extends TimedEffect {
 	private final ServerPlayer player;
 	private final Set<UUID> alreadyHit = new HashSet<>();
 	private final double startAngle;
+	private final Display.ItemDisplay scythe;
 
 	public HoeReapEffect(ServerLevel level, ServerPlayer player) {
 		super(level);
 		this.player = player;
 		Vec3 f = FX.forward(player);
 		this.startAngle = Math.atan2(f.z, f.x);
+		this.scythe = track(Visuals.item(level, player.position().add(0, 1, 0), player.getMainHandItem()));
+		Visuals.transform(scythe, new Vector3f(), new Quaternionf(), 0.5f, 0);
 		level.playSound(null, player.blockPosition(), SoundEvents.PHANTOM_SWOOP, SoundSource.PLAYERS, 1.5f, 0.6f);
 		level.playSound(null, player.blockPosition(), SoundEvents.VEX_CHARGE, SoundSource.PLAYERS, 1.0f, 0.5f);
 	}
@@ -47,6 +54,11 @@ public class HoeReapEffect extends TimedEffect {
 			return true;
 		}
 		Vec3 c = player.position();
+		double sweep = startAngle + Math.PI * 2 * age / (DURATION - 1);
+		Vec3 out = new Vec3(Math.cos(sweep), 0, Math.sin(sweep));
+		scythe.setPos(c.add(0, 1.0, 0));
+		Visuals.transform(scythe, out.scale(RADIUS * 0.45).toVector3f(), Visuals.pointing(out, (float) (Math.PI / 2)), (float) (RADIUS * 0.8), 1);
+
 		// La lame de la faux : un rayon de flammes d'âmes qui balaie un tour complet.
 		double angle = startAngle + Math.PI * 2 * age / (DURATION - 1);
 		for (double r = 0.8; r <= RADIUS; r += 0.35) {

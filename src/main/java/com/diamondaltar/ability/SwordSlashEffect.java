@@ -1,6 +1,12 @@
 package com.diamondaltar.ability;
 
 import com.diamondaltar.effect.TimedEffect;
+import com.diamondaltar.effect.Visuals;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Display;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -31,6 +37,7 @@ public class SwordSlashEffect extends TimedEffect {
 	private final Vec3 forward;
 	private final Vec3 right;
 	private final Set<UUID> alreadyHit = new HashSet<>();
+	private final Display.ItemDisplay blade;
 
 	public SwordSlashEffect(ServerLevel level, ServerPlayer player) {
 		super(level);
@@ -39,10 +46,28 @@ public class SwordSlashEffect extends TimedEffect {
 		this.forward = FX.forward(player);
 		this.right = FX.right(forward);
 
+		// L'épée spectrale géante qui balaie l'arc (avec la texture de l'épée infusée du joueur).
+		this.blade = track(Visuals.item(level, origin, player.getMainHandItem()));
+		Visuals.transform(blade, bladeOffset(-HALF_ANGLE, 1.5), bladeRotation(-HALF_ANGLE), 1.5f, 0);
+		player.addEffect(new MobEffectInstance(MobEffects.SPEED, 20, 1, false, false));
+
 		level.playSound(null, player.getX(), player.getY(), player.getZ(),
 				SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.PLAYERS, 2.0f, 0.5f);
 		level.playSound(null, player.getX(), player.getY(), player.getZ(),
 				SoundEvents.WARDEN_SONIC_BOOM, SoundSource.PLAYERS, 0.6f, 1.8f);
+	}
+
+	private Vec3 dirAt(double a) {
+		return forward.scale(Math.cos(a)).add(right.scale(Math.sin(a)));
+	}
+
+	private Vector3f bladeOffset(double a, double distance) {
+		Vec3 d = dirAt(a).scale(distance * 0.5);
+		return new Vector3f((float) d.x, (float) (Math.sin(a) * distance * 0.09), (float) d.z);
+	}
+
+	private Quaternionf bladeRotation(double a) {
+		return Visuals.pointing(dirAt(a), 0f);
 	}
 
 	@Override
@@ -50,7 +75,10 @@ public class SwordSlashEffect extends TimedEffect {
 		if (player.isRemoved()) {
 			return true;
 		}
-		double distance = 1.5 + (RANGE - 1.5) * (age / (double) (DURATION - 1));
+		double distance = Math.min(RANGE, 1.5 + (RANGE - 1.5) * (age / (double) (DURATION - 1)));
+
+		double sweep = -HALF_ANGLE + 2 * HALF_ANGLE * Math.min(1.0, (age + 1) / (double) (DURATION - 2));
+		Visuals.transform(blade, bladeOffset(sweep, distance), bladeRotation(sweep), (float) (distance * 0.85), 1);
 
 		// Le croissant : arc horizontal légèrement incliné (comme un vrai coup d'épée en diagonale).
 		double arcLength = 2 * HALF_ANGLE * distance;
@@ -89,6 +117,6 @@ public class SwordSlashEffect extends TimedEffect {
 			level.playSound(null, origin.x, origin.y, origin.z,
 					SoundEvents.PLAYER_ATTACK_STRONG, SoundSource.PLAYERS, 1.5f, 0.6f);
 		}
-		return age >= DURATION - 1;
+		return age >= DURATION + 1;
 	}
 }

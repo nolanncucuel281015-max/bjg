@@ -1,5 +1,6 @@
 package com.diamondaltar.effect;
 
+import com.diamondaltar.DiamondAltar;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 
@@ -24,12 +25,22 @@ public final class EffectManager {
 			PENDING.clear();
 			Iterator<TimedEffect> it = ACTIVE.iterator();
 			while (it.hasNext()) {
-				if (it.next().step()) {
+				TimedEffect effect = it.next();
+				boolean done;
+				try {
+					done = effect.step();
+				} catch (RuntimeException e) {
+					DiamondAltar.LOGGER.error("Erreur dans une capacité", e);
+					done = true;
+				}
+				if (done) {
+					effect.cleanup();
 					it.remove();
 				}
 			}
 		});
-		ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
+		ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
+			ACTIVE.forEach(TimedEffect::cleanup);
 			ACTIVE.clear();
 			PENDING.clear();
 		});

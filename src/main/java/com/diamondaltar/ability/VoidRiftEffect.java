@@ -1,6 +1,11 @@
 package com.diamondaltar.ability;
 
 import com.diamondaltar.effect.TimedEffect;
+import com.diamondaltar.effect.Visuals;
+import net.minecraft.world.entity.Display;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -23,17 +28,39 @@ public class VoidRiftEffect extends TimedEffect {
 
 	private final ServerPlayer player;
 	private final Vec3 center;
+	private final Display.BlockDisplay core;
+	private final Display.BlockDisplay[] shards = new Display.BlockDisplay[6];
 
 	public VoidRiftEffect(ServerLevel level, ServerPlayer player) {
 		super(level);
 		this.player = player;
 		this.center = FX.target(player, 20).add(0, 1.0, 0);
+		this.core = track(Visuals.block(level, center, Blocks.BLACK_CONCRETE.defaultBlockState()));
+		Visuals.transform(core, new Vector3f(), new Quaternionf(), 0.01f, 0);
+		for (int i = 0; i < shards.length; i++) {
+			shards[i] = track(Visuals.block(level, center, (i % 2 == 0 ? Blocks.CRYING_OBSIDIAN : Blocks.AMETHYST_BLOCK).defaultBlockState()));
+			Visuals.transform(shards[i], new Vector3f(), new Quaternionf(), 0.01f, 0);
+		}
 		level.playSound(null, BlockPos.containing(center), SoundEvents.WARDEN_SONIC_CHARGE, SoundSource.PLAYERS, 2.0f, 0.5f);
 		level.playSound(null, BlockPos.containing(center), SoundEvents.END_PORTAL_SPAWN, SoundSource.PLAYERS, 0.8f, 1.5f);
 	}
 
 	@Override
 	protected boolean tick() {
+		// Le noyau grossit en tournant dans tous les sens, les éclats tournent autour.
+		boolean imploding = age >= DURATION - 4;
+		float coreScale = imploding ? 0.05f : Math.min(1.6f, 0.2f + age * 0.08f);
+		Quaternionf spin = new Quaternionf().rotateXYZ(age * 0.21f, age * 0.33f, age * 0.17f);
+		Visuals.transform(core, Visuals.centered(spin, coreScale), spin, coreScale, imploding ? 4 : 1);
+		for (int i = 0; i < shards.length; i++) {
+			double a = age * 0.35 + i * Math.PI * 2 / shards.length;
+			float orbit = imploding ? 0f : 2.6f;
+			float s = imploding ? 0.05f : 0.45f;
+			Quaternionf q = new Quaternionf().rotateXYZ(age * 0.4f + i, age * 0.5f, i);
+			Vector3f off = new Vector3f((float) Math.cos(a) * orbit, (float) Math.sin(a * 2 + i) * 0.6f, (float) Math.sin(a) * orbit);
+			Visuals.transform(shards[i], off.add(Visuals.centered(q, s)), q, s, imploding ? 4 : 1);
+		}
+
 		// Cœur noir + disque d'accrétion qui tourne.
 		level.sendParticles(BLACK, center.x, center.y, center.z, 8, 0.25, 0.25, 0.25, 0);
 		for (int i = 0; i < 3; i++) {

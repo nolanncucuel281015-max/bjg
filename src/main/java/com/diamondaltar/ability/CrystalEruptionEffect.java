@@ -1,6 +1,10 @@
 package com.diamondaltar.ability;
 
 import com.diamondaltar.effect.TimedEffect;
+import com.diamondaltar.effect.Visuals;
+import net.minecraft.world.entity.Display;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.DustParticleOptions;
@@ -28,6 +32,8 @@ public class CrystalEruptionEffect extends TimedEffect {
 	private final Vec3 start;
 	private final Vec3 forward;
 	private final Set<UUID> hit = new HashSet<>();
+	private final java.util.List<Display.BlockDisplay> spikes = new java.util.ArrayList<>();
+	private final java.util.List<Quaternionf> tilts = new java.util.ArrayList<>();
 
 	public CrystalEruptionEffect(ServerLevel level, ServerPlayer player) {
 		super(level);
@@ -36,8 +42,25 @@ public class CrystalEruptionEffect extends TimedEffect {
 		this.forward = FX.forward(player);
 	}
 
+	/** Translation : bloc centré horizontalement, base posée au sol (+ décalage vertical). */
+	private static Vector3f base(Quaternionf q, float s, float dy) {
+		return new Vector3f(-0.5f * s, dy, -0.5f * s).rotate(q);
+	}
+
 	@Override
 	protected boolean tick() {
+		// Les pics restent un instant puis rentrent dans le sol.
+		for (int i = 0; i < spikes.size(); i++) {
+			int life = age - i;
+			if (life == 2) {
+				Visuals.transform(spikes.get(i), base(tilts.get(i), 2.6f, 0f), tilts.get(i), 2.6f, 2);
+			} else if (life == 22) {
+				Visuals.transform(spikes.get(i), base(tilts.get(i), 2.6f, -2.8f), tilts.get(i), 2.6f, 8);
+			}
+		}
+		if (age >= LENGTH) {
+			return age >= LENGTH + 32;
+		}
 		Vec3 p = FX.ground(level, start.add(forward.scale(1.5 + age)).add(0, 2, 0));
 		// Pic de cristal : une pointe qui monte puis s'affine.
 		for (double y = 0; y < 3.0; y += 0.2) {
@@ -57,6 +80,12 @@ public class CrystalEruptionEffect extends TimedEffect {
 			}
 		}
 		level.playSound(null, BlockPos.containing(p), SoundEvents.AMETHYST_CLUSTER_BREAK, SoundSource.PLAYERS, 1.5f, 0.5f + age * 0.05f);
-		return age >= LENGTH - 1;
+		Quaternionf tilt = new Quaternionf().rotateY(level.getRandom().nextFloat() * 6.28f)
+				.rotateX((level.getRandom().nextFloat() - 0.5f) * 0.6f);
+		Display.BlockDisplay spike = track(Visuals.block(level, p, (age % 3 == 0 ? Blocks.LARGE_AMETHYST_BUD : Blocks.AMETHYST_CLUSTER).defaultBlockState()));
+		Visuals.transform(spike, base(tilt, 2.6f, -2.8f), tilt, 2.6f, 0);
+		spikes.add(spike);
+		tilts.add(tilt);
+		return false;
 	}
 }

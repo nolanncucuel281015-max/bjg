@@ -1,6 +1,10 @@
 package com.diamondaltar.ability;
 
 import com.diamondaltar.effect.TimedEffect;
+import com.diamondaltar.effect.Visuals;
+import net.minecraft.world.entity.Display;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -25,18 +29,37 @@ public class CelestialJudgementEffect extends TimedEffect {
 
 	private final ServerPlayer player;
 	private final Vec3 center;
+	private final Display.ItemDisplay giant;
+	private static final float GIANT = 12.0f;
+	private static final double SKY = 40.0;
 
 	public CelestialJudgementEffect(ServerLevel level, ServerPlayer player) {
 		super(level);
 		this.player = player;
 		this.center = FX.ground(level, FX.target(player, 40));
+		this.giant = track(Visuals.item(level, center, player.getMainHandItem()));
+		Visuals.transform(giant, new Vector3f(0, (float) SKY, 0), DOWN, GIANT, 0);
 		level.playSound(null, BlockPos.containing(center), SoundEvents.BEACON_POWER_SELECT, SoundSource.PLAYERS, 2.0f, 0.5f);
 	}
+
+	private boolean sink() {
+		if (age == CHARGE + 15) {
+			Visuals.transform(giant, new Vector3f(0, -GIANT * 0.6f, 0), DOWN, GIANT * 0.6f, 7);
+		}
+		level.sendParticles(ParticleTypes.END_ROD, center.x, center.y + 0.5, center.z, 3, 0.6, 0.2, 0.6, 0.02);
+		return false;
+	}
+
+	/** Pointe vers le bas. */
+	private static final Quaternionf DOWN = Visuals.pointing(new Vec3(0, -1, 0), 0f);
 
 	@Override
 	protected boolean tick() {
 		if (age < CHARGE) {
 			double t = age / (double) CHARGE;
+			// L'épée tombe de plus en plus vite (accélération), pointe vers le bas.
+			double fall = SKY * (1 - t * t) + GIANT * 0.45;
+			Visuals.transform(giant, new Vector3f(0, (float) fall, 0), new Quaternionf(DOWN).rotateY((float) (t * 2)), GIANT, 1);
 			Vec3 c = center.add(0, 0.1, 0);
 			FX.ring(level, GOLD, c, RADIUS, 40);
 			FX.ring(level, ParticleTypes.END_ROD, c, RADIUS * (1 - t), 24);
@@ -58,6 +81,7 @@ public class CelestialJudgementEffect extends TimedEffect {
 			return false;
 		}
 		if (age == CHARGE) {
+			Visuals.transform(giant, new Vector3f(0, GIANT * 0.3f, 0), DOWN, GIANT, 1);
 			for (int i = 0; i < 3; i++) {
 				LightningBolt bolt = new LightningBolt(EntityType.LIGHTNING_BOLT, level);
 				bolt.setPos(center.x + (i - 1) * 1.5, center.y, center.z + (i % 2) * 1.5);
@@ -72,6 +96,9 @@ public class CelestialJudgementEffect extends TimedEffect {
 			level.playSound(null, BlockPos.containing(center), SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.PLAYERS, 3.0f, 0.8f);
 			level.playSound(null, BlockPos.containing(center), SoundEvents.TOTEM_USE, SoundSource.PLAYERS, 1.5f, 1.5f);
 		}
+		if (age > CHARGE + 6) {
+			return age >= CHARGE + 22 || sink();
+		}
 		// Pilier de lumière.
 		for (double y = 0; y < 30; y += 0.6) {
 			double a = y * 0.8 + age;
@@ -79,6 +106,6 @@ public class CelestialJudgementEffect extends TimedEffect {
 			level.sendParticles(GOLD, center.x, center.y + y, center.z, 1, 0.3, 0, 0.3, 0);
 		}
 		FX.ring(level, ParticleTypes.FIREWORK, center.add(0, 0.2, 0), RADIUS * (age - CHARGE + 1) / 6.0, 36);
-		return age >= CHARGE + 6;
+		return false;
 	}
 }
