@@ -107,5 +107,19 @@
 	"diamondaltar.ability.shovel_crater.name": "◯ Cratère Lunaire",
 	"diamondaltar.ability.shovel_crater.desc": "Bondis puis écrase-toi : le sol devient un cratère de lune.",
 	"diamondaltar.ability.hoe_garden.name": "❀ Jardin d'Étoiles",
-	"diamondaltar.ability.hoe_garden.desc": "10 fleurs d'étoile poussent autour de toi puis explosent en lumière."
+	"diamondaltar.ability.hoe_garden.desc": "10 fleurs d'étoile poussent autour de toi puis explosent en lumière.",
+	"diamondaltar.ability.sword_zodiac.name": "♈ Lames du Zodiaque",
+	"diamondaltar.ability.sword_zodiac.desc": "12 épées apparaissent en cercle derrière toi puis transpercent les ennemis une à une.",
+	"diamondaltar.ability.pickaxe_meteorite.name": "☄ Météorite Minière",
+	"diamondaltar.ability.pickaxe_meteorite.desc": "Une météorite s'écrase là où tu vises et creuse un cratère de 7 blocs.",
+	"diamondaltar.ability.axe_titan.name": "⚒ Hache du Titan Stellaire",
+	"diamondaltar.ability.axe_titan.desc": "Une hache colossale de 10 blocs s'abat devant toi et fend le sol.",
+	"diamondaltar.ability.shovel_asteroids.name": "◼ Mur d'Astéroïdes",
+	"diamondaltar.ability.shovel_asteroids.desc": "Un mur d'astéroïdes bloque les projectiles puis est catapulté en avant.",
+	"diamondaltar.ability.hoe_petals.name": "❁ Tempête de Pétales",
+	"diamondaltar.ability.hoe_petals.desc": "Une tornade de pétales de nébuleuse empoisonne les ennemis et te soigne.",
+	"diamondaltar.ability.mace_pulsar.name": "◉ Pulsar",
+	"diamondaltar.ability.mace_pulsar.desc": "Deux jets de lumière et 5 pulsations d'énergie repoussent tout autour de toi.",
+	"diamondaltar.ability.armor_gravity.name": "◍ Bouclier Gravitationnel",
+	"diamondaltar.ability.armor_gravity.desc": "Pendant 8 s, tous les projectiles sont renvoyés à leur tireur."
 }

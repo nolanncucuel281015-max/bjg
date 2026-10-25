@@ -102,5 +102,6 @@ public class StarfallEffect extends TimedEffect {
 			FX.push(target, 0, 0.5, 0);
 		}
 		level.playSound(null, BlockPos.containing(p), SoundEvents.FIREWORK_ROCKET_LARGE_BLAST, SoundSource.PLAYERS, 1.5f, 0.6f);
+		FX.shake(level, p, 14, 0.4f, 5);
 	}
 }

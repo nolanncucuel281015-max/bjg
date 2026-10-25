@@ -8,7 +8,9 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -46,7 +48,8 @@ public final class Abilities {
 					a("sword_void", 10, 5, VoidRiftEffect::new),
 					a("sword_crescent", 10, 2, LunarCrescentEffect::new),
 					a("sword_starfall", 10, 4, StarfallEffect::new),
-					a("sword_eclipse", 10, 5, EclipseEffect::new)),
+					a("sword_eclipse", 10, 5, EclipseEffect::new),
+					a("sword_zodiac", 10, 4, ZodiacBladesEffect::new)),
 			Items.DIAMOND_SPEAR, List.of(
 					a("spear_comet", 10, 3, CometLanceEffect::new),
 					a("spear_charge", 10, 3, StellarChargeEffect::new),
@@ -59,30 +62,35 @@ public final class Abilities {
 					a("pickaxe_ores", 10, 2, OreSightEffect::new),
 					a("pickaxe_eruption", 10, 4, CrystalEruptionEffect::new),
 					a("pickaxe_beam", 10, 6, StellarBeamEffect::new),
-					a("pickaxe_geode", 10, 5, CelestialGeodeEffect::new)),
+					a("pickaxe_geode", 10, 5, CelestialGeodeEffect::new),
+					a("pickaxe_meteorite", 10, 8, MeteoriteEffect::new)),
 			Items.DIAMOND_AXE, List.of(
 					a("axe_cyclone", 10, 6, AxeCycloneEffect::new),
 					a("axe_boomerang", 10, 3, BoomerangAxeEffect::new),
 					a("axe_timber", 10, 6, TimberEffect::new),
 					a("axe_fissure", 10, 4, FissureEffect::new),
-					a("axe_orbit", 10, 5, LunarOrbitEffect::new)),
+					a("axe_orbit", 10, 5, LunarOrbitEffect::new),
+					a("axe_titan", 10, 6, TitanAxeEffect::new)),
 			Items.DIAMOND_SHOVEL, List.of(
 					a("shovel_quake", 10, 5, ShovelQuakeEffect::new),
 					a("shovel_quicksand", 10, 4, QuicksandEffect::new),
 					a("shovel_excavate", 10, 8, ExcavateEffect::new),
 					a("shovel_gravity", 10, 5, LunarGravityEffect::new),
-					a("shovel_crater", 10, 5, LunarCraterEffect::new)),
+					a("shovel_crater", 10, 5, LunarCraterEffect::new),
+					a("shovel_asteroids", 10, 5, AsteroidWallEffect::new)),
 			Items.DIAMOND_HOE, List.of(
 					a("hoe_reap", 10, 5, HoeReapEffect::new),
 					a("hoe_vines", 10, 4, VinesEffect::new),
 					a("hoe_bloom", 10, 4, BloomEffect::new),
 					a("hoe_scythe", 10, 5, CelestialScytheEffect::new),
-					a("hoe_garden", 10, 4, StarGardenEffect::new)),
+					a("hoe_garden", 10, 4, StarGardenEffect::new),
+					a("hoe_petals", 10, 4, NebulaPetalsEffect::new)),
 			Items.MACE, List.of(
 					a("mace_meteor", 10, 6, MaceMeteorEffect::new),
 					a("mace_gravity", 10, 5, GravityWellEffect::new),
 					a("mace_thunder", 10, 6, ThunderEffect::new),
-					a("mace_supernova", 10, 8, SupernovaEffect::new)));
+					a("mace_supernova", 10, 8, SupernovaEffect::new),
+					a("mace_pulsar", 10, 6, PulsarEffect::new)));
 
 	/** Capacités de l'armure infusée (il faut porter le plastron infusé). J pour changer, Shift + clic droit pour lancer. */
 	public static final List<Ability> ARMOR = List.of(
@@ -91,7 +99,8 @@ public final class Abilities {
 			a("armor_nova", 10, 0, PrismNovaEffect::new),
 			a("armor_wings", 10, 0, DiamondWingsEffect::new),
 			a("armor_avatar", 10, 0, AvatarEffect::new),
-			a("armor_astral", 10, 0, AstralJumpEffect::new));
+			a("armor_astral", 10, 0, AstralJumpEffect::new),
+			a("armor_gravity", 10, 0, GravityShieldEffect::new));
 
 	public static int armorIndex(ItemStack chest) {
 		Integer i = chest.get(ModComponents.SELECTED_ABILITY);
@@ -130,6 +139,7 @@ public final class Abilities {
 		PayloadTypeRegistry.playC2S().register(SlashPayload.ID, SlashPayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(SwitchAbilityPayload.ID, SwitchAbilityPayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(ArmorActionPayload.ID, ArmorActionPayload.CODEC);
+		PayloadTypeRegistry.playS2C().register(ShakePayload.ID, ShakePayload.CODEC);
 
 		// Touches J / H : capacités de l'armure (stockées sur le plastron infusé).
 		ServerPlayNetworking.registerGlobalReceiver(ArmorActionPayload.ID, (payload, context) -> {
@@ -216,6 +226,11 @@ public final class Abilities {
 			return;
 		}
 		mine.put(ability.key(), now + ability.cooldown());
+		// Aura de lancement : anneau de lune + étoiles qui montent autour du joueur.
+		Vec3 feet = player.position().add(0, 0.1, 0);
+		FX.ring(level, Cosmic.MOON_SMALL, feet, 1.2, 20);
+		FX.ring(level, Cosmic.NEBULA, feet, 0.8, 14);
+		level.sendParticles(ParticleTypes.END_ROD, player.getX(), player.getY(1.0), player.getZ(), 6, 0.4, 0.6, 0.4, 0.05);
 		EffectManager.start(ability.factory().apply(level, player));
 		if (ability.durabilityCost() > 0) {
 			stack.hurtAndBreak(ability.durabilityCost(), player, slot);

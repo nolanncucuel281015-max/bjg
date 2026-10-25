@@ -68,6 +68,7 @@ public class SupernovaEffect extends TimedEffect {
 			level.sendParticles(ParticleTypes.END_ROD, core.x, core.y, core.z, 200, 0.5, 0.5, 0.5, 1.0);
 			level.playSound(null, player.blockPosition(), SoundEvents.DRAGON_FIREBALL_EXPLODE, SoundSource.PLAYERS, 3.0f, 0.5f);
 			level.playSound(null, player.blockPosition(), SoundEvents.WARDEN_SONIC_BOOM, SoundSource.PLAYERS, 3.0f, 0.5f);
+			FX.shake(level, core, 40, 2.4f, 22);
 		}
 		double r = (age - CHARGE + 1) * RADIUS / 7.0;
 		Cosmic.sphere(level, FIRE_TO_VIOLET, core, r, (int) (r * r * 3) + 40);

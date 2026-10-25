@@ -44,6 +44,7 @@ Chaque objet infusé a sa propre texture animée (reflet de diamant qui passe + 
 | Armure complète | Régénération II + Force II + saturation + aura de lumière |
 | Armure (plastron, **Shift + clic droit** pour lancer, **J** pour changer) | **Bouclier de Cristal** · **Ruée de Diamant** · **Nova Prismatique** · **Ailes de Diamant** · **Avatar de Diamant** · **Saut Astral** |
 | Lance (clic gauche) | **Lance Comète** · **Charge Stellaire** · **Constellation** · **Tourbillon Galactique** · **Lance Polaire** |
+| Encore plus | Épée : **Lames du Zodiaque** · Pioche : **Météorite Minière** · Hache : **Hache du Titan Stellaire** · Pelle : **Mur d'Astéroïdes** · Houe : **Tempête de Pétales** · Masse : **Pulsar** · Armure : **Bouclier Gravitationnel** |
 | Nouveautés lunaires | Épée : **Croissant Lunaire**, **Pluie d'Étoiles**, **Éclipse** · Pioche : **Rayon Stellaire**, **Géode Céleste** · Hache : **Orbite Lunaire** · Pelle : **Gravité Lunaire**, **Cratère Lunaire** · Houe : **Faux Céleste**, **Jardin d'Étoiles** · Masse : **Supernova** |
 
 L'armure infusée est incassable et très solide : armure 6/12/9/6, robustesse +5 et +6 PV par pièce,

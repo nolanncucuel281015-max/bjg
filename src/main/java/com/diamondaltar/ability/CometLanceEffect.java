@@ -71,5 +71,6 @@ public class CometLanceEffect extends TimedEffect {
 		}
 		level.playSound(null, BlockPos.containing(p), SoundEvents.FIREWORK_ROCKET_LARGE_BLAST_FAR, SoundSource.PLAYERS, 3.0f, 0.5f);
 		level.playSound(null, BlockPos.containing(p), SoundEvents.DRAGON_FIREBALL_EXPLODE, SoundSource.PLAYERS, 1.5f, 0.8f);
+		FX.shake(level, p, 20, 1.0f, 8);
 	}
 }

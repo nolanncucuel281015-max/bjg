@@ -4,6 +4,7 @@ import com.diamondaltar.DiamondAltar;
 import com.diamondaltar.ModComponents;
 import com.diamondaltar.ability.Abilities;
 import com.diamondaltar.ability.ArmorActionPayload;
+import com.diamondaltar.ability.ShakePayload;
 import com.diamondaltar.ability.SlashPayload;
 import com.diamondaltar.ability.SwitchAbilityPayload;
 import com.diamondaltar.block.ModBlocks;
@@ -41,8 +42,12 @@ public class DiamondAltarClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		BlockEntityRenderers.register(ModBlocks.INFUSION_ALTAR_ENTITY, InfusionAltarRenderer::new);
 
+		ClientPlayNetworking.registerGlobalReceiver(ShakePayload.ID, (payload, context) ->
+				ScreenShake.start(payload.strength(), payload.ticks()));
+
 		// Touche K : changer de capacité.
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
+			ScreenShake.tick(client);
 			while (SWITCH_KEY.consumeClick()) {
 				if (client.player != null && ModComponents.isInfused(client.player.getMainHandItem())
 						&& !Abilities.of(client.player.getMainHandItem().getItem()).isEmpty()) {

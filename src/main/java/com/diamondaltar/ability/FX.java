@@ -1,6 +1,8 @@
 package com.diamondaltar.ability;
 
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.server.level.ServerPlayer;
@@ -69,7 +71,24 @@ final class FX {
 	}
 
 	static void hit(ServerLevel level, ServerPlayer player, LivingEntity target, float damage) {
-		target.hurtServer(level, player.damageSources().playerAttack(player), damage);
+		if (target.hurtServer(level, player.damageSources().playerAttack(player), damage)) {
+			// Retour visuel de chaque coup : éclat d'étoiles + étincelles.
+			double y = target.getY(0.6);
+			level.sendParticles(ParticleTypes.CRIT, target.getX(), y, target.getZ(), 8, 0.3, 0.3, 0.3, 0.3);
+			level.sendParticles(Cosmic.MOON_TO_NEBULA, target.getX(), y, target.getZ(), 6, 0.35, 0.4, 0.35, 0);
+			level.sendParticles(ParticleTypes.END_ROD, target.getX(), y, target.getZ(), 3, 0.2, 0.2, 0.2, 0.08);
+		}
+	}
+
+	/** Fait trembler l'écran des joueurs à moins de {@code radius} blocs. */
+	static void shake(ServerLevel level, Vec3 center, double radius, float strength, int ticks) {
+		for (ServerPlayer p : level.players()) {
+			double d = Math.sqrt(p.distanceToSqr(center));
+			if (d <= radius) {
+				float s = (float) (strength * (1 - d / (radius * 1.2)));
+				ServerPlayNetworking.send(p, new ShakePayload(s, ticks));
+			}
+		}
 	}
 
 	static void push(Entity target, double x, double y, double z) {

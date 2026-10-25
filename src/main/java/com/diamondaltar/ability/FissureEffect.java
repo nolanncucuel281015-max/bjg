@@ -39,6 +39,7 @@ public class FissureEffect extends TimedEffect {
 		this.start = player.position();
 		this.forward = FX.forward(player);
 		level.playSound(null, player.blockPosition(), SoundEvents.MACE_SMASH_GROUND_HEAVY, SoundSource.PLAYERS, 1.5f, 0.6f);
+		FX.shake(level, start, 20, 0.8f, 14);
 	}
 
 	private static Vector3f base(Quaternionf q, float s, float dy) {

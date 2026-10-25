@@ -92,6 +92,7 @@ public class VoidRiftEffect extends TimedEffect {
 				FX.push(target, out.x, 0.8, out.z);
 			}
 			level.playSound(null, BlockPos.containing(center), SoundEvents.WARDEN_SONIC_BOOM, SoundSource.PLAYERS, 3.0f, 0.6f);
+			FX.shake(level, center, 26, 1.4f, 12);
 			level.playSound(null, BlockPos.containing(center), SoundEvents.DRAGON_FIREBALL_EXPLODE, SoundSource.PLAYERS, 2.0f, 0.5f);
 			return true;
 		}

@@ -93,6 +93,7 @@ public class LunarGravityEffect extends TimedEffect {
 			}
 		}
 		level.playSound(null, player.blockPosition(), SoundEvents.MACE_SMASH_GROUND_HEAVY, SoundSource.PLAYERS, 2.0f, 0.5f);
+		FX.shake(level, center, 24, 1.3f, 10);
 		return age >= FLOAT + 5;
 	}
 }

@@ -94,6 +94,7 @@ public class CelestialJudgementEffect extends TimedEffect {
 				FX.push(target, 0, 1.2, 0);
 			}
 			level.playSound(null, BlockPos.containing(center), SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.PLAYERS, 3.0f, 0.8f);
+			FX.shake(level, center, 32, 1.6f, 14);
 			level.playSound(null, BlockPos.containing(center), SoundEvents.TOTEM_USE, SoundSource.PLAYERS, 1.5f, 1.5f);
 		}
 		if (age > CHARGE + 6) {

@@ -63,6 +63,7 @@ public class GravityWellEffect extends TimedEffect {
 		}
 		FX.ring(level, ParticleTypes.SONIC_BOOM, player.position().add(0, 1, 0), 3, 8);
 		level.playSound(null, player.blockPosition(), SoundEvents.MACE_SMASH_GROUND_HEAVY, SoundSource.PLAYERS, 2.0f, 0.4f);
+		FX.shake(level, player.position(), 24, 1.3f, 10);
 		return true;
 	}
 }

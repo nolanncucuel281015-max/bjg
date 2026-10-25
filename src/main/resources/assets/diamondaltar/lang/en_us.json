@@ -107,5 +107,19 @@
 	"diamondaltar.ability.shovel_crater.name": "◯ Lunar Crater",
 	"diamondaltar.ability.shovel_crater.desc": "Leap and crash down: the ground becomes a moon crater.",
 	"diamondaltar.ability.hoe_garden.name": "❀ Star Garden",
-	"diamondaltar.ability.hoe_garden.desc": "10 star flowers bloom around you, then burst into light."
+	"diamondaltar.ability.hoe_garden.desc": "10 star flowers bloom around you, then burst into light.",
+	"diamondaltar.ability.sword_zodiac.name": "♈ Zodiac Blades",
+	"diamondaltar.ability.sword_zodiac.desc": "12 swords form a circle behind you, then pierce enemies one by one.",
+	"diamondaltar.ability.pickaxe_meteorite.name": "☄ Mining Meteorite",
+	"diamondaltar.ability.pickaxe_meteorite.desc": "A meteorite crashes where you aim and digs a 7-block crater.",
+	"diamondaltar.ability.axe_titan.name": "⚒ Stellar Titan Axe",
+	"diamondaltar.ability.axe_titan.desc": "A colossal 10-block axe chops down in front of you, splitting the ground.",
+	"diamondaltar.ability.shovel_asteroids.name": "◼ Asteroid Wall",
+	"diamondaltar.ability.shovel_asteroids.desc": "A wall of asteroids blocks projectiles, then is hurled forward.",
+	"diamondaltar.ability.hoe_petals.name": "❁ Petal Storm",
+	"diamondaltar.ability.hoe_petals.desc": "A nebula petal tornado poisons enemies and heals you.",
+	"diamondaltar.ability.mace_pulsar.name": "◉ Pulsar",
+	"diamondaltar.ability.mace_pulsar.desc": "Two light jets and 5 energy pulses blast everything around you.",
+	"diamondaltar.ability.armor_gravity.name": "◍ Gravity Shield",
+	"diamondaltar.ability.armor_gravity.desc": "For 8s, every projectile is sent back to its shooter."
 }
