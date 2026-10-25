@@ -7,10 +7,10 @@
 		"QQQ"
 	],
 	"key": {
-		"G": { "item": "minecraft:gold_block" },
-		"I": { "item": "minecraft:iron_block" },
-		"D": { "item": "minecraft:diamond_block" },
-		"Q": { "item": "minecraft:smooth_quartz" }
+		"G": "minecraft:gold_block",
+		"I": "minecraft:iron_block",
+		"D": "minecraft:diamond_block",
+		"Q": "minecraft:smooth_quartz"
 	},
 	"result": {
 		"id": "diamondaltar:infusion_altar",

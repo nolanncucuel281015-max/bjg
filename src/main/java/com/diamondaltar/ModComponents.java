@@ -1,26 +1,26 @@
 package com.diamondaltar;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.component.ComponentType;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Rarity;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.Rarity;
 
 import java.util.Set;
 
 public final class ModComponents {
 	/** Marque un objet comme "infusé" par l'autel : il gagne sa capacité spéciale. */
-	public static final ComponentType<Boolean> INFUSED = Registry.register(
-			Registries.DATA_COMPONENT_TYPE,
+	public static final DataComponentType<Boolean> INFUSED = Registry.register(
+			BuiltInRegistries.DATA_COMPONENT_TYPE,
 			DiamondAltar.id("infused"),
-			ComponentType.<Boolean>builder().codec(Codec.BOOL).packetCodec(PacketCodecs.BOOL).build());
+			DataComponentType.<Boolean>builder().persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL).build());
 
 	public static final Set<Item> INFUSABLE = Set.of(
 			Items.DIAMOND_HELMET, Items.DIAMOND_CHESTPLATE, Items.DIAMOND_LEGGINGS, Items.DIAMOND_BOOTS,
@@ -42,10 +42,11 @@ public final class ModComponents {
 	}
 
 	public static void infuse(ItemStack stack) {
+		Component baseName = stack.getItem().getName();
 		stack.set(INFUSED, true);
-		stack.set(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true);
-		stack.set(DataComponentTypes.RARITY, Rarity.EPIC);
-		stack.set(DataComponentTypes.ITEM_NAME, Text.translatable("diamondaltar.infused_name",
-				Text.translatable(stack.getItem().getTranslationKey())).formatted(Formatting.AQUA));
+		stack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
+		stack.set(DataComponents.RARITY, Rarity.EPIC);
+		stack.set(DataComponents.ITEM_NAME, Component.translatable("diamondaltar.infused_name", baseName)
+				.withStyle(ChatFormatting.AQUA));
 	}
 }

@@ -1,16 +1,16 @@
 package com.diamondaltar.ability;
 
 import com.diamondaltar.effect.TimedEffect;
-import net.minecraft.block.BlockState;
-import net.minecraft.particle.BlockStateParticleEffect;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.registry.tag.BlockTags;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * Pioche — « Foreuse de Diamant » : creuse un tunnel 3x3 de 8 blocs de profondeur
@@ -19,26 +19,26 @@ import net.minecraft.util.math.Direction;
 public class PickaxeDrillEffect extends TimedEffect {
 	private static final int DEPTH = 8;
 
-	private final ServerPlayerEntity player;
+	private final ServerPlayer player;
 	private final Direction direction;
 	private final Direction sideA;
 	private final Direction sideB;
 	private final BlockPos start;
 
-	public PickaxeDrillEffect(ServerWorld world, ServerPlayerEntity player) {
-		super(world);
+	public PickaxeDrillEffect(ServerLevel level, ServerPlayer player) {
+		super(level);
 		this.player = player;
-		this.direction = Direction.getEntityFacingOrder(player)[0];
+		this.direction = Direction.orderedByNearest(player)[0];
 		if (direction.getAxis() == Direction.Axis.Y) {
 			sideA = Direction.NORTH;
 			sideB = Direction.EAST;
 		} else {
 			sideA = Direction.UP;
-			sideB = direction.rotateYClockwise();
+			sideB = direction.getClockWise();
 		}
-		BlockPos base = direction.getAxis() == Direction.Axis.Y ? player.getBlockPos() : player.getBlockPos().up();
-		this.start = base.offset(direction);
-		world.playSound(null, player.getBlockPos(), SoundEvents.BLOCK_BEACON_POWER_SELECT, SoundCategory.PLAYERS, 1.0f, 1.6f);
+		BlockPos base = direction.getAxis() == Direction.Axis.Y ? player.blockPosition() : player.blockPosition().above();
+		this.start = base.relative(direction);
+		level.playSound(null, player.blockPosition(), SoundEvents.BEACON_POWER_SELECT, SoundSource.PLAYERS, 1.0f, 1.6f);
 	}
 
 	@Override
@@ -50,31 +50,31 @@ public class PickaxeDrillEffect extends TimedEffect {
 			return false;
 		}
 		int layer = age / 2;
-		BlockPos center = start.offset(direction, layer);
+		BlockPos center = start.relative(direction, layer);
 		for (int a = -1; a <= 1; a++) {
 			for (int b = -1; b <= 1; b++) {
-				BlockPos pos = center.offset(sideA, a).offset(sideB, b);
-				BlockState state = world.getBlockState(pos);
+				BlockPos pos = center.relative(sideA, a).relative(sideB, b);
+				BlockState state = level.getBlockState(pos);
 				if (state.isAir()) {
 					continue;
 				}
-				world.spawnParticles(ParticleTypes.END_ROD, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
+				level.sendParticles(ParticleTypes.END_ROD, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
 						3, 0.3, 0.3, 0.3, 0.02);
 				if (canBreak(pos, state)) {
-					world.spawnParticles(new BlockStateParticleEffect(ParticleTypes.BLOCK, state),
+					level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, state),
 							pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 12, 0.3, 0.3, 0.3, 0.1);
-					world.breakBlock(pos, true, player);
+					level.destroyBlock(pos, true, player);
 				}
 			}
 		}
-		world.playSound(null, center, SoundEvents.BLOCK_AMETHYST_BLOCK_BREAK, SoundCategory.PLAYERS, 1.0f, 0.6f + layer * 0.1f);
+		level.playSound(null, center, SoundEvents.AMETHYST_BLOCK_BREAK, SoundSource.PLAYERS, 1.0f, 0.6f + layer * 0.1f);
 		return layer >= DEPTH - 1;
 	}
 
 	private boolean canBreak(BlockPos pos, BlockState state) {
-		float hardness = state.getHardness(world, pos);
+		float hardness = state.getDestroySpeed(level, pos);
 		return hardness >= 0 && hardness < 50
-				&& (state.isIn(BlockTags.PICKAXE_MINEABLE) || state.isIn(BlockTags.SHOVEL_MINEABLE))
-				&& player.canModifyBlocks() && world.canPlayerModifyAt(player, pos);
+				&& (state.is(BlockTags.MINEABLE_WITH_PICKAXE) || state.is(BlockTags.MINEABLE_WITH_SHOVEL))
+				&& player.mayBuild() && level.mayInteract(player, pos);
 	}
 }

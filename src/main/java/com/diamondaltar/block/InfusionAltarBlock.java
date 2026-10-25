@@ -2,106 +2,94 @@ package com.diamondaltar.block;
 
 import com.diamondaltar.ModComponents;
 import com.mojang.serialization.MapCodec;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockWithEntity;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ItemActionResult;
-import net.minecraft.util.ItemScatterer;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-public class InfusionAltarBlock extends BlockWithEntity {
-	public static final MapCodec<InfusionAltarBlock> CODEC = createCodec(InfusionAltarBlock::new);
+public class InfusionAltarBlock extends BaseEntityBlock {
+	public static final MapCodec<InfusionAltarBlock> CODEC = simpleCodec(InfusionAltarBlock::new);
 
-	private static final VoxelShape SHAPE = VoxelShapes.union(
-			createCuboidShape(0, 0, 0, 16, 6, 16),
-			createCuboidShape(0.5, 6, 0.5, 5.5, 16, 5.5),
-			createCuboidShape(10.5, 6, 0.5, 15.5, 16, 5.5),
-			createCuboidShape(0.5, 6, 10.5, 5.5, 16, 15.5),
-			createCuboidShape(10.5, 6, 10.5, 15.5, 16, 15.5));
+	private static final VoxelShape SHAPE = Shapes.or(
+			box(0, 0, 0, 16, 6, 16),
+			box(0.5, 6, 0.5, 5.5, 16, 5.5),
+			box(10.5, 6, 0.5, 15.5, 16, 5.5),
+			box(0.5, 6, 10.5, 5.5, 16, 15.5),
+			box(10.5, 6, 10.5, 15.5, 16, 15.5));
 
-	public InfusionAltarBlock(Settings settings) {
-		super(settings);
+	public InfusionAltarBlock(Properties properties) {
+		super(properties);
 	}
 
 	@Override
-	protected MapCodec<? extends BlockWithEntity> getCodec() {
+	protected MapCodec<? extends BaseEntityBlock> codec() {
 		return CODEC;
 	}
 
 	@Override
-	protected BlockRenderType getRenderType(BlockState state) {
-		return BlockRenderType.MODEL;
+	protected RenderShape getRenderShape(BlockState state) {
+		return RenderShape.MODEL;
 	}
 
 	@Override
-	protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+	protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
 		return SHAPE;
 	}
 
 	@Nullable
 	@Override
-	public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 		return new InfusionAltarBlockEntity(pos, state);
 	}
 
 	@Nullable
 	@Override
-	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-		return validateTicker(type, ModBlocks.INFUSION_ALTAR_ENTITY,
-				world.isClient ? InfusionAltarBlockEntity::clientTick : InfusionAltarBlockEntity::serverTick);
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+		return createTickerHelper(type, ModBlocks.INFUSION_ALTAR_ENTITY,
+				level.isClientSide() ? InfusionAltarBlockEntity::clientTick : InfusionAltarBlockEntity::serverTick);
 	}
 
 	@Override
-	protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos,
-			PlayerEntity player, Hand hand, BlockHitResult hit) {
-		if (!(world.getBlockEntity(pos) instanceof InfusionAltarBlockEntity altar)) {
-			return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-		}
-		if (altar.isEmpty() && ModComponents.canInfuse(stack)) {
-			if (!world.isClient) {
-				altar.startInfusion(stack.splitUnlessCreative(1, player), player);
+	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
+			Player player, InteractionHand hand, BlockHitResult hit) {
+		if (level.getBlockEntity(pos) instanceof InfusionAltarBlockEntity altar
+				&& altar.isEmpty() && ModComponents.canInfuse(stack)) {
+			if (!level.isClientSide()) {
+				altar.startInfusion(stack.consumeAndReturn(1, player));
 			}
-			return ItemActionResult.success(world.isClient);
+			return InteractionResult.SUCCESS;
 		}
-		return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+		return InteractionResult.TRY_WITH_EMPTY_HAND;
 	}
 
 	@Override
-	protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
-		if (world.getBlockEntity(pos) instanceof InfusionAltarBlockEntity altar && !altar.isEmpty()) {
+	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+		if (level.getBlockEntity(pos) instanceof InfusionAltarBlockEntity altar && !altar.isEmpty()) {
 			if (altar.isInfusing()) {
-				return ActionResult.CONSUME;
+				return InteractionResult.CONSUME;
 			}
-			if (!world.isClient) {
+			if (!level.isClientSide()) {
 				ItemStack taken = altar.takeItem();
-				if (!player.giveItemStack(taken)) {
-					player.dropItem(taken, false);
+				if (!player.addItem(taken)) {
+					player.drop(taken, false);
 				}
 			}
-			return ActionResult.success(world.isClient);
+			return InteractionResult.SUCCESS;
 		}
-		return ActionResult.PASS;
-	}
-
-	@Override
-	protected void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-		if (!state.isOf(newState.getBlock()) && world.getBlockEntity(pos) instanceof InfusionAltarBlockEntity altar) {
-			ItemScatterer.spawn(world, pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5, altar.takeItem());
-		}
-		super.onStateReplaced(state, world, pos, newState, moved);
+		return InteractionResult.PASS;
 	}
 }

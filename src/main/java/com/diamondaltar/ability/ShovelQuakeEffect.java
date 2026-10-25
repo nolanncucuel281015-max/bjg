@@ -1,16 +1,16 @@
 package com.diamondaltar.ability;
 
 import com.diamondaltar.effect.TimedEffect;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.particle.BlockStateParticleEffect;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -24,15 +24,15 @@ public class ShovelQuakeEffect extends TimedEffect {
 	private static final int DURATION = 12;
 	private static final double RANGE = 8.0;
 
-	private final ServerPlayerEntity player;
-	private final Vec3d center;
+	private final ServerPlayer player;
+	private final Vec3 center;
 	private final Set<UUID> alreadyHit = new HashSet<>();
 
-	public ShovelQuakeEffect(ServerWorld world, ServerPlayerEntity player) {
-		super(world);
+	public ShovelQuakeEffect(ServerLevel level, ServerPlayer player) {
+		super(level);
 		this.player = player;
-		this.center = player.getPos();
-		world.playSound(null, player.getBlockPos(), SoundEvents.ITEM_MACE_SMASH_GROUND_HEAVY, SoundCategory.PLAYERS, 1.5f, 0.7f);
+		this.center = player.position();
+		level.playSound(null, player.blockPosition(), SoundEvents.MACE_SMASH_GROUND_HEAVY, SoundSource.PLAYERS, 1.5f, 0.7f);
 	}
 
 	@Override
@@ -43,25 +43,24 @@ public class ShovelQuakeEffect extends TimedEffect {
 			double a = Math.PI * 2 * i / points;
 			double x = center.x + Math.cos(a) * radius;
 			double z = center.z + Math.sin(a) * radius;
-			BlockPos ground = BlockPos.ofFloored(x, center.y - 0.5, z);
-			BlockState state = world.getBlockState(ground);
+			BlockState state = level.getBlockState(BlockPos.containing(x, center.y - 0.5, z));
 			if (!state.isAir()) {
-				world.spawnParticles(new BlockStateParticleEffect(ParticleTypes.BLOCK, state),
+				level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, state),
 						x, center.y + 0.1, z, 4, 0.2, 0.4, 0.2, 0.15);
 			}
 			if (i % 3 == 0) {
-				world.spawnParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, x, center.y + 0.2, z, 0, 0, 0.05, 0, 1);
+				level.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, x, center.y + 0.2, z, 0, 0, 0.05, 0, 1);
 			}
 		}
-		for (LivingEntity target : FX.livingAround(world, player, center, radius + 0.5)) {
-			if (alreadyHit.add(target.getUuid())) {
-				FX.hit(player, target, 7.0f);
-				Vec3d out = target.getPos().subtract(center).multiply(1, 0, 1).normalize().multiply(0.5);
+		for (LivingEntity target : FX.livingAround(level, player, center, radius + 0.5)) {
+			if (alreadyHit.add(target.getUUID())) {
+				FX.hit(level, player, target, 7.0f);
+				Vec3 out = target.position().subtract(center).multiply(1, 0, 1).normalize().scale(0.5);
 				FX.push(target, out.x, 1.0, out.z);
 			}
 		}
 		if (age % 3 == 0) {
-			world.playSound(null, BlockPos.ofFloored(center), SoundEvents.BLOCK_ROOTED_DIRT_BREAK, SoundCategory.PLAYERS, 1.5f, 0.5f);
+			level.playSound(null, BlockPos.containing(center), SoundEvents.ROOTED_DIRT_BREAK, SoundSource.PLAYERS, 1.5f, 0.5f);
 		}
 		return age >= DURATION - 1;
 	}

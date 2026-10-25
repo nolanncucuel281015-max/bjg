@@ -3,13 +3,14 @@ package com.diamondaltar.ability;
 import com.diamondaltar.ModComponents;
 import com.diamondaltar.effect.EffectManager;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.TypedActionResult;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 import java.util.Map;
 
@@ -20,43 +21,44 @@ public final class Abilities {
 
 	@FunctionalInterface
 	public interface Factory {
-		void start(ServerWorld world, ServerPlayerEntity player);
+		void start(ServerLevel level, ServerPlayer player);
 	}
 
 	public static final Map<Item, Ability> ABILITIES = Map.of(
 			Items.DIAMOND_SWORD, new Ability("sword", 60, 5,
-					(w, p) -> EffectManager.start(new SwordSlashEffect(w, p))),
+					(l, p) -> EffectManager.start(new SwordSlashEffect(l, p))),
 			Items.DIAMOND_PICKAXE, new Ability("pickaxe", 80, 10,
-					(w, p) -> EffectManager.start(new PickaxeDrillEffect(w, p))),
+					(l, p) -> EffectManager.start(new PickaxeDrillEffect(l, p))),
 			Items.DIAMOND_AXE, new Ability("axe", 120, 8,
-					(w, p) -> EffectManager.start(new AxeCycloneEffect(w, p))),
+					(l, p) -> EffectManager.start(new AxeCycloneEffect(l, p))),
 			Items.DIAMOND_SHOVEL, new Ability("shovel", 100, 6,
-					(w, p) -> EffectManager.start(new ShovelQuakeEffect(w, p))),
+					(l, p) -> EffectManager.start(new ShovelQuakeEffect(l, p))),
 			Items.DIAMOND_HOE, new Ability("hoe", 100, 6,
-					(w, p) -> EffectManager.start(new HoeReapEffect(w, p))),
+					(l, p) -> EffectManager.start(new HoeReapEffect(l, p))),
 			Items.MACE, new Ability("mace", 160, 8,
-					(w, p) -> EffectManager.start(new MaceMeteorEffect(w, p))));
+					(l, p) -> EffectManager.start(new MaceMeteorEffect(l, p))));
 
 	private Abilities() {
 	}
 
 	public static void register() {
-		UseItemCallback.EVENT.register((player, world, hand) -> {
-			ItemStack stack = player.getStackInHand(hand);
+		UseItemCallback.EVENT.register((player, level, hand) -> {
+			ItemStack stack = player.getItemInHand(hand);
 			Ability ability = ABILITIES.get(stack.getItem());
 			if (ability == null || !ModComponents.isInfused(stack) || player.isSpectator()) {
-				return TypedActionResult.pass(ItemStack.EMPTY);
+				return InteractionResult.PASS;
 			}
-			if (player.getItemCooldownManager().isCoolingDown(stack.getItem())) {
-				return TypedActionResult.fail(stack);
+			if (player.getCooldowns().isOnCooldown(stack)) {
+				return InteractionResult.FAIL;
 			}
-			if (world instanceof ServerWorld server && player instanceof ServerPlayerEntity serverPlayer) {
+			if (level instanceof ServerLevel server && player instanceof ServerPlayer serverPlayer) {
 				ability.factory().start(server, serverPlayer);
-				player.getItemCooldownManager().set(stack.getItem(), ability.cooldown());
-				stack.damage(ability.durabilityCost(), player, LivingEntity.getSlotForHand(hand));
-				player.swingHand(hand, true);
+				player.getCooldowns().addCooldown(stack, ability.cooldown());
+				stack.hurtAndBreak(ability.durabilityCost(), player,
+						hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
+				player.swing(hand, true);
 			}
-			return TypedActionResult.success(stack, world.isClient);
+			return InteractionResult.SUCCESS;
 		});
 	}
 }

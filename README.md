@@ -1,4 +1,4 @@
-# Diamond Altar (mod Fabric 1.21.1)
+# Diamond Altar (mod Fabric 1.21.11)
 
 Un **Autel d'Infusion** (blanc, 4 piliers à bobines dorées) qui transforme ton équipement
 en diamant en armes légendaires, avec une animation : l'objet flotte, tourne de plus en plus
@@ -45,7 +45,7 @@ Il faut Java 21 :
 ```
 
 Le `.jar` est dans `build/libs/`. Mets-le dans `.minecraft/mods` avec **Fabric Loader** et
-**Fabric API** pour Minecraft 1.21.1.
+**Fabric API** pour Minecraft 1.21.11.
 
 Chaque push sur GitHub compile aussi le mod automatiquement (onglet **Actions** → dernier
 build → artefact `diamond-altar-mod`).
