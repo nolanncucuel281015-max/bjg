@@ -2,6 +2,7 @@
 	"block.diamondaltar.infusion_altar": "Infusion Altar",
 	"diamondaltar.infused_name": "Infused %s",
 	"diamondaltar.ability.hint": "Right-click: activate (%ss cooldown)",
+	"diamondaltar.ability.hint_left": "Left-click: activate (no cooldown)",
 	"diamondaltar.ability.armor_set": "Full set: Regeneration + Strength + aura",
 
 	"diamondaltar.ability.sword.name": "⚔ Slash of Will",

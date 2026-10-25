@@ -2,6 +2,7 @@
 	"block.diamondaltar.infusion_altar": "Autel d'Infusion",
 	"diamondaltar.infused_name": "%s Infusé(e)",
 	"diamondaltar.ability.hint": "Clic droit : activer (recharge %s s)",
+	"diamondaltar.ability.hint_left": "Clic gauche : activer (sans recharge)",
 	"diamondaltar.ability.armor_set": "Armure complète : Régénération + Force + aura",
 
 	"diamondaltar.ability.sword.name": "⚔ Tranche de la Volonté",

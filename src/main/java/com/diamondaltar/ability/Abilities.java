@@ -3,6 +3,8 @@ package com.diamondaltar.ability;
 import com.diamondaltar.ModComponents;
 import com.diamondaltar.effect.EffectManager;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -14,9 +16,12 @@ import net.minecraft.world.item.Items;
 
 import java.util.Map;
 
-/** Capacités actives des outils infusés, déclenchées par clic droit. */
+/** Capacités actives des outils infusés : clic gauche pour l'épée, clic droit pour les autres. */
 public final class Abilities {
-	public record Ability(String key, int cooldown, int durabilityCost, Factory factory) {
+	public record Ability(String key, int cooldown, int durabilityCost, boolean leftClick, Factory factory) {
+		Ability(String key, int cooldown, int durabilityCost, Factory factory) {
+			this(key, cooldown, durabilityCost, false, factory);
+		}
 	}
 
 	@FunctionalInterface
@@ -25,7 +30,7 @@ public final class Abilities {
 	}
 
 	public static final Map<Item, Ability> ABILITIES = Map.of(
-			Items.DIAMOND_SWORD, new Ability("sword", 60, 5,
+			Items.DIAMOND_SWORD, new Ability("sword", 0, 1, true,
 					(l, p) -> EffectManager.start(new SwordSlashEffect(l, p))),
 			Items.DIAMOND_PICKAXE, new Ability("pickaxe", 80, 10,
 					(l, p) -> EffectManager.start(new PickaxeDrillEffect(l, p))),
@@ -42,10 +47,24 @@ public final class Abilities {
 	}
 
 	public static void register() {
+		// Clic gauche avec l'épée infusée : Tranche de la Volonté, sans recharge.
+		PayloadTypeRegistry.playC2S().register(SlashPayload.ID, SlashPayload.CODEC);
+		ServerPlayNetworking.registerGlobalReceiver(SlashPayload.ID, (payload, context) -> {
+			ServerPlayer player = context.player();
+			ItemStack stack = player.getMainHandItem();
+			Ability ability = ABILITIES.get(stack.getItem());
+			if (ability == null || !ability.leftClick() || !ModComponents.isInfused(stack) || player.isSpectator()
+					|| !(player.level() instanceof ServerLevel server)) {
+				return;
+			}
+			ability.factory().start(server, player);
+			stack.hurtAndBreak(ability.durabilityCost(), player, EquipmentSlot.MAINHAND);
+		});
+
 		UseItemCallback.EVENT.register((player, level, hand) -> {
 			ItemStack stack = player.getItemInHand(hand);
 			Ability ability = ABILITIES.get(stack.getItem());
-			if (ability == null || !ModComponents.isInfused(stack) || player.isSpectator()) {
+			if (ability == null || ability.leftClick() || !ModComponents.isInfused(stack) || player.isSpectator()) {
 				return InteractionResult.PASS;
 			}
 			if (player.getCooldowns().isOnCooldown(stack)) {
