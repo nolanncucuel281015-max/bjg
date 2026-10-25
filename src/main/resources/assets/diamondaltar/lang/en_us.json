@@ -1,0 +1,28 @@
+{
+	"block.diamondaltar.infusion_altar": "Infusion Altar",
+	"diamondaltar.infused_name": "Infused %s",
+	"diamondaltar.ability.hint": "Right-click: activate (%ss cooldown)",
+	"diamondaltar.ability.armor_set": "Full set: Regeneration + Strength + aura",
+
+	"diamondaltar.ability.sword.name": "⚔ Slash of Will",
+	"diamondaltar.ability.sword.desc": "A giant 10-block sweeping slash that cuts through everything ahead.",
+	"diamondaltar.ability.pickaxe.name": "⛏ Diamond Drill",
+	"diamondaltar.ability.pickaxe.desc": "Digs a 3x3 tunnel 8 blocks deep where you look.",
+	"diamondaltar.ability.axe.name": "Steel Cyclone",
+	"diamondaltar.ability.axe.desc": "A 2-second whirlwind of blades that pulls in, then flings enemies.",
+	"diamondaltar.ability.shovel.name": "Seismic Wave",
+	"diamondaltar.ability.shovel.desc": "Slam the ground: an 8-block shockwave launches enemies into the air.",
+	"diamondaltar.ability.hoe.name": "☠ Soul Harvest",
+	"diamondaltar.ability.hoe.desc": "A spectral scythe circles you, steals life and grows nearby crops.",
+	"diamondaltar.ability.mace.name": "☄ Meteor Fall",
+	"diamondaltar.ability.mace.desc": "Rocket upward and crash down like a meteor for a massive fiery impact.",
+
+	"diamondaltar.ability.armor_head.name": "Crystal Sight",
+	"diamondaltar.ability.armor_head.desc": "Night vision and water breathing.",
+	"diamondaltar.ability.armor_chest.name": "Diamond Heart",
+	"diamondaltar.ability.armor_chest.desc": "Permanent Resistance.",
+	"diamondaltar.ability.armor_legs.name": "Lightning Stride",
+	"diamondaltar.ability.armor_legs.desc": "Permanent Speed II.",
+	"diamondaltar.ability.armor_feet.name": "Sky Step",
+	"diamondaltar.ability.armor_feet.desc": "Jump Boost II and no fall damage."
+}

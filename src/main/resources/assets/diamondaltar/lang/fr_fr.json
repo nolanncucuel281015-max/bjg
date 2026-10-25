@@ -1,0 +1,28 @@
+{
+	"block.diamondaltar.infusion_altar": "Autel d'Infusion",
+	"diamondaltar.infused_name": "%s Infusé(e)",
+	"diamondaltar.ability.hint": "Clic droit : activer (recharge %s s)",
+	"diamondaltar.ability.armor_set": "Armure complète : Régénération + Force + aura",
+
+	"diamondaltar.ability.sword.name": "⚔ Tranche de la Volonté",
+	"diamondaltar.ability.sword.desc": "Un coup balayé géant de 10 blocs qui fend tout devant toi.",
+	"diamondaltar.ability.pickaxe.name": "⛏ Foreuse de Diamant",
+	"diamondaltar.ability.pickaxe.desc": "Creuse un tunnel 3x3 de 8 blocs dans la direction du regard.",
+	"diamondaltar.ability.axe.name": "Cyclone d'Acier",
+	"diamondaltar.ability.axe.desc": "Tourbillon de lames pendant 2 s qui aspire puis éjecte les ennemis.",
+	"diamondaltar.ability.shovel.name": "Onde Sismique",
+	"diamondaltar.ability.shovel.desc": "Frappe le sol : une onde de choc de 8 blocs projette les ennemis en l'air.",
+	"diamondaltar.ability.hoe.name": "☠ Moisson des Âmes",
+	"diamondaltar.ability.hoe.desc": "Une faux spectrale fait le tour de toi, vole de la vie et fait pousser les cultures.",
+	"diamondaltar.ability.mace.name": "☄ Chute Météore",
+	"diamondaltar.ability.mace.desc": "Envole-toi puis écrase-toi comme une météorite : énorme impact enflammé.",
+
+	"diamondaltar.ability.armor_head.name": "Regard de Cristal",
+	"diamondaltar.ability.armor_head.desc": "Vision nocturne et respiration aquatique.",
+	"diamondaltar.ability.armor_chest.name": "Cœur de Diamant",
+	"diamondaltar.ability.armor_chest.desc": "Résistance permanente.",
+	"diamondaltar.ability.armor_legs.name": "Foulée Éclair",
+	"diamondaltar.ability.armor_legs.desc": "Vitesse II permanente.",
+	"diamondaltar.ability.armor_feet.name": "Pas Céleste",
+	"diamondaltar.ability.armor_feet.desc": "Saut amélioré II et aucun dégât de chute."
+}
