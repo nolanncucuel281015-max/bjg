@@ -40,32 +40,32 @@ public final class Abilities {
 	public static final Map<Item, List<Ability>> ABILITIES = Map.of(
 			Items.DIAMOND_SWORD, List.of(
 					a("sword_slash", 0, 1, SwordSlashEffect::new),
-					a("sword_blades", 20, 2, PhantomBladesEffect::new),
-					a("sword_shadow", 40, 2, ShadowStepEffect::new),
-					a("sword_judgement", 100, 4, CelestialJudgementEffect::new),
-					a("sword_void", 160, 5, VoidRiftEffect::new)),
+					a("sword_blades", 10, 2, PhantomBladesEffect::new),
+					a("sword_shadow", 15, 2, ShadowStepEffect::new),
+					a("sword_judgement", 40, 4, CelestialJudgementEffect::new),
+					a("sword_void", 60, 5, VoidRiftEffect::new)),
 			Items.DIAMOND_PICKAXE, List.of(
-					a("pickaxe_drill", 60, 8, PickaxeDrillEffect::new),
-					a("pickaxe_sphere", 40, 6, CrystalSphereEffect::new),
-					a("pickaxe_ores", 200, 2, OreSightEffect::new),
-					a("pickaxe_eruption", 80, 4, CrystalEruptionEffect::new)),
+					a("pickaxe_drill", 20, 8, PickaxeDrillEffect::new),
+					a("pickaxe_sphere", 10, 6, CrystalSphereEffect::new),
+					a("pickaxe_ores", 60, 2, OreSightEffect::new),
+					a("pickaxe_eruption", 25, 4, CrystalEruptionEffect::new)),
 			Items.DIAMOND_AXE, List.of(
-					a("axe_cyclone", 100, 6, AxeCycloneEffect::new),
-					a("axe_boomerang", 40, 3, BoomerangAxeEffect::new),
-					a("axe_timber", 40, 6, TimberEffect::new),
-					a("axe_fissure", 60, 4, FissureEffect::new)),
+					a("axe_cyclone", 30, 6, AxeCycloneEffect::new),
+					a("axe_boomerang", 15, 3, BoomerangAxeEffect::new),
+					a("axe_timber", 10, 6, TimberEffect::new),
+					a("axe_fissure", 20, 4, FissureEffect::new)),
 			Items.DIAMOND_SHOVEL, List.of(
-					a("shovel_quake", 80, 5, ShovelQuakeEffect::new),
-					a("shovel_quicksand", 160, 4, QuicksandEffect::new),
-					a("shovel_excavate", 40, 8, ExcavateEffect::new)),
+					a("shovel_quake", 25, 5, ShovelQuakeEffect::new),
+					a("shovel_quicksand", 60, 4, QuicksandEffect::new),
+					a("shovel_excavate", 10, 8, ExcavateEffect::new)),
 			Items.DIAMOND_HOE, List.of(
-					a("hoe_reap", 80, 5, HoeReapEffect::new),
-					a("hoe_vines", 160, 4, VinesEffect::new),
-					a("hoe_bloom", 300, 4, BloomEffect::new)),
+					a("hoe_reap", 25, 5, HoeReapEffect::new),
+					a("hoe_vines", 60, 4, VinesEffect::new),
+					a("hoe_bloom", 100, 4, BloomEffect::new)),
 			Items.MACE, List.of(
-					a("mace_meteor", 140, 6, MaceMeteorEffect::new),
-					a("mace_gravity", 160, 5, GravityWellEffect::new),
-					a("mace_thunder", 200, 6, ThunderEffect::new)));
+					a("mace_meteor", 50, 6, MaceMeteorEffect::new),
+					a("mace_gravity", 60, 5, GravityWellEffect::new),
+					a("mace_thunder", 60, 6, ThunderEffect::new)));
 
 	/** Recharges par joueur et par capacité : fin de recharge en ticks de jeu. */
 	private static final Map<UUID, Map<String, Long>> COOLDOWNS = new HashMap<>();
