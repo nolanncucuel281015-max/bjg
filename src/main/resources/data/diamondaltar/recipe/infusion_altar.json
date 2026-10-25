@@ -2,15 +2,12 @@
 	"type": "minecraft:crafting_shaped",
 	"category": "misc",
 	"pattern": [
-		"GDG",
-		"IDI",
-		"QQQ"
+		" S ",
+		"NNN"
 	],
 	"key": {
-		"G": "minecraft:gold_block",
-		"I": "minecraft:iron_block",
-		"D": "minecraft:diamond_block",
-		"Q": "minecraft:smooth_quartz"
+		"S": "minecraft:nether_star",
+		"N": "minecraft:netherite_block"
 	},
 	"result": {
 		"id": "diamondaltar:infusion_altar",

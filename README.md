@@ -7,9 +7,9 @@ vite, des arcs électriques partent des piliers, puis un éclair le frappe.
 ## Craft de l'autel
 
 ```
-[Bloc d'or]      [Bloc de diamant] [Bloc d'or]
-[Bloc de fer]    [Bloc de diamant] [Bloc de fer]
-[Quartz lisse]   [Quartz lisse]    [Quartz lisse]
+[ vide ]              [ vide ]              [ vide ]
+[ vide ]              [Étoile du Nether]    [ vide ]
+[Bloc de netherite]   [Bloc de netherite]   [Bloc de netherite]
 ```
 
 ## Utilisation
