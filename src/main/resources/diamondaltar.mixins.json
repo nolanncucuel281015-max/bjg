@@ -1,0 +1,10 @@
+{
+	"required": true,
+	"minVersion": "0.8",
+	"package": "com.diamondaltar.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"mixins": ["ItemStackMixin"],
+	"injectors": {
+		"defaultRequire": 0
+	}
+}

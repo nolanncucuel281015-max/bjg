@@ -27,6 +27,15 @@ public final class ArmorPassives {
 
 	/** À appeler à chaque tick serveur : applique les passifs une fois par seconde. */
 	public static void tick(MinecraftServer server) {
+		// Chaque tick : tous les objets infusés de l'inventaire sont mis à jour et ne s'usent jamais.
+		for (ServerLevel level : server.getAllLevels()) {
+			for (ServerPlayer player : level.players()) {
+				var inv = player.getInventory();
+				for (int i = 0; i < inv.getContainerSize(); i++) {
+					keepPristine(inv.getItem(i));
+				}
+			}
+		}
 		if (server.getTickCount() % 20 != 0) {
 			return;
 		}
@@ -34,6 +43,20 @@ public final class ArmorPassives {
 			for (ServerPlayer player : level.players()) {
 				tickPlayer(level, player);
 			}
+		}
+	}
+
+	/** Met à jour un objet infusé d'une ancienne version et répare toute usure (incassable). */
+	public static void keepPristine(net.minecraft.world.item.ItemStack stack) {
+		if (stack.isEmpty() || !ModComponents.isInfused(stack)) {
+			return;
+		}
+		ModComponents.upgradeIfOld(stack);
+		if (!stack.has(net.minecraft.core.component.DataComponents.UNBREAKABLE)) {
+			stack.set(net.minecraft.core.component.DataComponents.UNBREAKABLE, net.minecraft.util.Unit.INSTANCE);
+		}
+		if (stack.getDamageValue() > 0) {
+			stack.set(net.minecraft.core.component.DataComponents.DAMAGE, 0);
 		}
 	}
 
