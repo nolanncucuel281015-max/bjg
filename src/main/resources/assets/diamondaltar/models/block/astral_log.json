@@ -1,0 +1,7 @@
+{
+	"parent": "minecraft:block/cube_column",
+	"textures": {
+		"end": "diamondaltar:block/astral_log_top",
+		"side": "diamondaltar:block/astral_log"
+	}
+}

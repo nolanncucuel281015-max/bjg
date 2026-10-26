@@ -54,6 +54,8 @@ public final class AstralEvents {
 				report.append("OK dimension chargee, minY=").append(astral.getMinY()).append(" maxY=").append(astral.getMaxY()).append('\n');
 				int solid = 0;
 				int ores = 0;
+				int trees = 0;
+				int rocks = 0;
 				for (int cx = -4; cx <= 4; cx++) {
 					for (int cz = -4; cz <= 4; cz++) {
 						astral.getChunk(cx, cz);
@@ -70,6 +72,12 @@ public final class AstralEvents {
 									if (s.is(AstralContent.LUNARITE_ORE) || s.is(AstralContent.ASTRALITE_ORE)) {
 										ores++;
 									}
+									if (s.is(AstralContent.ASTRAL_LOG) || s.is(AstralContent.ASTRAL_LEAVES)) {
+										trees++;
+									}
+									if (s.is(net.minecraft.world.level.block.Blocks.CALCITE)) {
+										rocks++;
+									}
 								}
 							}
 						}
@@ -77,6 +85,8 @@ public final class AstralEvents {
 				}
 				report.append(solid > 0 ? "OK" : "FAIL").append(" terrain genere : ").append(solid).append(" blocs solides echantillonnes, ").append(ores).append(" minerais\n");
 				ok &= solid > 0;
+				report.append(trees > 0 ? "OK" : "WARN").append(" arbres astraux : ").append(trees).append(" blocs de bois/feuilles, rochers : ")
+						.append(rocks).append(" blocs de calcite\n");
 				BlockState surface = astral.getBlockState(new BlockPos(0, astral.getHeight(Heightmap.Types.WORLD_SURFACE, 0, 0) - 1, 0));
 				report.append("INFO bloc de surface en 0,0 : ").append(surface).append('\n');
 				BlockPos found = astral.findNearestMapStructure(ASTRAL_STRUCTURES, BlockPos.ZERO, 50, false);

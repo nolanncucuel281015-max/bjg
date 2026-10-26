@@ -21,7 +21,10 @@
 		],
 		[],
 		[],
-		[],
+		[
+			"diamondaltar:rocks_lunar_plains",
+			"diamondaltar:trees_lunar_plains"
+		],
 		[]
 	],
 	"has_precipitation": false,

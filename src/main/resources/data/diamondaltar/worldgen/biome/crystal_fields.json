@@ -23,7 +23,10 @@
 		],
 		[],
 		[],
-		[],
+		[
+			"diamondaltar:rocks_crystal_fields",
+			"diamondaltar:trees_crystal_fields"
+		],
 		[]
 	],
 	"has_precipitation": false,

@@ -1,0 +1,16 @@
+{
+	"variants": {
+		"axis=y": {
+			"model": "diamondaltar:block/astral_log"
+		},
+		"axis=z": {
+			"model": "diamondaltar:block/astral_log",
+			"x": 90
+		},
+		"axis=x": {
+			"model": "diamondaltar:block/astral_log",
+			"x": 90,
+			"y": 90
+		}
+	}
+}

@@ -51,6 +51,7 @@ public class DiamondAltarClient implements ClientModInitializer {
 		BlockEntityRenderers.register(ModBlocks.INFUSION_ALTAR_ENTITY, InfusionAltarRenderer::new);
 		BlockRenderLayerMap.putBlock(AstralContent.ASTRAL_PORTAL, ChunkSectionLayer.TRANSLUCENT);
 		BlockRenderLayerMap.putBlock(AstralContent.FUSER, ChunkSectionLayer.CUTOUT);
+		BlockRenderLayerMap.putBlock(AstralContent.ASTRAL_LEAVES, ChunkSectionLayer.CUTOUT);
 
 		// Halos lumineux (une couleur par type de particule).
 		ParticleFactoryRegistry particles = ParticleFactoryRegistry.getInstance();

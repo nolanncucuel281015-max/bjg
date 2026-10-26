@@ -61,6 +61,14 @@ public final class AstralContent {
 	public static final Block GUARDIAN_ALTAR = block("guardian_altar", GuardianAltarBlock::new, BlockBehaviour.Properties.of()
 			.mapColor(MapColor.COLOR_BLACK).strength(-1f, 3600000f).sound(SoundType.LODESTONE).lightLevel(s -> 10).noLootTable());
 
+	public static final Block ASTRAL_LOG = block("astral_log", net.minecraft.world.level.block.RotatedPillarBlock::new, BlockBehaviour.Properties.of()
+			.mapColor(MapColor.QUARTZ).strength(2f).sound(SoundType.CHERRY_WOOD).lightLevel(s -> 2));
+	public static final Block ASTRAL_PLANKS = block("astral_planks", Block::new, BlockBehaviour.Properties.of()
+			.mapColor(MapColor.QUARTZ).strength(2f, 3f).sound(SoundType.CHERRY_WOOD));
+	public static final Block ASTRAL_LEAVES = block("astral_leaves", Block::new, BlockBehaviour.Properties.of()
+			.mapColor(MapColor.COLOR_PURPLE).strength(0.2f).sound(SoundType.AZALEA_LEAVES).noOcclusion().lightLevel(s -> 7)
+			.isSuffocating((st, l, pos) -> false).isViewBlocking((st, l, pos) -> false));
+
 	public static final BlockEntityType<FuserBlockEntity> FUSER_ENTITY = Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE,
 			DiamondAltar.id("fuser"), FabricBlockEntityTypeBuilder.create(FuserBlockEntity::new, FUSER).build());
 	public static final BlockEntityType<GuardianAltarBlockEntity> GUARDIAN_ALTAR_ENTITY = Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE,
@@ -128,6 +136,7 @@ public final class AstralContent {
 
 	public static void register() {
 		SurfaceStructure.register();
+		AstralFeatures.register();
 		AstralEvents.register();
 	}
 }

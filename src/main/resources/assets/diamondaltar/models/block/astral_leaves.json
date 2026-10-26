@@ -1,0 +1,6 @@
+{
+	"parent": "minecraft:block/leaves",
+	"textures": {
+		"all": "diamondaltar:block/astral_leaves"
+	}
+}
