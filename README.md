@@ -10,6 +10,12 @@ Chaque objet infusé a sa propre texture animée (reflet de diamant qui passe + 
 
 ![Textures](docs/textures.png)
 
+## Manuel en jeu
+
+Chaque joueur reçoit le **Manuel Diamond Altar** en rejoignant le monde (sinon : un livre + un diamant
+sur la table de craft, ou l'onglet créatif). Clic droit pour l'ouvrir : sommaire, touches, toutes les
+capacités, l'armure, la Dimension Astrale, les mobs, le Gardien et tous les crafts avec les vrais objets.
+
 ## Craft de l'autel
 
 ```

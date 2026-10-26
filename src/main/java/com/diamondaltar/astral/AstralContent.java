@@ -87,12 +87,16 @@ public final class AstralContent {
 	public static final Item CELESTIAL_HEART = item("celestial_heart", Item::new, new Item.Properties().rarity(Rarity.EPIC).fireResistant()
 			.component(net.minecraft.core.component.DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true));
 
+	/** Manuel du mod : s'ouvre en jeu (clic droit) et explique tout, avec les objets et les crafts. */
+	public static final Item MANUAL = item("diamond_manual", Item::new, new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
+
 	/** Onglet créatif « Diamond Altar » : l'autel, tout l'équipement déjà infusé, et tout le contenu astral. */
 	public static final CreativeModeTab TAB = Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, DiamondAltar.id("main"),
 			FabricItemGroup.builder()
 					.title(Component.translatable("itemGroup.diamondaltar.main"))
 					.icon(() -> new ItemStack(com.diamondaltar.block.ModBlocks.INFUSION_ALTAR_ITEM))
 					.displayItems((params, out) -> {
+						out.accept(MANUAL);
 						out.accept(com.diamondaltar.block.ModBlocks.INFUSION_ALTAR_ITEM);
 						for (Item item : List.of(Items.DIAMOND_SWORD, Items.DIAMOND_SPEAR, Items.DIAMOND_PICKAXE, Items.DIAMOND_AXE,
 								Items.DIAMOND_SHOVEL, Items.DIAMOND_HOE, Items.MACE, Items.DIAMOND_HELMET, Items.DIAMOND_CHESTPLATE,

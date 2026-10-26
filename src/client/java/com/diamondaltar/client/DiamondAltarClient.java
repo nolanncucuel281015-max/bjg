@@ -53,6 +53,17 @@ public class DiamondAltarClient implements ClientModInitializer {
 		BlockRenderLayerMap.putBlock(AstralContent.FUSER, ChunkSectionLayer.CUTOUT);
 		BlockRenderLayerMap.putBlock(AstralContent.ASTRAL_LEAVES, ChunkSectionLayer.CUTOUT);
 
+		// Manuel : clic droit pour l'ouvrir.
+		net.fabricmc.fabric.api.event.player.UseItemCallback.EVENT.register((player, level, hand) -> {
+			if (player.getItemInHand(hand).is(AstralContent.MANUAL)) {
+				if (level.isClientSide()) {
+					net.minecraft.client.Minecraft.getInstance().setScreen(new ManualScreen());
+				}
+				return net.minecraft.world.InteractionResult.SUCCESS;
+			}
+			return net.minecraft.world.InteractionResult.PASS;
+		});
+
 		// Halos lumineux (une couleur par type de particule).
 		ParticleFactoryRegistry particles = ParticleFactoryRegistry.getInstance();
 		particles.register(ModParticles.GLOW_WHITE, s -> new GlowOrbParticle.Provider(s, 0xFFFFFF));

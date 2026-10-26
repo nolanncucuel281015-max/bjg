@@ -159,5 +159,6 @@
 	"entity.diamondaltar.living_meteor": "Météore Vivant",
 	"entity.diamondaltar.moon_rabbit": "Lapin Lunaire",
 	"entity.diamondaltar.lunar_goat": "Chèvre Lunaire",
-	"diamondaltar.guardian.stunned": "Le Gardien est étourdi ! Frappe-le : dégâts x2"
+	"diamondaltar.guardian.stunned": "Le Gardien est étourdi ! Frappe-le : dégâts x2",
+	"item.diamondaltar.diamond_manual": "Manuel Diamond Altar"
 }
