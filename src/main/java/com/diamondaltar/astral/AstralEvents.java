@@ -166,6 +166,9 @@ public final class AstralEvents {
 						&& mods.modifiers().stream().anyMatch(m -> m.attribute().is(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE));
 				report.append(fast ? "OK" : "FAIL").append(" outils infuses : vitesse de minage +").append(com.diamondaltar.ability.ToolPassives.MINING_BONUS).append('\n');
 				ok &= fast;
+				boolean unbreakable = axe.has(net.minecraft.core.component.DataComponents.UNBREAKABLE);
+				report.append(unbreakable ? "OK" : "FAIL").append(" outils infuses incassables\n");
+				ok &= unbreakable;
 				var faker = net.fabricmc.fabric.api.entity.FakePlayer.get(astral);
 				faker.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, axe);
 				BlockPos treeBase = new BlockPos(2010, 200, 2010);

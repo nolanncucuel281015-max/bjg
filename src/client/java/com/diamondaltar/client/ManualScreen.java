@@ -122,7 +122,7 @@ public class ManualScreen extends Screen {
 		chapters.add(new Chapter("Capacités : armure", armor));
 
 		chapter("Bonus des outils",
-				icon(infused(Items.DIAMOND_PICKAXE), "Minage ultra rapide", "La pioche, la hache et la pelle infusées minent beaucoup plus vite (bien plus qu'Efficacité V)."),
+				icon(infused(Items.DIAMOND_PICKAXE), "Minage ultra rapide", "Tous les objets infusés sont incassables. La pioche, la hache et la pelle minent beaucoup plus vite (bien plus qu'Efficacité V)."),
 				icon(infused(Items.DIAMOND_AXE), "Abattage d'arbre", "Avec la hache infusée, casse une bûche : tout l'arbre tombe, bûches et feuilles. Accroupi pour couper normalement."));
 
 		chapter("L'armure infusée",

@@ -53,7 +53,7 @@ capacités, l'armure, la Dimension Astrale, les mobs, le Gardien et tous les cra
 | Encore plus | Épée : **Tranchant Céleste**, **Lames du Zodiaque** · Pioche : **Météorite Minière** · Hache : **Hache du Titan Stellaire** · Pelle : **Mur d'Astéroïdes** · Houe : **Tempête de Pétales** · Masse : **Pulsar** · Armure : **Bouclier Gravitationnel** |
 | Nouveautés lunaires | Épée : **Croissant Lunaire**, **Pluie d'Étoiles**, **Éclipse** · Pioche : **Rayon Stellaire**, **Géode Céleste** · Hache : **Orbite Lunaire** · Pelle : **Gravité Lunaire**, **Cratère Lunaire** · Houe : **Faux Céleste**, **Jardin d'Étoiles** · Masse : **Supernova** |
 
-La **pioche, la hache et la pelle infusées** minent beaucoup plus vite, et la **hache infusée abat tout
+Tous les objets infusés sont **incassables**. La **pioche, la hache et la pelle infusées** minent beaucoup plus vite, et la **hache infusée abat tout
 l'arbre** quand tu casses une bûche (accroupi pour couper normalement).
 
 L'armure infusée est incassable et très solide : armure 6/12/9/6, robustesse +5 et +6 PV par pièce,
