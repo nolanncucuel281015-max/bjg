@@ -138,6 +138,35 @@ public final class AstralEvents {
 					bosses.get(0).discard();
 				}
 			}
+			// Amélioration : une épée infusée passée à la forge garde ses capacités, avec la texture astrale.
+			var recipes = server.getRecipeManager();
+			net.minecraft.world.item.ItemStack infusedSword = new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.DIAMOND_SWORD);
+			com.diamondaltar.ModComponents.infuse(infusedSword);
+			var input = new net.minecraft.world.item.crafting.SmithingRecipeInput(
+					new net.minecraft.world.item.ItemStack(AstralContent.ASTRAL_UPGRADE_TEMPLATE), infusedSword,
+					new net.minecraft.world.item.ItemStack(AstralContent.ASTRALITE_INGOT));
+			var smith = recipes.getRecipeFor(net.minecraft.world.item.crafting.RecipeType.SMITHING, input, server.overworld());
+			if (smith.isPresent()) {
+				net.minecraft.world.item.ItemStack result = smith.get().value().assemble(input, server.registryAccess());
+				com.diamondaltar.ModComponents.upgradeIfOld(result);
+				boolean good = result.is(AstralContent.ASTRAL_SWORD) && com.diamondaltar.ModComponents.isInfused(result)
+						&& !com.diamondaltar.ability.Abilities.of(result.getItem()).isEmpty();
+				report.append(good ? "OK" : "FAIL").append(" forge : epee infusee -> ").append(result.getItem()).append(" infusee=")
+						.append(com.diamondaltar.ModComponents.isInfused(result)).append(" modele=").append(result.get(net.minecraft.core.component.DataComponents.ITEM_MODEL)).append('\n');
+				ok &= good;
+			} else {
+				report.append("FAIL forge : aucune recette pour epee en diamant\n");
+				ok = false;
+			}
+			var ingotInput = net.minecraft.world.item.crafting.CraftingInput.of(3, 3, java.util.List.of(
+					new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.NETHERITE_INGOT),
+					new net.minecraft.world.item.ItemStack(AstralContent.ASTRALITE_FRAGMENT), new net.minecraft.world.item.ItemStack(AstralContent.ASTRALITE_FRAGMENT),
+					new net.minecraft.world.item.ItemStack(AstralContent.ASTRALITE_FRAGMENT), new net.minecraft.world.item.ItemStack(AstralContent.ASTRALITE_FRAGMENT),
+					new net.minecraft.world.item.ItemStack(AstralContent.ASTRALITE_FRAGMENT), new net.minecraft.world.item.ItemStack(AstralContent.ASTRALITE_FRAGMENT),
+					new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.NETHERITE_INGOT), net.minecraft.world.item.ItemStack.EMPTY));
+			boolean ingot = recipes.getRecipeFor(net.minecraft.world.item.crafting.RecipeType.CRAFTING, ingotInput, server.overworld()).isPresent();
+			report.append(ingot ? "OK" : "FAIL").append(" craft du lingot d'Astralite (6 fragments + 2 netherite)\n");
+			ok &= ingot;
 			ServerLevel overworld = server.overworld();
 			// Le Fusionneur mélange lave + eau en Essence Galactique.
 			BlockPos fuserPos = new BlockPos(10, 130, 10);

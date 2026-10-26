@@ -1,7 +1,10 @@
 {
 	"type": "minecraft:smithing_transform",
 	"template": "diamondaltar:astral_upgrade_smithing_template",
-	"base": "minecraft:netherite_chestplate",
+	"base": [
+		"minecraft:diamond_chestplate",
+		"minecraft:netherite_chestplate"
+	],
 	"addition": "diamondaltar:astralite_ingot",
 	"result": {
 		"id": "diamondaltar:astral_chestplate"

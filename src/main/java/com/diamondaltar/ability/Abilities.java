@@ -110,7 +110,7 @@ public final class Abilities {
 	}
 
 	public static List<Ability> of(Item item) {
-		return ABILITIES.getOrDefault(item, List.of());
+		return ABILITIES.getOrDefault(ModComponents.abilityItem(item), List.of());
 	}
 
 	public static int selectedIndex(ItemStack stack) {
@@ -127,7 +127,8 @@ public final class Abilities {
 	}
 
 	public static boolean isLeftClick(ItemStack stack) {
-		return stack.is(Items.DIAMOND_SWORD) || stack.is(Items.DIAMOND_SPEAR);
+		Item item = ModComponents.abilityItem(stack.getItem());
+		return item == Items.DIAMOND_SWORD || item == Items.DIAMOND_SPEAR;
 	}
 
 	/** Touche « changer de capacité » (K) : capacité suivante de l'objet en main. */

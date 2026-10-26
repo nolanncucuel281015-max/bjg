@@ -1,7 +1,10 @@
 {
 	"type": "minecraft:smithing_transform",
 	"template": "diamondaltar:astral_upgrade_smithing_template",
-	"base": "minecraft:netherite_hoe",
+	"base": [
+		"minecraft:diamond_hoe",
+		"minecraft:netherite_hoe"
+	],
 	"addition": "diamondaltar:astralite_ingot",
 	"result": {
 		"id": "diamondaltar:astral_hoe"

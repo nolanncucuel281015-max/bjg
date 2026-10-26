@@ -69,11 +69,12 @@ gemmes violettes) :
 4. **Bastions Astraux** (coffres, **Gabarit Astral Endommagé** très rare) et **Châteaux Astraux**
    (plus rares) où l'**Autel du Gardien** invoque le boss : le **Gardien Astral** (700 PV, barre de
    boss, pluie d'étoiles, ondes de choc, téléportation, invocations). Il lâche le **Cœur du Gardien**.
-5. **Astralite** : cuire l'Astralite Brute → **Fragment d'Astralite**. 6 fragments en haut de la
-   table de craft + 2 lingots de netherite en bas → **Lingot d'Astralite**.
+5. **Astralite** : cuire l'Astralite Brute → **Fragment d'Astralite**. 6 fragments + 2 lingots de
+   netherite, n'importe où sur la table de craft → **Lingot d'Astralite**.
 6. **Gabarit d'Amélioration Astrale** = Gabarit Astral Endommagé + Cœur du Gardien.
-   À la table de forge : gabarit + outil/armure en **netherite** + Lingot d'Astralite →
-   **équipement Astral** (plus fort que la netherite).
+   À la table de forge : gabarit + outil/armure en **diamant ou netherite** (même **infusé**) +
+   Lingot d'Astralite → **équipement Astral** (plus fort que la netherite). Un objet infusé garde
+   toutes ses capacités et devient encore plus solide.
 
 ![Dimension Astrale](docs/astral.png)
 

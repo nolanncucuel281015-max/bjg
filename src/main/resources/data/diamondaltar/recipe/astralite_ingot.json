@@ -1,15 +1,16 @@
 {
-	"type": "minecraft:crafting_shaped",
+	"type": "minecraft:crafting_shapeless",
 	"category": "misc",
-	"pattern": [
-		"FFF",
-		"FFF",
-		"N N"
+	"ingredients": [
+		"diamondaltar:astralite_fragment",
+		"diamondaltar:astralite_fragment",
+		"diamondaltar:astralite_fragment",
+		"diamondaltar:astralite_fragment",
+		"diamondaltar:astralite_fragment",
+		"diamondaltar:astralite_fragment",
+		"minecraft:netherite_ingot",
+		"minecraft:netherite_ingot"
 	],
-	"key": {
-		"F": "diamondaltar:astralite_fragment",
-		"N": "minecraft:netherite_ingot"
-	},
 	"result": {
 		"id": "diamondaltar:astralite_ingot",
 		"count": 1

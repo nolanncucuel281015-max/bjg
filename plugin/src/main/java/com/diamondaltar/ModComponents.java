@@ -53,6 +53,11 @@ public final class ModComponents {
 		return stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
 	}
 
+	/** L'objet dont on utilise les capacités (le plugin n'a pas d'équipement astral). */
+	public static Item abilityItem(Item item) {
+		return item;
+	}
+
 	public static boolean isInfused(ItemStack stack) {
 		return !stack.isEmpty() && tag(stack).getBooleanOr(INFUSED, false);
 	}

@@ -59,6 +59,29 @@ public final class ModComponents {
 	public static void register() {
 	}
 
+	/** L'équipement astral a les mêmes capacités que sa version en diamant. */
+	public static Item abilityItem(Item item) {
+		if (ASTRAL_TO_DIAMOND == null) {
+			ASTRAL_TO_DIAMOND = java.util.Map.of(
+					com.diamondaltar.astral.AstralContent.ASTRAL_SWORD, Items.DIAMOND_SWORD,
+					com.diamondaltar.astral.AstralContent.ASTRAL_PICKAXE, Items.DIAMOND_PICKAXE,
+					com.diamondaltar.astral.AstralContent.ASTRAL_AXE, Items.DIAMOND_AXE,
+					com.diamondaltar.astral.AstralContent.ASTRAL_SHOVEL, Items.DIAMOND_SHOVEL,
+					com.diamondaltar.astral.AstralContent.ASTRAL_HOE, Items.DIAMOND_HOE,
+					com.diamondaltar.astral.AstralContent.ASTRAL_HELMET, Items.DIAMOND_HELMET,
+					com.diamondaltar.astral.AstralContent.ASTRAL_CHESTPLATE, Items.DIAMOND_CHESTPLATE,
+					com.diamondaltar.astral.AstralContent.ASTRAL_LEGGINGS, Items.DIAMOND_LEGGINGS,
+					com.diamondaltar.astral.AstralContent.ASTRAL_BOOTS, Items.DIAMOND_BOOTS);
+		}
+		return ASTRAL_TO_DIAMOND.getOrDefault(item, item);
+	}
+
+	private static java.util.Map<Item, Item> ASTRAL_TO_DIAMOND;
+
+	public static boolean isAstral(ItemStack stack) {
+		return abilityItem(stack.getItem()) != stack.getItem();
+	}
+
 	public static boolean isInfused(ItemStack stack) {
 		return !stack.isEmpty() && Boolean.TRUE.equals(stack.get(INFUSED));
 	}
@@ -73,32 +96,38 @@ public final class ModComponents {
 	}
 
 	public static boolean canInfuse(ItemStack stack) {
-		return INFUSABLE.contains(stack.getItem()) && !isInfused(stack);
+		return (INFUSABLE.contains(stack.getItem()) || isAstral(stack)) && !isInfused(stack);
 	}
 
 	/** Met à jour un objet infusé avec une ancienne version du mod (textures, armure renforcée…). */
 	public static void upgradeIfOld(ItemStack stack) {
 		if (isInfused(stack) && !Integer.valueOf(CURRENT_VERSION).equals(stack.get(INFUSE_VERSION))) {
 			infuse(stack);
+		} else if (isInfused(stack) && isAstral(stack)
+				&& !java.util.Objects.equals(stack.get(DataComponents.ITEM_MODEL), stack.getItem().components().get(DataComponents.ITEM_MODEL))) {
+			// Objet infusé puis amélioré à la forge : il prend l'apparence et les stats astrales.
+			infuse(stack);
 		}
 	}
 
 	/** Armure infusée : bien plus solide que le diamant (et même que la netherite). */
-	private static ItemAttributeModifiers armorStats(EquipmentSlot slot) {
+	private static ItemAttributeModifiers armorStats(EquipmentSlot slot, boolean astral) {
 		double armor = switch (slot) {
-			case HEAD -> 6;
-			case CHEST -> 12;
-			case LEGS -> 9;
-			case FEET -> 6;
+			case HEAD -> astral ? 8 : 6;
+			case CHEST -> astral ? 15 : 12;
+			case LEGS -> astral ? 12 : 9;
+			case FEET -> astral ? 8 : 6;
 			default -> 0;
 		};
+		double toughness = astral ? 8 : 5;
+		double health = astral ? 10 : 6;
 		EquipmentSlotGroup group = EquipmentSlotGroup.bySlot(slot);
 		String name = slot.getSerializedName();
 		return ItemAttributeModifiers.builder()
 				.add(Attributes.ARMOR, new AttributeModifier(DiamondAltar.id("armor_" + name), armor, AttributeModifier.Operation.ADD_VALUE), group)
-				.add(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(DiamondAltar.id("toughness_" + name), 5, AttributeModifier.Operation.ADD_VALUE), group)
+				.add(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(DiamondAltar.id("toughness_" + name), toughness, AttributeModifier.Operation.ADD_VALUE), group)
 				.add(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(DiamondAltar.id("knockback_" + name), 0.2, AttributeModifier.Operation.ADD_VALUE), group)
-				.add(Attributes.MAX_HEALTH, new AttributeModifier(DiamondAltar.id("health_" + name), 6, AttributeModifier.Operation.ADD_VALUE), group)
+				.add(Attributes.MAX_HEALTH, new AttributeModifier(DiamondAltar.id("health_" + name), health, AttributeModifier.Operation.ADD_VALUE), group)
 				.build();
 	}
 
@@ -109,18 +138,26 @@ public final class ModComponents {
 		stack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
 		stack.set(DataComponents.RARITY, Rarity.EPIC);
 		// Texture animée spéciale : assets/diamondaltar/items/infused_<objet>.json
+		boolean astral = isAstral(stack);
+		if (astral) {
+			// L'équipement astral garde sa propre texture et sa propre armure portée.
+			stack.set(DataComponents.ITEM_MODEL, stack.getItem().components().get(DataComponents.ITEM_MODEL));
+			stack.set(DataComponents.EQUIPPABLE, stack.getItem().components().get(DataComponents.EQUIPPABLE));
+		}
 		// (la lance garde son modèle 3D d'origine, avec la brillance)
-		if (!stack.is(Items.DIAMOND_SPEAR)) {
+		if (!stack.is(Items.DIAMOND_SPEAR) && !astral) {
 			String path = BuiltInRegistries.ITEM.getKey(stack.getItem()).getPath();
 			stack.set(DataComponents.ITEM_MODEL, DiamondAltar.id("infused_" + path));
 		}
 		Equippable equippable = stack.get(DataComponents.EQUIPPABLE);
 		if (equippable != null && equippable.assetId().isPresent()) {
-			stack.set(DataComponents.EQUIPPABLE, Equippable.builder(equippable.slot())
-					.setEquipSound(equippable.equipSound())
-					.setAsset(INFUSED_ARMOR)
-					.build());
-			stack.set(DataComponents.ATTRIBUTE_MODIFIERS, armorStats(equippable.slot()));
+			if (!astral) {
+				stack.set(DataComponents.EQUIPPABLE, Equippable.builder(equippable.slot())
+						.setEquipSound(equippable.equipSound())
+						.setAsset(INFUSED_ARMOR)
+						.build());
+			}
+			stack.set(DataComponents.ATTRIBUTE_MODIFIERS, armorStats(equippable.slot(), astral));
 			stack.set(DataComponents.UNBREAKABLE, Unit.INSTANCE);
 		}
 		stack.set(DataComponents.ITEM_NAME, Component.translatable("diamondaltar.infused_name", baseName)
