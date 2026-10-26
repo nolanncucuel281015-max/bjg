@@ -59,27 +59,9 @@ public final class ModComponents {
 	public static void register() {
 	}
 
-	/** L'équipement astral a les mêmes capacités que sa version en diamant. */
+	/** L'objet dont on utilise les capacités (même interface que le plugin). */
 	public static Item abilityItem(Item item) {
-		if (ASTRAL_TO_DIAMOND == null) {
-			ASTRAL_TO_DIAMOND = java.util.Map.of(
-					com.diamondaltar.astral.AstralContent.ASTRAL_SWORD, Items.DIAMOND_SWORD,
-					com.diamondaltar.astral.AstralContent.ASTRAL_PICKAXE, Items.DIAMOND_PICKAXE,
-					com.diamondaltar.astral.AstralContent.ASTRAL_AXE, Items.DIAMOND_AXE,
-					com.diamondaltar.astral.AstralContent.ASTRAL_SHOVEL, Items.DIAMOND_SHOVEL,
-					com.diamondaltar.astral.AstralContent.ASTRAL_HOE, Items.DIAMOND_HOE,
-					com.diamondaltar.astral.AstralContent.ASTRAL_HELMET, Items.DIAMOND_HELMET,
-					com.diamondaltar.astral.AstralContent.ASTRAL_CHESTPLATE, Items.DIAMOND_CHESTPLATE,
-					com.diamondaltar.astral.AstralContent.ASTRAL_LEGGINGS, Items.DIAMOND_LEGGINGS,
-					com.diamondaltar.astral.AstralContent.ASTRAL_BOOTS, Items.DIAMOND_BOOTS);
-		}
-		return ASTRAL_TO_DIAMOND.getOrDefault(item, item);
-	}
-
-	private static java.util.Map<Item, Item> ASTRAL_TO_DIAMOND;
-
-	public static boolean isAstral(ItemStack stack) {
-		return abilityItem(stack.getItem()) != stack.getItem();
+		return item;
 	}
 
 	public static boolean isInfused(ItemStack stack) {
@@ -96,16 +78,12 @@ public final class ModComponents {
 	}
 
 	public static boolean canInfuse(ItemStack stack) {
-		return (INFUSABLE.contains(stack.getItem()) || isAstral(stack)) && !isInfused(stack);
+		return INFUSABLE.contains(stack.getItem()) && !isInfused(stack);
 	}
 
 	/** Met à jour un objet infusé avec une ancienne version du mod (textures, armure renforcée…). */
 	public static void upgradeIfOld(ItemStack stack) {
 		if (isInfused(stack) && !Integer.valueOf(CURRENT_VERSION).equals(stack.get(INFUSE_VERSION))) {
-			infuse(stack);
-		} else if (isInfused(stack) && isAstral(stack)
-				&& !java.util.Objects.equals(stack.get(DataComponents.ITEM_MODEL), stack.getItem().components().get(DataComponents.ITEM_MODEL))) {
-			// Objet infusé puis amélioré à la forge : il prend l'apparence et les stats astrales.
 			infuse(stack);
 		}
 	}
@@ -138,12 +116,7 @@ public final class ModComponents {
 		stack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
 		stack.set(DataComponents.RARITY, Rarity.EPIC);
 		// Texture animée spéciale : assets/diamondaltar/items/infused_<objet>.json
-		boolean astral = isAstral(stack);
-		if (astral) {
-			// L'équipement astral garde sa propre texture et sa propre armure portée.
-			stack.set(DataComponents.ITEM_MODEL, stack.getItem().components().get(DataComponents.ITEM_MODEL));
-			stack.set(DataComponents.EQUIPPABLE, stack.getItem().components().get(DataComponents.EQUIPPABLE));
-		}
+		boolean astral = false;
 		// (la lance garde son modèle 3D d'origine, avec la brillance)
 		if (!stack.is(Items.DIAMOND_SPEAR) && !astral) {
 			String path = BuiltInRegistries.ITEM.getKey(stack.getItem()).getPath();

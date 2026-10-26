@@ -2,10 +2,12 @@
 	"type": "minecraft:crafting_shaped",
 	"category": "misc",
 	"pattern": [
+		" H ",
 		" S ",
 		"NNN"
 	],
 	"key": {
+		"H": "diamondaltar:celestial_heart",
 		"S": "minecraft:nether_star",
 		"N": "minecraft:netherite_block"
 	},

@@ -1,6 +1,0 @@
-{
-	"parent": "minecraft:item/generated",
-	"textures": {
-		"layer0": "diamondaltar:item/damaged_astral_template"
-	}
-}

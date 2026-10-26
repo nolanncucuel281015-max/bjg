@@ -138,26 +138,27 @@ public final class AstralEvents {
 					bosses.get(0).discard();
 				}
 			}
-			// Amélioration : une épée infusée passée à la forge garde ses capacités, avec la texture astrale.
+			// Forge : gabarit + Cœur du Gardien + lingot -> Cœur Céleste ; et l'autel se fabrique avec.
 			var recipes = server.getRecipeManager();
-			net.minecraft.world.item.ItemStack infusedSword = new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.DIAMOND_SWORD);
-			com.diamondaltar.ModComponents.infuse(infusedSword);
 			var input = new net.minecraft.world.item.crafting.SmithingRecipeInput(
-					new net.minecraft.world.item.ItemStack(AstralContent.ASTRAL_UPGRADE_TEMPLATE), infusedSword,
+					new net.minecraft.world.item.ItemStack(AstralContent.ASTRAL_UPGRADE_TEMPLATE),
+					new net.minecraft.world.item.ItemStack(AstralContent.GUARDIAN_HEART),
 					new net.minecraft.world.item.ItemStack(AstralContent.ASTRALITE_INGOT));
 			var smith = recipes.getRecipeFor(net.minecraft.world.item.crafting.RecipeType.SMITHING, input, server.overworld());
-			if (smith.isPresent()) {
-				net.minecraft.world.item.ItemStack result = smith.get().value().assemble(input, server.registryAccess());
-				com.diamondaltar.ModComponents.upgradeIfOld(result);
-				boolean good = result.is(AstralContent.ASTRAL_SWORD) && com.diamondaltar.ModComponents.isInfused(result)
-						&& !com.diamondaltar.ability.Abilities.of(result.getItem()).isEmpty();
-				report.append(good ? "OK" : "FAIL").append(" forge : epee infusee -> ").append(result.getItem()).append(" infusee=")
-						.append(com.diamondaltar.ModComponents.isInfused(result)).append(" modele=").append(result.get(net.minecraft.core.component.DataComponents.ITEM_MODEL)).append('\n');
-				ok &= good;
-			} else {
-				report.append("FAIL forge : aucune recette pour epee en diamant\n");
-				ok = false;
-			}
+			boolean heart = smith.isPresent() && smith.get().value().assemble(input, server.registryAccess()).is(AstralContent.CELESTIAL_HEART);
+			report.append(heart ? "OK" : "FAIL").append(" forge : coeur du Gardien -> coeur celeste\n");
+			ok &= heart;
+			net.minecraft.world.item.ItemStack E = net.minecraft.world.item.ItemStack.EMPTY;
+			var altarInput = net.minecraft.world.item.crafting.CraftingInput.of(3, 3, java.util.List.of(
+					E, new net.minecraft.world.item.ItemStack(AstralContent.CELESTIAL_HEART), E,
+					E, new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.NETHER_STAR), E,
+					new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.NETHERITE_BLOCK),
+					new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.NETHERITE_BLOCK),
+					new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.NETHERITE_BLOCK)));
+			var altarRecipe = recipes.getRecipeFor(net.minecraft.world.item.crafting.RecipeType.CRAFTING, altarInput, server.overworld());
+			boolean altar = altarRecipe.isPresent() && altarRecipe.get().value().assemble(altarInput, server.registryAccess()).is(com.diamondaltar.block.ModBlocks.INFUSION_ALTAR_ITEM);
+			report.append(altar ? "OK" : "FAIL").append(" craft de l'autel avec le coeur celeste en haut au milieu\n");
+			ok &= altar;
 			var ingotInput = net.minecraft.world.item.crafting.CraftingInput.of(3, 3, java.util.List.of(
 					new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.NETHERITE_INGOT),
 					new net.minecraft.world.item.ItemStack(AstralContent.ASTRALITE_FRAGMENT), new net.minecraft.world.item.ItemStack(AstralContent.ASTRALITE_FRAGMENT),

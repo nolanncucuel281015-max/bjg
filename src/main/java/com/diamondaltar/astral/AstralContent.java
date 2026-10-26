@@ -8,20 +8,12 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.ToolMaterial;
-import net.minecraft.world.item.equipment.ArmorMaterial;
-import net.minecraft.world.item.equipment.ArmorType;
-import net.minecraft.world.item.equipment.EquipmentAsset;
-import net.minecraft.world.item.equipment.EquipmentAssets;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DropExperienceBlock;
@@ -33,7 +25,6 @@ import net.minecraft.util.valueproviders.UniformInt;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 
 /**
@@ -82,27 +73,11 @@ public final class AstralContent {
 	public static final Item RAW_ASTRALITE = item("raw_astralite", Item::new, new Item.Properties().rarity(Rarity.UNCOMMON).fireResistant());
 	public static final Item ASTRALITE_FRAGMENT = item("astralite_fragment", Item::new, new Item.Properties().rarity(Rarity.RARE).fireResistant());
 	public static final Item ASTRALITE_INGOT = item("astralite_ingot", Item::new, new Item.Properties().rarity(Rarity.EPIC).fireResistant());
-	public static final Item DAMAGED_ASTRAL_TEMPLATE = item("damaged_astral_template", Item::new, new Item.Properties().rarity(Rarity.RARE));
 	public static final Item ASTRAL_UPGRADE_TEMPLATE = item("astral_upgrade_smithing_template", Item::new, new Item.Properties().rarity(Rarity.EPIC));
 	public static final Item GUARDIAN_HEART = item("guardian_heart", Item::new, new Item.Properties().rarity(Rarity.EPIC).fireResistant());
-
-	// ---------- Équipement astral (au-dessus de la netherite) ----------
-	public static final TagKey<Item> REPAIRS_ASTRAL = TagKey.create(Registries.ITEM, DiamondAltar.id("repairs_astral"));
-	public static final ToolMaterial ASTRAL_TOOLS = new ToolMaterial(BlockTags.INCORRECT_FOR_NETHERITE_TOOL, 4062, 12.0f, 6.0f, 25, REPAIRS_ASTRAL);
-	public static final ResourceKey<EquipmentAsset> ASTRAL_ASSET = ResourceKey.create(EquipmentAssets.ROOT_ID, DiamondAltar.id("astral"));
-	public static final ArmorMaterial ASTRAL_ARMOR = new ArmorMaterial(50,
-			Map.of(ArmorType.HELMET, 5, ArmorType.CHESTPLATE, 10, ArmorType.LEGGINGS, 8, ArmorType.BOOTS, 5),
-			25, SoundEvents.ARMOR_EQUIP_NETHERITE, 5.0f, 0.2f, REPAIRS_ASTRAL, ASTRAL_ASSET);
-
-	public static final Item ASTRAL_SWORD = item("astral_sword", Item::new, new Item.Properties().sword(ASTRAL_TOOLS, 3f, -2.2f).fireResistant().rarity(Rarity.EPIC));
-	public static final Item ASTRAL_PICKAXE = item("astral_pickaxe", Item::new, new Item.Properties().pickaxe(ASTRAL_TOOLS, 1f, -2.6f).fireResistant().rarity(Rarity.EPIC));
-	public static final Item ASTRAL_AXE = item("astral_axe", Item::new, new Item.Properties().axe(ASTRAL_TOOLS, 5f, -2.9f).fireResistant().rarity(Rarity.EPIC));
-	public static final Item ASTRAL_SHOVEL = item("astral_shovel", Item::new, new Item.Properties().shovel(ASTRAL_TOOLS, 1.5f, -2.8f).fireResistant().rarity(Rarity.EPIC));
-	public static final Item ASTRAL_HOE = item("astral_hoe", Item::new, new Item.Properties().hoe(ASTRAL_TOOLS, -5f, 0f).fireResistant().rarity(Rarity.EPIC));
-	public static final Item ASTRAL_HELMET = armor("astral_helmet", ArmorType.HELMET);
-	public static final Item ASTRAL_CHESTPLATE = armor("astral_chestplate", ArmorType.CHESTPLATE);
-	public static final Item ASTRAL_LEGGINGS = armor("astral_leggings", ArmorType.LEGGINGS);
-	public static final Item ASTRAL_BOOTS = armor("astral_boots", ArmorType.BOOTS);
+	/** Cœur du Gardien amélioré à la forge (gabarit + lingot d'Astralite) : sert à fabriquer l'Autel d'Infusion. */
+	public static final Item CELESTIAL_HEART = item("celestial_heart", Item::new, new Item.Properties().rarity(Rarity.EPIC).fireResistant()
+			.component(net.minecraft.core.component.DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true));
 
 	/** Onglet créatif « Diamond Altar » : l'autel, tout l'équipement déjà infusé, et tout le contenu astral. */
 	public static final CreativeModeTab TAB = Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, DiamondAltar.id("main"),
@@ -149,11 +124,6 @@ public final class AstralContent {
 		Item item = Registry.register(BuiltInRegistries.ITEM, itemKey(name), factory.apply(props.setId(itemKey(name))));
 		TAB_ITEMS.add(item);
 		return item;
-	}
-
-	private static Item armor(String name, ArmorType type) {
-		return item(name, Item::new, new Item.Properties().humanoidArmor(ASTRAL_ARMOR, type)
-				.durability(type.getDurability(50)).fireResistant().rarity(Rarity.EPIC));
 	}
 
 	public static void register() {

@@ -95,7 +95,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "diamondaltar:damaged_astral_template",
+					"name": "diamondaltar:astral_upgrade_smithing_template",
 					"weight": 25
 				},
 				{

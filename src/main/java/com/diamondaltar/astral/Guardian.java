@@ -39,7 +39,7 @@ import java.util.UUID;
 /**
  * Le Gardien Astral : un squelette wither géant et céleste (700 PV) avec une barre de boss.
  * Il lance des pluies d'étoiles, des ondes de choc lunaires, se téléporte et invoque des esprits.
- * À sa mort : Cœur du Gardien + Lingot d'Astralite (+ parfois un Gabarit Astral endommagé).
+ * À sa mort : Cœur du Gardien + Lingot d'Astralite (+ parfois un Gabarit d'Amélioration Astrale).
  */
 public final class Guardian {
 	public static final String TAG = "diamondaltar_guardian";
@@ -211,7 +211,7 @@ public final class Guardian {
 		boss.spawnAtLocation(level, new ItemStack(AstralContent.GUARDIAN_HEART));
 		boss.spawnAtLocation(level, new ItemStack(AstralContent.ASTRALITE_INGOT));
 		if (level.getRandom().nextFloat() < 0.5f) {
-			boss.spawnAtLocation(level, new ItemStack(AstralContent.DAMAGED_ASTRAL_TEMPLATE));
+			boss.spawnAtLocation(level, new ItemStack(AstralContent.ASTRAL_UPGRADE_TEMPLATE));
 		}
 		level.sendParticles(ParticleTypes.EXPLOSION_EMITTER, boss.getX(), boss.getY() + 1, boss.getZ(), 3, 1, 1, 1, 0);
 		level.sendParticles(ParticleTypes.END_ROD, boss.getX(), boss.getY() + 1.5, boss.getZ(), 200, 0.5, 1, 0.5, 0.4);
