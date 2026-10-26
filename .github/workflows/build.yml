@@ -15,13 +15,15 @@ jobs:
       - name: Inspect vanilla data (temporaire)
         continue-on-error: true
         run: |
-          JAR=$(find ~/.gradle/caches -name "*.jar" -path "*minecraft*" -size +10M | while read j; do unzip -l "$j" 2>/dev/null | grep -q "data/minecraft/dimension_type/overworld.json" && echo "$j" && break; done)
-          echo "JAR=$JAR"
-          mkdir -p /tmp/v && cd /tmp/v && unzip -q -o "$JAR" 'data/minecraft/*' 'version.json' || true
-          for f in version.json data/minecraft/dimension_type/overworld.json data/minecraft/dimension_type/the_end.json data/minecraft/dimension/*.json data/minecraft/worldgen/biome/plains.json data/minecraft/worldgen/biome/end_highlands.json data/minecraft/worldgen/biome/crimson_forest.json data/minecraft/worldgen/structure/bastion_remnant.json data/minecraft/worldgen/structure/end_city.json data/minecraft/worldgen/structure_set/end_cities.json data/minecraft/worldgen/structure_set/nether_complexes.json data/minecraft/worldgen/template_pool/end_city/start.json data/minecraft/recipe/netherite_sword_smithing.json data/minecraft/recipe/iron_ingot_from_smelting_raw_iron.json data/minecraft/worldgen/configured_feature/ore_diamond.json data/minecraft/worldgen/placed_feature/ore_diamond.json; do echo "===== $f"; cat $f; echo; done
-          echo "===== noise_settings/floating_islands"; head -c 6000 data/minecraft/worldgen/noise_settings/floating_islands.json
-          echo; echo "===== noise_settings/end"; head -c 3000 data/minecraft/worldgen/noise_settings/end.json
-          ls data/minecraft/timeline 2>/dev/null; for f in data/minecraft/timeline/*.json; do echo "===== $f"; head -c 1500 $f; echo; done
+          set +e
+          JAR=$HOME/.gradle/caches/fabric-loom/1.21.11/minecraft-extracted_server.jar
+          mkdir -p /tmp/v && cd /tmp/v && unzip -q -o "$JAR" 'data/minecraft/*'
+          for f in worldgen/world_preset/normal.json worldgen/biome/end_highlands.json worldgen/biome/crimson_forest.json worldgen/structure/bastion_remnant.json worldgen/structure/end_city.json worldgen/structure_set/end_cities.json worldgen/template_pool/end_city/start.json recipe/netherite_sword_smithing.json recipe/iron_ingot_from_smelting_raw_iron.json recipe/iron_ingot_from_blasting_raw_iron.json worldgen/configured_feature/ore_diamond.json worldgen/placed_feature/ore_diamond.json worldgen/configured_feature/end_island.json loot_table/chests/bastion_treasure.json tags/timeline/in_end.json; do echo "===== $f"; cat data/minecraft/$f; echo; done
+          ls data/minecraft/timeline; ls data/minecraft/tags/timeline
+          echo "===== noise_settings/floating_islands"; cat data/minecraft/worldgen/noise_settings/floating_islands.json | tr -d ' \n'
+          echo
+          echo "===== biome/plains"; cat data/minecraft/worldgen/biome/plains.json | tr -d ' \n' | head -c 5000
+          echo
       - uses: actions/upload-artifact@v4
         with:
           name: diamond-altar-mod
