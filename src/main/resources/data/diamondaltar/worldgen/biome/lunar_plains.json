@@ -32,7 +32,20 @@
 	"spawners": {
 		"ambient": [],
 		"axolotls": [],
-		"creature": [],
+		"creature": [
+			{
+				"type": "minecraft:rabbit",
+				"maxCount": 4,
+				"minCount": 2,
+				"weight": 8
+			},
+			{
+				"type": "minecraft:goat",
+				"maxCount": 2,
+				"minCount": 1,
+				"weight": 4
+			}
+		],
 		"misc": [],
 		"monster": [
 			{
@@ -42,10 +55,22 @@
 				"weight": 10
 			},
 			{
+				"type": "minecraft:skeleton",
+				"maxCount": 3,
+				"minCount": 1,
+				"weight": 8
+			},
+			{
 				"type": "minecraft:phantom",
 				"maxCount": 2,
 				"minCount": 1,
 				"weight": 4
+			},
+			{
+				"type": "minecraft:magma_cube",
+				"maxCount": 2,
+				"minCount": 1,
+				"weight": 3
 			}
 		],
 		"underground_water_creature": [],

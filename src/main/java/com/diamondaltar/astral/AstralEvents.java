@@ -32,7 +32,11 @@ public final class AstralEvents {
 			if (Guardian.isGuardian(entity) && entity.level() instanceof ServerLevel level) {
 				Guardian.onDeath(level, entity);
 			}
+			if (entity.level() instanceof ServerLevel level) {
+				AstralMobs.onDeath(level, entity, source);
+			}
 		});
+		AstralMobs.register();
 		if (Boolean.getBoolean("diamondaltar.selftest")) {
 			ServerLifecycleEvents.SERVER_STARTED.register(AstralEvents::selfTest);
 		}
@@ -133,6 +137,17 @@ public final class AstralEvents {
 					} else {
 						report.append("WARN aucun chateau dans un rayon de 100 chunks\n");
 					}
+				}
+				// Les mobs de la dimension deviennent astraux.
+				var archer = net.minecraft.world.entity.EntityType.SKELETON.create(astral, net.minecraft.world.entity.EntitySpawnReason.NATURAL);
+				if (archer != null) {
+					archer.setPos(2000.5, 190, 2003.5);
+					astral.addFreshEntity(archer);
+					boolean astralMob = AstralMobs.isAstral(archer);
+					report.append(astralMob ? "OK" : "FAIL").append(" mob astral : ").append(archer.getName().getString())
+							.append(" PV=").append(archer.getMaxHealth()).append('\n');
+					ok &= astralMob;
+					archer.discard();
 				}
 				// Le Gardien apparaît et donne son butin.
 				BlockPos arena = new BlockPos(2000, 190, 2000);
