@@ -25,6 +25,7 @@ val syncSharedSources by tasks.registering(Sync::class) {
 			"com/diamondaltar/ability/Glow.java",
 			"com/diamondaltar/ability/Abilities.java",
 			"com/diamondaltar/ability/ArmorPassives.java",
+			"com/diamondaltar/ability/ToolPassives.java",
 			"com/diamondaltar/effect/TimedEffect.java",
 			"com/diamondaltar/effect/EffectManager.java",
 		)

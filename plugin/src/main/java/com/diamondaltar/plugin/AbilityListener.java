@@ -34,6 +34,16 @@ public final class AbilityListener implements Listener {
 		return ((CraftPlayer) p).getHandle();
 	}
 
+	/** Hache infusée : abat tout l'arbre (le bloc cassé lui-même est cassé ensuite par le jeu). */
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	public void onBreak(org.bukkit.event.block.BlockBreakEvent event) {
+		ServerPlayer sp = nms(event.getPlayer());
+		var b = event.getBlock();
+		var pos = new net.minecraft.core.BlockPos(b.getX(), b.getY(), b.getZ());
+		var level = (net.minecraft.server.level.ServerLevel) sp.level();
+		com.diamondaltar.ability.ToolPassives.onBlockBroken(level, sp, pos, level.getBlockState(pos));
+	}
+
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onInteract(PlayerInteractEvent event) {
 		if (event.getHand() != EquipmentSlot.HAND) {

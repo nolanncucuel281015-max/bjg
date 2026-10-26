@@ -53,6 +53,9 @@ capacités, l'armure, la Dimension Astrale, les mobs, le Gardien et tous les cra
 | Encore plus | Épée : **Tranchant Céleste**, **Lames du Zodiaque** · Pioche : **Météorite Minière** · Hache : **Hache du Titan Stellaire** · Pelle : **Mur d'Astéroïdes** · Houe : **Tempête de Pétales** · Masse : **Pulsar** · Armure : **Bouclier Gravitationnel** |
 | Nouveautés lunaires | Épée : **Croissant Lunaire**, **Pluie d'Étoiles**, **Éclipse** · Pioche : **Rayon Stellaire**, **Géode Céleste** · Hache : **Orbite Lunaire** · Pelle : **Gravité Lunaire**, **Cratère Lunaire** · Houe : **Faux Céleste**, **Jardin d'Étoiles** · Masse : **Supernova** |
 
+La **pioche, la hache et la pelle infusées** minent beaucoup plus vite, et la **hache infusée abat tout
+l'arbre** quand tu casses une bûche (accroupi pour couper normalement).
+
 L'armure infusée est incassable et très solide : armure 6/12/9/6, robustesse +5 et +6 PV par pièce,
 résistance au recul.
 
@@ -72,7 +75,7 @@ gemmes violettes) :
    puis clic droit dedans avec le **Seau d'Essence Galactique** (comme un briquet).
 3. **La dimension** : des îles flottantes dans un ciel violet étoilé (Plaines Lunaires, Champs de
    Cristal), avec du **Minerai de Lunarite** et du rare **Minerai d'Astralite** (le minerai ultime).
-4. **Bastions Astraux** (forteresses à remparts, tours, donjon au trésor et ponts, 3 coffres) et **Châteaux Astraux** (plus rares) où l'**Autel du Gardien**
+4. **Bastions Astraux** (pyramides de blackstone à gradins, lac de lave et 3 coffres au sommet) et **Châteaux Astraux** (plus rares) où l'**Autel du Gardien**
    invoque le boss : le **Gardien Astral** (200 PV, hache, **saut écrasant** qui l'étourdit : dégâts x2 pendant 4 s, pluie d'étoiles, ondes de choc,
    téléportation). Il lâche le **Cœur du Gardien**, un Lingot d'Astralite et parfois
    le **Gabarit d'Amélioration Astrale** (aussi très rare dans les coffres).

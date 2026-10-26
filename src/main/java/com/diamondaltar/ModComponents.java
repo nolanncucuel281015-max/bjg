@@ -46,7 +46,7 @@ public final class ModComponents {
 			BuiltInRegistries.DATA_COMPONENT_TYPE,
 			DiamondAltar.id("infuse_version"),
 			DataComponentType.<Integer>builder().persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT).build());
-	public static final int CURRENT_VERSION = 3;
+	public static final int CURRENT_VERSION = 4;
 
 	public static final Set<Item> INFUSABLE = Set.of(
 			Items.DIAMOND_HELMET, Items.DIAMOND_CHESTPLATE, Items.DIAMOND_LEGGINGS, Items.DIAMOND_BOOTS,
@@ -126,6 +126,7 @@ public final class ModComponents {
 			stack.set(DataComponents.ATTRIBUTE_MODIFIERS, armorStats(equippable.slot()));
 			stack.set(DataComponents.UNBREAKABLE, Unit.INSTANCE);
 		}
+		com.diamondaltar.ability.ToolPassives.boostMining(stack);
 		stack.set(DataComponents.ITEM_NAME, Component.translatable("diamondaltar.infused_name", baseName)
 				.withStyle(ChatFormatting.AQUA));
 	}

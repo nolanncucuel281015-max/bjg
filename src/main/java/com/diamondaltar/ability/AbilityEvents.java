@@ -35,6 +35,11 @@ public final class AbilityEvents {
 		ServerPlayNetworking.registerGlobalReceiver(SwitchAbilityPayload.ID, (payload, context) -> Abilities.switchTool(context.player()));
 
 		// Clic droit avec les autres objets infusés.
+		net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents.AFTER.register((level, player, pos, state, blockEntity) -> {
+			if (level instanceof net.minecraft.server.level.ServerLevel sl && player instanceof ServerPlayer sp) {
+				ToolPassives.onBlockBroken(sl, sp, pos, state);
+			}
+		});
 		UseItemCallback.EVENT.register((player, level, hand) -> {
 			ItemStack stack = player.getItemInHand(hand);
 			if (!Abilities.usesRightClick(stack) || player.isSpectator()) {

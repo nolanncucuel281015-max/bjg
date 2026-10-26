@@ -121,6 +121,10 @@ public class ManualScreen extends Screen {
 		}
 		chapters.add(new Chapter("Capacités : armure", armor));
 
+		chapter("Bonus des outils",
+				icon(infused(Items.DIAMOND_PICKAXE), "Minage ultra rapide", "La pioche, la hache et la pelle infusées minent beaucoup plus vite (bien plus qu'Efficacité V)."),
+				icon(infused(Items.DIAMOND_AXE), "Abattage d'arbre", "Avec la hache infusée, casse une bûche : tout l'arbre tombe, bûches et feuilles. Accroupi pour couper normalement."));
+
 		chapter("L'armure infusée",
 				text("Incassable et plus solide que la netherite. Par pièce : armure 6 / 12 / 9 / 6, robustesse +5, +6 PV et résistance au recul."),
 				passive(Items.DIAMOND_HELMET, "head"),
@@ -151,7 +155,7 @@ public class ManualScreen extends Screen {
 				icon(st(AstralContent.LUNARITE_ORE), "Minerai de Lunarite", "Pioche en fer. Donne de la Lunarite."),
 				icon(st(AstralContent.ASTRALITE_ORE), "Minerai d'Astralite", "Le minerai ultime, rare. Pioche en diamant."),
 				icon(st(AstralContent.ASTRAL_LOG), "Arbres astraux", "Tronc argenté, feuilles de cristal violet. Les feuilles se récupèrent à la cisaille."),
-				icon(st(AstralContent.ASTRAL_BRICKS), "Structures", "Bastions Astraux : forteresses avec remparts, tours, ponts et un donjon au trésor (3 coffres). Châteaux Astraux, plus rares, avec l'Autel du Gardien."));
+				icon(st(AstralContent.ASTRAL_BRICKS), "Structures", "Bastions Astraux : pyramides de blackstone à gradins, avec un lac de lave et 3 coffres au sommet. Châteaux Astraux, plus rares, avec l'Autel du Gardien."));
 
 		chapter("Les mobs astraux",
 				text("Ils tombent lentement (gravité lunaire). Les hostiles lâchent de la Lunarite et parfois de l'Astralite Brute.", MUTED),

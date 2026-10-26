@@ -158,6 +158,43 @@ public final class AstralEvents {
 					ok &= astralMob;
 					archer.discard();
 				}
+				// Outils infusés : minage plus rapide, et la hache abat tout l'arbre.
+				var axe = new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.DIAMOND_AXE);
+				com.diamondaltar.ModComponents.infuse(axe);
+				var mods = axe.get(net.minecraft.core.component.DataComponents.ATTRIBUTE_MODIFIERS);
+				boolean fast = mods != null && mods.modifiers().stream().anyMatch(m -> m.attribute().is(net.minecraft.world.entity.ai.attributes.Attributes.MINING_EFFICIENCY))
+						&& mods.modifiers().stream().anyMatch(m -> m.attribute().is(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE));
+				report.append(fast ? "OK" : "FAIL").append(" outils infuses : vitesse de minage +").append(com.diamondaltar.ability.ToolPassives.MINING_BONUS).append('\n');
+				ok &= fast;
+				var faker = net.fabricmc.fabric.api.entity.FakePlayer.get(astral);
+				faker.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, axe);
+				BlockPos treeBase = new BlockPos(2010, 200, 2010);
+				for (int y = 0; y < 6; y++) {
+					astral.setBlock(treeBase.above(y), AstralContent.ASTRAL_LOG.defaultBlockState(), 3);
+				}
+				for (int dx = -2; dx <= 2; dx++) {
+					for (int dz = -2; dz <= 2; dz++) {
+						if (dx != 0 || dz != 0) {
+							astral.setBlock(treeBase.offset(dx, 5, dz), AstralContent.ASTRAL_LEAVES.defaultBlockState(), 3);
+						}
+					}
+				}
+				BlockState cut = astral.getBlockState(treeBase);
+				astral.removeBlock(treeBase, false);
+				com.diamondaltar.ability.ToolPassives.onBlockBroken(astral, faker, treeBase, cut);
+				int left = 0;
+				for (int dx = -2; dx <= 2; dx++) {
+					for (int dy = 0; dy < 7; dy++) {
+						for (int dz = -2; dz <= 2; dz++) {
+							BlockState rest = astral.getBlockState(treeBase.offset(dx, dy, dz));
+							if (rest.is(AstralContent.ASTRAL_LOG) || rest.is(AstralContent.ASTRAL_LEAVES)) {
+								left++;
+							}
+						}
+					}
+				}
+				report.append(left == 0 ? "OK" : "FAIL").append(" hache infusee : arbre entier abattu (blocs restants : ").append(left).append(")\n");
+				ok &= left == 0;
 				// Le Gardien apparaît et donne son butin.
 				BlockPos arena = new BlockPos(2000, 190, 2000);
 				Guardian.summon(astral, arena);
