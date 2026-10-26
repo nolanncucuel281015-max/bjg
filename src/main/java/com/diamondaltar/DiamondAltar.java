@@ -25,6 +25,7 @@ public class DiamondAltar implements ModInitializer {
 		ModComponents.register();
 		ModParticles.register();
 		ModBlocks.register();
+		com.diamondaltar.astral.AstralContent.register();
 		AbilityEvents.register();
 		ServerTickEvents.END_SERVER_TICK.register(server -> {
 			EffectManager.tickAll();
