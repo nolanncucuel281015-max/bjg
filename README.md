@@ -21,7 +21,7 @@ capacités, l'armure, la Dimension Astrale, les mobs, le Gardien et tous les cra
 ```
 [ vide ]              [Cœur Céleste]        [ vide ]
 [ vide ]              [Étoile du Nether]    [ vide ]
-[Bloc de netherite]   [Bloc de netherite]   [Bloc de netherite]
+[Lingot de netherite] [Lingot de netherite] [Lingot de netherite]
 ```
 
 ## Utilisation
@@ -72,7 +72,7 @@ gemmes violettes) :
    puis clic droit dedans avec le **Seau d'Essence Galactique** (comme un briquet).
 3. **La dimension** : des îles flottantes dans un ciel violet étoilé (Plaines Lunaires, Champs de
    Cristal), avec du **Minerai de Lunarite** et du rare **Minerai d'Astralite** (le minerai ultime).
-4. **Bastions Astraux** (coffres) et **Châteaux Astraux** (plus rares) où l'**Autel du Gardien**
+4. **Bastions Astraux** (forteresses à remparts, tours, donjon au trésor et ponts, 3 coffres) et **Châteaux Astraux** (plus rares) où l'**Autel du Gardien**
    invoque le boss : le **Gardien Astral** (200 PV, hache, **saut écrasant** qui l'étourdit : dégâts x2 pendant 4 s, pluie d'étoiles, ondes de choc,
    téléportation). Il lâche le **Cœur du Gardien**, un Lingot d'Astralite et parfois
    le **Gabarit d'Amélioration Astrale** (aussi très rare dans les coffres).

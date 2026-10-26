@@ -210,9 +210,9 @@ public final class AstralEvents {
 			var altarInput = net.minecraft.world.item.crafting.CraftingInput.of(3, 3, java.util.List.of(
 					E, new net.minecraft.world.item.ItemStack(AstralContent.CELESTIAL_HEART), E,
 					E, new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.NETHER_STAR), E,
-					new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.NETHERITE_BLOCK),
-					new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.NETHERITE_BLOCK),
-					new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.NETHERITE_BLOCK)));
+					new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.NETHERITE_INGOT),
+					new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.NETHERITE_INGOT),
+					new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.NETHERITE_INGOT)));
 			var altarRecipe = recipes.getRecipeFor(net.minecraft.world.item.crafting.RecipeType.CRAFTING, altarInput, server.overworld());
 			boolean altar = altarRecipe.isPresent() && altarRecipe.get().value().assemble(altarInput, server.registryAccess()).is(com.diamondaltar.block.ModBlocks.INFUSION_ALTAR_ITEM);
 			report.append(altar ? "OK" : "FAIL").append(" craft de l'autel avec le coeur celeste en haut au milieu\n");

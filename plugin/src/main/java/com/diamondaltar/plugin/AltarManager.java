@@ -113,7 +113,7 @@ public final class AltarManager implements Listener {
 		ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(plugin, "infusion_altar"), altarItem());
 		recipe.shape(" S ", "NNN");
 		recipe.setIngredient('S', Material.NETHER_STAR);
-		recipe.setIngredient('N', Material.NETHERITE_BLOCK);
+		recipe.setIngredient('N', Material.NETHERITE_INGOT);
 		Bukkit.addRecipe(recipe);
 	}
 

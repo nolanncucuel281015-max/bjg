@@ -86,7 +86,7 @@ public class ManualScreen extends Screen {
 		chapter("L'Autel d'Infusion",
 				sub("Le fabriquer"),
 				craft(new ItemStack[]{null, st(AstralContent.CELESTIAL_HEART), null, null, st(Items.NETHER_STAR), null,
-						st(Items.NETHERITE_BLOCK), st(Items.NETHERITE_BLOCK), st(Items.NETHERITE_BLOCK)}, altar),
+						st(Items.NETHERITE_INGOT), st(Items.NETHERITE_INGOT), st(Items.NETHERITE_INGOT)}, altar),
 				text("Le Cœur Céleste vient de la Dimension Astrale : il faut battre le Gardien (voir Progression).", MUTED),
 				sub("L'utiliser"),
 				text("1. Pose l'autel par terre."),
@@ -151,7 +151,7 @@ public class ManualScreen extends Screen {
 				icon(st(AstralContent.LUNARITE_ORE), "Minerai de Lunarite", "Pioche en fer. Donne de la Lunarite."),
 				icon(st(AstralContent.ASTRALITE_ORE), "Minerai d'Astralite", "Le minerai ultime, rare. Pioche en diamant."),
 				icon(st(AstralContent.ASTRAL_LOG), "Arbres astraux", "Tronc argenté, feuilles de cristal violet. Les feuilles se récupèrent à la cisaille."),
-				icon(st(AstralContent.ASTRAL_BRICKS), "Structures", "Bastions Astraux (coffres) et Châteaux Astraux, plus rares, avec l'Autel du Gardien."));
+				icon(st(AstralContent.ASTRAL_BRICKS), "Structures", "Bastions Astraux : forteresses avec remparts, tours, ponts et un donjon au trésor (3 coffres). Châteaux Astraux, plus rares, avec l'Autel du Gardien."));
 
 		chapter("Les mobs astraux",
 				text("Ils tombent lentement (gravité lunaire). Les hostiles lâchent de la Lunarite et parfois de l'Astralite Brute.", MUTED),

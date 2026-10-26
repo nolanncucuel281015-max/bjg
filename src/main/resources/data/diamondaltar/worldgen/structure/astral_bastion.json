@@ -4,7 +4,7 @@
 	"spawn_overrides": {},
 	"step": "surface_structures",
 	"terrain_adaptation": "beard_thin",
-	"footprint": 10,
+	"footprint": 16,
 	"delegate": {
 		"type": "minecraft:jigsaw",
 		"biomes": "#diamondaltar:has_astral_structures",
@@ -12,7 +12,7 @@
 		"size": 1,
 		"spawn_overrides": {},
 		"start_height": {
-			"absolute": 0
+			"absolute": -10
 		},
 		"start_pool": "diamondaltar:astral_bastion/start",
 		"step": "surface_structures",

@@ -25,7 +25,7 @@ COMMANDES EN JEU (le plugin ne peut pas ajouter de touches) :
   - Autel : clic droit pour poser/reprendre un objet, accroupi + clic gauche pour le ramasser.
   - /diamondaltar (op) ........... donne un Autel d'Infusion
 
-Craft de l'autel : étoile du Nether au milieu, 3 blocs de netherite en dessous.
+Craft de l'autel : étoile du Nether au milieu, 3 lingots de netherite en dessous.
 
 Différences avec le mod : pas de tremblement d'écran, halos lumineux plus simples ;
 le flash d'écran passe par un « titre » du pack de ressources.
