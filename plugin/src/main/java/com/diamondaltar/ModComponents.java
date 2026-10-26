@@ -35,7 +35,7 @@ public final class ModComponents {
 	private static final String INFUSED = "diamondaltar_infused";
 	private static final String SELECTED = "diamondaltar_selected";
 	private static final String VERSION = "diamondaltar_version";
-	public static final int CURRENT_VERSION = 2;
+	public static final int CURRENT_VERSION = 3;
 
 	public static final Set<Item> INFUSABLE = Set.of(
 			Items.DIAMOND_HELMET, Items.DIAMOND_CHESTPLATE, Items.DIAMOND_LEGGINGS, Items.DIAMOND_BOOTS,
@@ -107,10 +107,8 @@ public final class ModComponents {
 		});
 		stack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
 		stack.set(DataComponents.RARITY, Rarity.EPIC);
-		if (!stack.is(Items.DIAMOND_SPEAR)) {
-			String path = BuiltInRegistries.ITEM.getKey(stack.getItem()).getPath();
-			stack.set(DataComponents.ITEM_MODEL, id("infused_" + path));
-		}
+		String path = BuiltInRegistries.ITEM.getKey(stack.getItem()).getPath();
+		stack.set(DataComponents.ITEM_MODEL, id("infused_" + path));
 		Equippable equippable = stack.get(DataComponents.EQUIPPABLE);
 		if (equippable != null && equippable.assetId().isPresent()) {
 			stack.set(DataComponents.EQUIPPABLE, Equippable.builder(equippable.slot())

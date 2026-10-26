@@ -46,7 +46,7 @@ public final class ModComponents {
 			BuiltInRegistries.DATA_COMPONENT_TYPE,
 			DiamondAltar.id("infuse_version"),
 			DataComponentType.<Integer>builder().persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT).build());
-	public static final int CURRENT_VERSION = 2;
+	public static final int CURRENT_VERSION = 3;
 
 	public static final Set<Item> INFUSABLE = Set.of(
 			Items.DIAMOND_HELMET, Items.DIAMOND_CHESTPLATE, Items.DIAMOND_LEGGINGS, Items.DIAMOND_BOOTS,
@@ -89,16 +89,15 @@ public final class ModComponents {
 	}
 
 	/** Armure infusée : bien plus solide que le diamant (et même que la netherite). */
-	private static ItemAttributeModifiers armorStats(EquipmentSlot slot, boolean astral) {
+	private static ItemAttributeModifiers armorStats(EquipmentSlot slot) {
 		double armor = switch (slot) {
-			case HEAD -> astral ? 8 : 6;
-			case CHEST -> astral ? 15 : 12;
-			case LEGS -> astral ? 12 : 9;
-			case FEET -> astral ? 8 : 6;
+			case HEAD, FEET -> 6;
+			case CHEST -> 12;
+			case LEGS -> 9;
 			default -> 0;
 		};
-		double toughness = astral ? 8 : 5;
-		double health = astral ? 10 : 6;
+		double toughness = 5;
+		double health = 6;
 		EquipmentSlotGroup group = EquipmentSlotGroup.bySlot(slot);
 		String name = slot.getSerializedName();
 		return ItemAttributeModifiers.builder()
@@ -116,21 +115,15 @@ public final class ModComponents {
 		stack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
 		stack.set(DataComponents.RARITY, Rarity.EPIC);
 		// Texture animée spéciale : assets/diamondaltar/items/infused_<objet>.json
-		boolean astral = false;
-		// (la lance garde son modèle 3D d'origine, avec la brillance)
-		if (!stack.is(Items.DIAMOND_SPEAR) && !astral) {
-			String path = BuiltInRegistries.ITEM.getKey(stack.getItem()).getPath();
-			stack.set(DataComponents.ITEM_MODEL, DiamondAltar.id("infused_" + path));
-		}
+		String path = BuiltInRegistries.ITEM.getKey(stack.getItem()).getPath();
+		stack.set(DataComponents.ITEM_MODEL, DiamondAltar.id("infused_" + path));
 		Equippable equippable = stack.get(DataComponents.EQUIPPABLE);
 		if (equippable != null && equippable.assetId().isPresent()) {
-			if (!astral) {
-				stack.set(DataComponents.EQUIPPABLE, Equippable.builder(equippable.slot())
-						.setEquipSound(equippable.equipSound())
-						.setAsset(INFUSED_ARMOR)
-						.build());
-			}
-			stack.set(DataComponents.ATTRIBUTE_MODIFIERS, armorStats(equippable.slot(), astral));
+			stack.set(DataComponents.EQUIPPABLE, Equippable.builder(equippable.slot())
+					.setEquipSound(equippable.equipSound())
+					.setAsset(INFUSED_ARMOR)
+					.build());
+			stack.set(DataComponents.ATTRIBUTE_MODIFIERS, armorStats(equippable.slot()));
 			stack.set(DataComponents.UNBREAKABLE, Unit.INSTANCE);
 		}
 		stack.set(DataComponents.ITEM_NAME, Component.translatable("diamondaltar.infused_name", baseName)

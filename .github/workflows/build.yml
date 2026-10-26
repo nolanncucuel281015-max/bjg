@@ -12,17 +12,6 @@ jobs:
           java-version: 25
       - name: Build mod
         run: chmod +x gradlew && ./gradlew build --no-daemon
-      - name: Inspect spear assets (temporaire)
-        continue-on-error: true
-        run: |
-          set +e
-          for J in $(find ~/.gradle/caches/fabric-loom -name "*.jar" -size +5M); do unzip -l "$J" 2>/dev/null | grep -q "assets/minecraft/items/diamond_spear.json" && C=$J && break; done
-          echo "CLIENT=$C"; mkdir -p /tmp/a && cd /tmp/a && unzip -q -o "$C" 'assets/minecraft/items/diamond_spear.json' 'assets/minecraft/models/item/*spear*' 'assets/minecraft/textures/item/*spear*'
-          for f in assets/minecraft/items/diamond_spear.json assets/minecraft/models/item/*spear*.json; do echo "===== $f"; cat $f; echo; done
-          ls -la assets/minecraft/textures/item/ | grep spear
-          python3 -c "import struct;f=open('assets/minecraft/textures/item/diamond_spear.png','rb').read();print('size',struct.unpack('>II',f[16:24]))"
-          base64 -w0 assets/minecraft/textures/item/diamond_spear.png; echo
-          ls assets/minecraft/textures/item/ | grep -i "spear" ; for t in assets/minecraft/textures/item/diamond_spear*.png; do echo "== $t"; base64 -w0 $t; echo; done
       - uses: actions/upload-artifact@v4
         with:
           name: diamond-altar-mod

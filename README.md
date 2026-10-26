@@ -13,7 +13,7 @@ Chaque objet infusé a sa propre texture animée (reflet de diamant qui passe + 
 ## Craft de l'autel
 
 ```
-[ vide ]              [ vide ]              [ vide ]
+[ vide ]              [Cœur Céleste]        [ vide ]
 [ vide ]              [Étoile du Nether]    [ vide ]
 [Bloc de netherite]   [Bloc de netherite]   [Bloc de netherite]
 ```
@@ -66,15 +66,15 @@ gemmes violettes) :
    puis clic droit dedans avec le **Seau d'Essence Galactique** (comme un briquet).
 3. **La dimension** : des îles flottantes dans un ciel violet étoilé (Plaines Lunaires, Champs de
    Cristal), avec du **Minerai de Lunarite** et du rare **Minerai d'Astralite** (le minerai ultime).
-4. **Bastions Astraux** (coffres, **Gabarit Astral Endommagé** très rare) et **Châteaux Astraux**
-   (plus rares) où l'**Autel du Gardien** invoque le boss : le **Gardien Astral** (700 PV, barre de
-   boss, pluie d'étoiles, ondes de choc, téléportation, invocations). Il lâche le **Cœur du Gardien**.
+4. **Bastions Astraux** (coffres) et **Châteaux Astraux** (plus rares) où l'**Autel du Gardien**
+   invoque le boss : le **Gardien Astral** (700 PV, barre de boss, pluie d'étoiles, ondes de choc,
+   téléportation, invocations). Il lâche le **Cœur du Gardien**, un Lingot d'Astralite et parfois
+   le **Gabarit d'Amélioration Astrale** (aussi très rare dans les coffres).
 5. **Astralite** : cuire l'Astralite Brute → **Fragment d'Astralite**. 6 fragments + 2 lingots de
    netherite, n'importe où sur la table de craft → **Lingot d'Astralite**.
-6. **Gabarit d'Amélioration Astrale** = Gabarit Astral Endommagé + Cœur du Gardien.
-   À la table de forge : gabarit + outil/armure en **diamant ou netherite** (même **infusé**) +
-   Lingot d'Astralite → **équipement Astral** (plus fort que la netherite). Un objet infusé garde
-   toutes ses capacités et devient encore plus solide.
+6. **Cœur Céleste** : à la table de forge, Gabarit d'Amélioration Astrale + **Cœur du Gardien** +
+   Lingot d'Astralite → **Cœur Céleste**. Il se met **en haut au milieu** du craft de l'Autel
+   d'Infusion : il faut donc aller dans la dimension pour fabriquer l'autel.
 
 ![Dimension Astrale](docs/astral.png)
 
