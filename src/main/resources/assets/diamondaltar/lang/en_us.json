@@ -158,5 +158,6 @@
 	"entity.diamondaltar.lunar_archer": "Lunar Archer",
 	"entity.diamondaltar.living_meteor": "Living Meteor",
 	"entity.diamondaltar.moon_rabbit": "Moon Rabbit",
-	"entity.diamondaltar.lunar_goat": "Lunar Goat"
+	"entity.diamondaltar.lunar_goat": "Lunar Goat",
+	"diamondaltar.guardian.stunned": "The Guardian is stunned! Hit it: double damage"
 }

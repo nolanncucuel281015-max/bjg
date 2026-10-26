@@ -67,7 +67,7 @@ gemmes violettes) :
 3. **La dimension** : des îles flottantes dans un ciel violet étoilé (Plaines Lunaires, Champs de
    Cristal), avec du **Minerai de Lunarite** et du rare **Minerai d'Astralite** (le minerai ultime).
 4. **Bastions Astraux** (coffres) et **Châteaux Astraux** (plus rares) où l'**Autel du Gardien**
-   invoque le boss : le **Gardien Astral** (400 PV, barre de boss, pluie d'étoiles, ondes de choc,
+   invoque le boss : le **Gardien Astral** (200 PV, hache, **saut écrasant** qui l'étourdit : dégâts x2 pendant 4 s, pluie d'étoiles, ondes de choc,
    téléportation, invocations). Il lâche le **Cœur du Gardien**, un Lingot d'Astralite et parfois
    le **Gabarit d'Amélioration Astrale** (aussi très rare dans les coffres).
 5. **Astralite** : cuire l'Astralite Brute → **Fragment d'Astralite**. 6 fragments + 2 lingots de

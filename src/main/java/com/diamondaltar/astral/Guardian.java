@@ -37,8 +37,10 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Le Gardien Astral : un squelette wither géant et céleste (700 PV) avec une barre de boss.
- * Il lance des pluies d'étoiles, des ondes de choc lunaires, se téléporte et invoque des esprits.
+ * Le Gardien Astral : un squelette wither géant et céleste (200 PV) armé d'une hache, avec une barre de boss.
+ * Il attaque lentement au début puis de plus en plus vite. Attaque spéciale : il saute et écrase le sol
+ * (smash explosif), puis reste étourdi quelques secondes en prenant deux fois plus de dégâts.
+ * Il lance aussi des pluies d'étoiles, des ondes de choc lunaires et se téléporte.
  * À sa mort : Cœur du Gardien + Lingot d'Astralite (+ parfois un Gabarit d'Amélioration Astrale).
  */
 public final class Guardian {
@@ -47,6 +49,10 @@ public final class Guardian {
 	private static final DustParticleOptions NEBULA = new DustParticleOptions(0x9B4BFF, 2.0f);
 	private static final Map<UUID, ServerBossEvent> BARS = new HashMap<>();
 	private static final Map<UUID, Integer> TIMERS = new HashMap<>();
+	private static final Map<UUID, Integer> ATTACKS = new HashMap<>();
+	/** Fin de l'étourdissement (temps de jeu) : pendant ce temps le Gardien prend des dégâts x2. */
+	private static final Map<UUID, Long> STUNNED = new HashMap<>();
+	private static final int STUN_TICKS = 80;
 
 	private Guardian() {
 	}
@@ -61,16 +67,16 @@ public final class Guardian {
 		boss.setPersistenceRequired();
 		boss.setCustomName(Component.translatable("entity.diamondaltar.guardian").withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD));
 		boss.setCustomNameVisible(true);
-		set(boss, Attributes.MAX_HEALTH, 400);
+		set(boss, Attributes.MAX_HEALTH, 200);
 		set(boss, Attributes.SCALE, 2.0);
-		set(boss, Attributes.ATTACK_DAMAGE, 10);
-		set(boss, Attributes.ARMOR, 10);
-		set(boss, Attributes.ARMOR_TOUGHNESS, 4);
+		set(boss, Attributes.ATTACK_DAMAGE, 4);
+		set(boss, Attributes.ARMOR, 6);
+		set(boss, Attributes.ARMOR_TOUGHNESS, 0);
 		set(boss, Attributes.KNOCKBACK_RESISTANCE, 1.0);
-		set(boss, Attributes.MOVEMENT_SPEED, 0.28);
+		set(boss, Attributes.MOVEMENT_SPEED, 0.25);
 		set(boss, Attributes.FOLLOW_RANGE, 48);
 		boss.setHealth(boss.getMaxHealth());
-		ItemStack sword = new ItemStack(Items.NETHERITE_SWORD);
+		ItemStack sword = new ItemStack(Items.NETHERITE_AXE);
 		sword.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
 		boss.setItemSlot(EquipmentSlot.MAINHAND, sword);
 		boss.setItemSlot(EquipmentSlot.HEAD, new ItemStack(Items.NETHERITE_HELMET));
@@ -138,24 +144,78 @@ public final class Guardian {
 				level.sendParticles(k == 0 ? MOON : NEBULA, boss.getX() + Math.cos(ang) * 1.4, boss.getY() + 1.5 + Math.sin(ang * 2) * 0.5, boss.getZ() + Math.sin(ang) * 1.4, 1, 0, 0, 0, 0);
 			}
 		}
+		if (isStunned(level, boss)) {
+			// Étourdi : il ne bouge plus et n'attaque plus, des étoiles tournent au-dessus de sa tête.
+			if (boss instanceof Mob mob) {
+				mob.getNavigation().stop();
+				mob.setTarget(null);
+			}
+			double a = level.getGameTime() * 0.35;
+			double top = boss.getBbHeight() + 0.3;
+			for (int k = 0; k < 3; k++) {
+				double ang = a + k * Math.PI * 2 / 3;
+				level.sendParticles(ParticleTypes.WAX_OFF, boss.getX() + Math.cos(ang) * 0.9, boss.getY() + top, boss.getZ() + Math.sin(ang) * 0.9, 1, 0, 0, 0, 0);
+			}
+			return;
+		}
+		STUNNED.remove(boss.getUUID());
 		boolean enraged = boss.getHealth() < boss.getMaxHealth() * 0.4;
 		if (enraged && level.getGameTime() % 20 == 0) {
-			boss.addEffect(new MobEffectInstance(MobEffects.SPEED, 30, 1, false, false));
+			boss.addEffect(new MobEffectInstance(MobEffects.SPEED, 30, 0, false, false));
 		}
+		// Lent au début (une attaque toutes les 9 s), de plus en plus rapide quand il perd des PV (4,5 s).
+		int period = 90 + (int) (90 * (boss.getHealth() / boss.getMaxHealth()));
 		int t = TIMERS.merge(boss.getUUID(), 1, Integer::sum);
-		int period = enraged ? 110 : 160;
-		if (t % period != 0) {
+		if (t < period) {
 			return;
 		}
 		ServerPlayer target = nearest(level, boss);
 		if (target == null) {
 			return;
 		}
-		switch ((t / period) % 4) {
+		TIMERS.put(boss.getUUID(), 0);
+		int n = ATTACKS.merge(boss.getUUID(), 1, Integer::sum);
+		if (n % 2 == 1) {
+			EffectManager.start(new GuardianLeap(level, boss, target));
+			return;
+		}
+		switch ((n / 2) % 3) {
 			case 0 -> EffectManager.start(new GuardianStarfall(level, boss, target.position()));
 			case 1 -> EffectManager.start(new GuardianShockwave(level, boss));
-			case 2 -> blink(level, boss, target);
-			default -> summonVexes(level, boss, target);
+			default -> blink(level, boss, target);
+		}
+	}
+
+	public static boolean isStunned(ServerLevel level, LivingEntity boss) {
+		Long until = STUNNED.get(boss.getUUID());
+		return until != null && level.getGameTime() < until;
+	}
+
+	/** Étourdit le Gardien : il ne bouge plus et prend deux fois plus de dégâts. */
+	public static void stun(ServerLevel level, LivingEntity boss) {
+		STUNNED.put(boss.getUUID(), level.getGameTime() + STUN_TICKS);
+		boss.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, STUN_TICKS, 10, false, false));
+		boss.addEffect(new MobEffectInstance(MobEffects.GLOWING, STUN_TICKS, 0, false, false));
+		for (ServerPlayer p : level.players()) {
+			if (p.distanceToSqr(boss) < 40 * 40) {
+				p.displayClientMessage(Component.translatable("diamondaltar.guardian.stunned").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD), true);
+			}
+		}
+		level.playSound(null, boss.blockPosition(), SoundEvents.ANVIL_LAND, SoundSource.HOSTILE, 1.2f, 0.6f);
+	}
+
+	/** Pendant l'étourdissement, chaque coup reçu inflige ses dégâts une deuxième fois. */
+	public static void afterDamage(LivingEntity boss, float damageTaken) {
+		if (!(boss.level() instanceof ServerLevel level) || !isGuardian(boss) || !boss.isAlive()
+				|| damageTaken <= 0 || !isStunned(level, boss)) {
+			return;
+		}
+		level.sendParticles(ParticleTypes.CRIT, boss.getX(), boss.getY() + boss.getBbHeight() * 0.6, boss.getZ(), 25, 0.6, 0.8, 0.6, 0.4);
+		float health = boss.getHealth() - damageTaken;
+		if (health <= 0) {
+			boss.kill(level);
+		} else {
+			boss.setHealth(health);
 		}
 	}
 
@@ -188,9 +248,10 @@ public final class Guardian {
 			level.sendParticles(MOON, p.x, p.y, p.z, 2, 0.05, 0.05, 0.05, 0);
 			level.sendParticles(ParticleTypes.SWEEP_ATTACK, p.x, p.y, p.z, 1, 0, 0, 0, 0);
 		}
-		target.hurtServer(level, level.damageSources().mobAttack(boss), 8f);
+		target.hurtServer(level, level.damageSources().mobAttack(boss), 4f);
 	}
 
+	@SuppressWarnings("unused")
 	private static void summonVexes(ServerLevel level, LivingEntity boss, ServerPlayer target) {
 		for (int i = 0; i < 2; i++) {
 			Vex vex = EntityType.VEX.create(level, EntitySpawnReason.MOB_SUMMONED);
@@ -220,6 +281,102 @@ public final class Guardian {
 			bar.removeAllPlayers();
 		}
 		TIMERS.remove(boss.getUUID());
+		ATTACKS.remove(boss.getUUID());
+		STUNNED.remove(boss.getUUID());
+	}
+
+	/**
+	 * Saut écrasant : le Gardien lève sa hache, bondit vers le joueur, retombe en écrasant le sol
+	 * (explosion sans casser de blocs) puis reste étourdi.
+	 */
+	static final class GuardianLeap extends TimedEffect {
+		private static final int WINDUP = 14;
+		private final LivingEntity boss;
+		private final ServerPlayer target;
+		private boolean launched;
+		private boolean landed;
+
+		GuardianLeap(ServerLevel level, LivingEntity boss, ServerPlayer target) {
+			super(level);
+			this.boss = boss;
+			this.target = target;
+			level.playSound(null, boss.blockPosition(), SoundEvents.RAVAGER_ROAR, SoundSource.HOSTILE, 2.0f, 0.7f);
+		}
+
+		@Override
+		protected boolean tick() {
+			if (!boss.isAlive()) {
+				return true;
+			}
+			if (age < WINDUP) {
+				// Préparation : il s'accroupit et lève les bras, des éclats montent autour de lui.
+				if (boss instanceof Mob mob) {
+					mob.getNavigation().stop();
+					mob.getLookControl().setLookAt(target);
+				}
+				boss.setDeltaMovement(0, boss.getDeltaMovement().y, 0);
+				if (age % 4 == 0) {
+					boss.swing(net.minecraft.world.InteractionHand.MAIN_HAND, true);
+				}
+				for (int k = 0; k < 12; k++) {
+					double a = Math.PI * 2 * k / 12;
+					level.sendParticles(k % 2 == 0 ? MOON : NEBULA, boss.getX() + Math.cos(a) * 2.2, boss.getY() + 0.2 + age * 0.12, boss.getZ() + Math.sin(a) * 2.2, 1, 0, 0, 0, 0);
+				}
+				return false;
+			}
+			if (!launched) {
+				launched = true;
+				Vec3 to = target.position().subtract(boss.position());
+				Vec3 flat = new Vec3(to.x, 0, to.z);
+				double dist = Math.min(flat.length(), 14);
+				Vec3 dir = flat.lengthSqr() > 0.01 ? flat.normalize() : Vec3.ZERO;
+				boss.setDeltaMovement(dir.x * dist * 0.11, 1.15, dir.z * dist * 0.11);
+				boss.hurtMarked = true;
+				boss.swing(net.minecraft.world.InteractionHand.MAIN_HAND, true);
+				level.playSound(null, boss.blockPosition(), SoundEvents.WARDEN_SONIC_CHARGE, SoundSource.HOSTILE, 1.5f, 1.4f);
+				level.sendParticles(ParticleTypes.CLOUD, boss.getX(), boss.getY(), boss.getZ(), 30, 1, 0.1, 1, 0.1);
+				return false;
+			}
+			level.sendParticles(ParticleTypes.END_ROD, boss.getX(), boss.getY() + 1, boss.getZ(), 3, 0.4, 0.6, 0.4, 0.01);
+			boolean down = (age > WINDUP + 6 && boss.onGround()) || age > WINDUP + 60;
+			if (!down) {
+				if (age > WINDUP + 10 && boss.getDeltaMovement().y < 0) {
+					boss.setDeltaMovement(boss.getDeltaMovement().add(0, -0.25, 0)); // retombe lourdement
+					boss.hurtMarked = true;
+				}
+				return false;
+			}
+			if (!landed) {
+				landed = true;
+				smash();
+				stun(level, boss);
+			}
+			return true;
+		}
+
+		private void smash() {
+			Vec3 c = boss.position();
+			level.sendParticles(ParticleTypes.EXPLOSION_EMITTER, c.x, c.y + 0.5, c.z, 1, 0, 0, 0, 0);
+			level.sendParticles(ParticleTypes.EXPLOSION, c.x, c.y + 0.5, c.z, 12, 2.5, 0.3, 2.5, 0);
+			for (int ring = 1; ring <= 3; ring++) {
+				double r = ring * 2.0;
+				int n = (int) (r * 10);
+				for (int i = 0; i < n; i++) {
+					double a = Math.PI * 2 * i / n;
+					level.sendParticles(ring % 2 == 0 ? NEBULA : MOON, c.x + Math.cos(a) * r, c.y + 0.2, c.z + Math.sin(a) * r, 1, 0, 0.1, 0, 0);
+				}
+			}
+			level.playSound(null, boss.blockPosition(), SoundEvents.MACE_SMASH_GROUND_HEAVY, SoundSource.HOSTILE, 2.5f, 0.5f);
+			for (LivingEntity e : level.getEntitiesOfClass(LivingEntity.class, AABB.ofSize(c, 12, 6, 12),
+					e -> e != boss && !isGuardian(e) && e.distanceToSqr(c) < 6 * 6)) {
+				double d = Math.sqrt(e.distanceToSqr(c));
+				e.hurtServer(level, level.damageSources().mobAttack(boss), (float) Math.max(2.0, 6.0 - d));
+				Vec3 out = e.position().subtract(c).multiply(1, 0, 1);
+				out = out.lengthSqr() > 0.01 ? out.normalize().scale(1.2) : new Vec3(0, 0, 0);
+				e.push(out.x, 0.7, out.z);
+				e.hurtMarked = true;
+			}
+		}
 	}
 
 	/** Pluie d'étoiles du Gardien sur la position du joueur. */
@@ -264,7 +421,7 @@ public final class Guardian {
 				if (next.y <= center.y + 0.4) {
 					level.sendParticles(ParticleTypes.EXPLOSION, next.x, next.y + 0.5, next.z, 1, 0, 0, 0, 0);
 					for (LivingEntity e : level.getEntitiesOfClass(LivingEntity.class, AABB.ofSize(next, 6, 6, 6), e -> e != boss && !isGuardian(e))) {
-						e.hurtServer(level, level.damageSources().mobAttack(boss), 5f);
+						e.hurtServer(level, level.damageSources().mobAttack(boss), 3f);
 					}
 					level.playSound(null, BlockPos.containing(next), SoundEvents.FIREWORK_ROCKET_LARGE_BLAST, SoundSource.HOSTILE, 1.5f, 0.6f);
 					stars[i].discard();
@@ -297,7 +454,7 @@ public final class Guardian {
 			}
 			for (LivingEntity e : level.getEntitiesOfClass(LivingEntity.class, AABB.ofSize(center, r * 2 + 1, 4, r * 2 + 1),
 					e -> e != boss && !isGuardian(e) && Math.abs(Math.sqrt(e.distanceToSqr(center.x, e.getY(), center.z)) - r) < 0.8)) {
-				e.hurtServer(level, level.damageSources().mobAttack(boss), 5f);
+				e.hurtServer(level, level.damageSources().mobAttack(boss), 3f);
 				Vec3 out = e.position().subtract(center).multiply(1, 0, 1).normalize().scale(1.4);
 				e.push(out.x, 0.6, out.z);
 				e.hurtMarked = true;

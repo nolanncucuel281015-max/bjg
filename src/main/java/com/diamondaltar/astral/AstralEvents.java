@@ -37,6 +37,8 @@ public final class AstralEvents {
 			}
 		});
 		AstralMobs.register();
+		ServerLivingEntityEvents.AFTER_DAMAGE.register((entity, source, baseDamage, damageTaken, blocked) ->
+				Guardian.afterDamage(entity, damageTaken));
 		if (Boolean.getBoolean("diamondaltar.selftest")) {
 			ServerLifecycleEvents.SERVER_STARTED.register(AstralEvents::selfTest);
 		}
@@ -160,6 +162,23 @@ public final class AstralEvents {
 				for (int i = 0; i < 120; i++) {
 					Guardian.tick(astral);
 					com.diamondaltar.effect.EffectManager.tickAll();
+				}
+				if (!bosses.isEmpty()) {
+					// Étourdi après son smash : il prend deux fois plus de dégâts.
+					var b = bosses.get(0);
+					b.invulnerableTime = 0;
+					float h0 = b.getHealth();
+					b.hurtServer(astral, astral.damageSources().generic(), 10f);
+					float normal = h0 - b.getHealth();
+					Guardian.stun(astral, b);
+					b.invulnerableTime = 0;
+					h0 = b.getHealth();
+					b.hurtServer(astral, astral.damageSources().generic(), 10f);
+					float stunned = h0 - b.getHealth();
+					boolean doubled = normal > 0 && stunned > normal * 1.8f;
+					report.append(doubled ? "OK" : "FAIL").append(" Gardien etourdi : degats ").append(normal)
+							.append(" -> ").append(stunned).append('\n');
+					ok &= doubled;
 				}
 				if (!bosses.isEmpty()) {
 					Guardian.onDeath(astral, bosses.get(0));
