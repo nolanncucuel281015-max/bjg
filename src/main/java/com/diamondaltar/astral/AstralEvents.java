@@ -107,6 +107,7 @@ public final class AstralEvents {
 					if (hit != null) {
 						BlockPos c = hit.getFirst();
 						int altars = 0;
+						int altarY = 0;
 						int bricks = 0;
 						for (int dx = -48; dx <= 48; dx++) {
 							for (int dz = -48; dz <= 48; dz++) {
@@ -114,6 +115,7 @@ public final class AstralEvents {
 									BlockState st = astral.getBlockState(new BlockPos(c.getX() + dx, y, c.getZ() + dz));
 									if (st.is(AstralContent.GUARDIAN_ALTAR)) {
 										altars++;
+										altarY = y;
 									} else if (st.is(AstralContent.ASTRAL_BRICKS)) {
 										bricks++;
 									}
@@ -121,7 +123,10 @@ public final class AstralEvents {
 							}
 						}
 						int ground = astral.getHeight(Heightmap.Types.WORLD_SURFACE, c.getX(), c.getZ());
-						report.append("INFO surface du chateau : y=").append(ground).append('\n');
+						boolean onSurface = altars > 0 && Math.abs(altarY - ground) <= 30;
+						report.append(onSurface ? "OK" : "FAIL").append(" chateau a la surface : sol y=").append(ground)
+								.append(", autel y=").append(altarY).append('\n');
+						ok &= onSurface;
 						report.append(altars > 0 ? "OK" : "FAIL").append(" chateau en ").append(c).append(" : ").append(altars)
 								.append(" autel(s) du Gardien, ").append(bricks).append(" briques\n");
 						ok &= altars > 0;
