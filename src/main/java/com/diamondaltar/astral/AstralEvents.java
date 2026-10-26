@@ -86,7 +86,75 @@ public final class AstralEvents {
 				report.append(portalOk ? "OK" : "FAIL").append(" portail de retour construit en ").append(portal).append('\n');
 				ok &= portalOk;
 			}
+			if (astral != null) {
+				// Le château est-il vraiment construit ? (on cherche l'Autel du Gardien autour)
+				var structures = astral.registryAccess().lookupOrThrow(Registries.STRUCTURE);
+				var castleKey = net.minecraft.resources.ResourceKey.create(Registries.STRUCTURE, DiamondAltar.id("astral_castle"));
+				var castle = structures.get(castleKey).orElse(null);
+				if (castle != null) {
+					var hit = astral.getChunkSource().getGenerator().findNearestMapStructure(astral,
+							net.minecraft.core.HolderSet.direct(castle), BlockPos.ZERO, 100, false);
+					if (hit != null) {
+						BlockPos c = hit.getFirst();
+						int altars = 0;
+						int bricks = 0;
+						for (int dx = -48; dx <= 48; dx++) {
+							for (int dz = -48; dz <= 48; dz++) {
+								for (int y = 40; y < 120; y++) {
+									BlockState st = astral.getBlockState(new BlockPos(c.getX() + dx, y, c.getZ() + dz));
+									if (st.is(AstralContent.GUARDIAN_ALTAR)) {
+										altars++;
+									} else if (st.is(AstralContent.ASTRAL_BRICKS)) {
+										bricks++;
+									}
+								}
+							}
+						}
+						report.append(altars > 0 ? "OK" : "FAIL").append(" chateau en ").append(c).append(" : ").append(altars)
+								.append(" autel(s) du Gardien, ").append(bricks).append(" briques\n");
+						ok &= altars > 0;
+					} else {
+						report.append("WARN aucun chateau dans un rayon de 100 chunks\n");
+					}
+				}
+				// Le Gardien apparaît et donne son butin.
+				BlockPos arena = new BlockPos(2000, 190, 2000);
+				Guardian.summon(astral, arena);
+				var bosses = astral.getEntitiesOfClass(net.minecraft.world.entity.LivingEntity.class,
+						new net.minecraft.world.phys.AABB(arena).inflate(4), Guardian::isGuardian);
+				report.append(!bosses.isEmpty() ? "OK" : "FAIL").append(" Gardien invoque, PV=")
+						.append(bosses.isEmpty() ? 0 : bosses.get(0).getMaxHealth()).append('\n');
+				ok &= !bosses.isEmpty();
+				for (int i = 0; i < 120; i++) {
+					Guardian.tick(astral);
+					com.diamondaltar.effect.EffectManager.tickAll();
+				}
+				if (!bosses.isEmpty()) {
+					Guardian.onDeath(astral, bosses.get(0));
+					long hearts = astral.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class,
+							new net.minecraft.world.phys.AABB(arena).inflate(8), e -> e.getItem().is(AstralContent.GUARDIAN_HEART)).size();
+					report.append(hearts > 0 ? "OK" : "FAIL").append(" butin du Gardien : ").append(hearts).append(" coeur(s)\n");
+					ok &= hearts > 0;
+					bosses.get(0).discard();
+				}
+			}
 			ServerLevel overworld = server.overworld();
+			// Le Fusionneur mélange lave + eau en Essence Galactique.
+			BlockPos fuserPos = new BlockPos(10, 130, 10);
+			overworld.setBlockAndUpdate(fuserPos, AstralContent.FUSER.defaultBlockState());
+			if (overworld.getBlockEntity(fuserPos) instanceof FuserBlockEntity fuser) {
+				fuser.fillLava();
+				fuser.fillWater();
+				for (int i = 0; i < FuserBlockEntity.MIX_TIME + 5; i++) {
+					FuserBlockEntity.serverTick(overworld, fuserPos, overworld.getBlockState(fuserPos), fuser);
+				}
+				boolean essence = fuser.takeEssence();
+				report.append(essence ? "OK" : "FAIL").append(" Fusionneur : lave + eau -> essence galactique\n");
+				ok &= essence;
+			} else {
+				report.append("FAIL Fusionneur sans block entity\n");
+				ok = false;
+			}
 			BlockPos base = new BlockPos(0, 120, 0);
 			BlockState diamond = net.minecraft.world.level.block.Blocks.DIAMOND_BLOCK.defaultBlockState();
 			for (int dx = -1; dx <= 2; dx++) {

@@ -55,6 +55,28 @@ gemmes violettes) :
 
 ![Armure](docs/armor.png)
 
+## Dimension Astrale
+
+1. **Fusionneur** (craft : `bloc de fer, verre, bloc de fer` / `seau, bloc de diamant, seau` /
+   `bloc de cuivre, éclat d'améthyste, bloc de cuivre`). Côté **gauche** (dessin de lave) : lave,
+   côté **droit** (dessin d'eau) : eau. Clic droit avec les seaux, ou pose de la lave / de l'eau
+   juste à côté : les **tuyaux** l'aspirent. Quand les deux sont pleins, ça bout, ça tourne et ça
+   se mélange en **Essence Galactique** violette (clic droit avec un seau vide pour la récupérer).
+2. **Portail Astral** : un cadre de **blocs de diamant** comme un portail du Nether (4×5 minimum),
+   puis clic droit dedans avec le **Seau d'Essence Galactique** (comme un briquet).
+3. **La dimension** : des îles flottantes dans un ciel violet étoilé (Plaines Lunaires, Champs de
+   Cristal), avec du **Minerai de Lunarite** et du rare **Minerai d'Astralite** (le minerai ultime).
+4. **Bastions Astraux** (coffres, **Gabarit Astral Endommagé** très rare) et **Châteaux Astraux**
+   (plus rares) où l'**Autel du Gardien** invoque le boss : le **Gardien Astral** (700 PV, barre de
+   boss, pluie d'étoiles, ondes de choc, téléportation, invocations). Il lâche le **Cœur du Gardien**.
+5. **Astralite** : cuire l'Astralite Brute → **Fragment d'Astralite**. 6 fragments en haut de la
+   table de craft + 2 lingots de netherite en bas → **Lingot d'Astralite**.
+6. **Gabarit d'Amélioration Astrale** = Gabarit Astral Endommagé + Cœur du Gardien.
+   À la table de forge : gabarit + outil/armure en **netherite** + Lingot d'Astralite →
+   **équipement Astral** (plus fort que la netherite).
+
+Tout est aussi dans l'onglet créatif **Diamond Altar** (avec l'équipement déjà infusé).
+
 ## Version plugin (serveur Paper)
 
 Un 2ᵉ téléchargement, **`diamond-altar-plugin`**, contient un plugin pour serveur **Paper 1.21.11**
