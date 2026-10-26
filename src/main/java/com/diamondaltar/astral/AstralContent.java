@@ -105,7 +105,11 @@ public final class AstralContent {
 							com.diamondaltar.ModComponents.infuse(infused);
 							out.accept(infused);
 						}
-						TAB_ITEMS.forEach(out::accept);
+						for (Item item : TAB_ITEMS) {
+							if (item != MANUAL) { // déjà ajouté en premier : un doublon fait planter l'inventaire créatif
+								out.accept(item);
+							}
+						}
 					})
 					.build());
 

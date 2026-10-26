@@ -211,6 +211,15 @@ public final class AstralEvents {
 				}
 				report.append(left == 0 ? "OK" : "FAIL").append(" hache infusee : arbre entier abattu (blocs restants : ").append(left).append(")\n");
 				ok &= left == 0;
+				// L'onglet créatif se construit sans erreur (un doublon fait planter l'inventaire).
+				try {
+					AstralContent.TAB.buildContents(new net.minecraft.world.item.CreativeModeTab.ItemDisplayParameters(
+							server.getWorldData().enabledFeatures(), true, server.registryAccess()));
+					report.append("OK onglet creatif Diamond Altar : ").append(AstralContent.TAB.getDisplayItems().size()).append(" objets\n");
+				} catch (RuntimeException e) {
+					report.append("FAIL onglet creatif : ").append(e.getMessage()).append('\n');
+					ok = false;
+				}
 				// Le Gardien apparaît et donne son butin.
 				BlockPos arena = new BlockPos(2000, 190, 2000);
 				Guardian.summon(astral, arena);
