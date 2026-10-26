@@ -57,8 +57,8 @@ gemmes violettes) :
 
 ## Dimension Astrale
 
-1. **Fusionneur** (craft : `bloc de fer, verre, bloc de fer` / `seau, bloc de diamant, seau` /
-   `bloc de cuivre, éclat d'améthyste, bloc de cuivre`). Côté **gauche** (dessin de lave) : lave,
+1. **Fusionneur** (craft : un **diamant** au milieu de la table de craft et **3 blocs de fer** en
+   bas). Côté **gauche** (dessin de lave) : lave,
    côté **droit** (dessin d'eau) : eau. Clic droit avec les seaux, ou pose de la lave / de l'eau
    juste à côté : les **tuyaux** l'aspirent. Quand les deux sont pleins, ça bout, ça tourne et ça
    se mélange en **Essence Galactique** violette (clic droit avec un seau vide pour la récupérer).

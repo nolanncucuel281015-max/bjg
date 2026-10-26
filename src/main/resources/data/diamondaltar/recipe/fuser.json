@@ -2,17 +2,13 @@
 	"type": "minecraft:crafting_shaped",
 	"category": "misc",
 	"pattern": [
-		"IGI",
-		"BDB",
-		"CPC"
+		"   ",
+		" D ",
+		"III"
 	],
 	"key": {
 		"I": "minecraft:iron_block",
-		"G": "minecraft:glass",
-		"B": "minecraft:bucket",
-		"D": "minecraft:diamond_block",
-		"C": "minecraft:copper_block",
-		"P": "minecraft:amethyst_shard"
+		"D": "minecraft:diamond"
 	},
 	"result": {
 		"id": "diamondaltar:fuser",
