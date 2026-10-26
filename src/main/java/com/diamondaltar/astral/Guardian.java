@@ -61,13 +61,13 @@ public final class Guardian {
 		boss.setPersistenceRequired();
 		boss.setCustomName(Component.translatable("entity.diamondaltar.guardian").withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD));
 		boss.setCustomNameVisible(true);
-		set(boss, Attributes.MAX_HEALTH, 700);
+		set(boss, Attributes.MAX_HEALTH, 400);
 		set(boss, Attributes.SCALE, 2.0);
-		set(boss, Attributes.ATTACK_DAMAGE, 18);
-		set(boss, Attributes.ARMOR, 20);
-		set(boss, Attributes.ARMOR_TOUGHNESS, 10);
+		set(boss, Attributes.ATTACK_DAMAGE, 10);
+		set(boss, Attributes.ARMOR, 10);
+		set(boss, Attributes.ARMOR_TOUGHNESS, 4);
 		set(boss, Attributes.KNOCKBACK_RESISTANCE, 1.0);
-		set(boss, Attributes.MOVEMENT_SPEED, 0.32);
+		set(boss, Attributes.MOVEMENT_SPEED, 0.28);
 		set(boss, Attributes.FOLLOW_RANGE, 48);
 		boss.setHealth(boss.getMaxHealth());
 		ItemStack sword = new ItemStack(Items.NETHERITE_SWORD);
@@ -141,10 +141,9 @@ public final class Guardian {
 		boolean enraged = boss.getHealth() < boss.getMaxHealth() * 0.4;
 		if (enraged && level.getGameTime() % 20 == 0) {
 			boss.addEffect(new MobEffectInstance(MobEffects.SPEED, 30, 1, false, false));
-			boss.addEffect(new MobEffectInstance(MobEffects.STRENGTH, 30, 1, false, false));
 		}
 		int t = TIMERS.merge(boss.getUUID(), 1, Integer::sum);
-		int period = enraged ? 70 : 110;
+		int period = enraged ? 110 : 160;
 		if (t % period != 0) {
 			return;
 		}
@@ -189,11 +188,11 @@ public final class Guardian {
 			level.sendParticles(MOON, p.x, p.y, p.z, 2, 0.05, 0.05, 0.05, 0);
 			level.sendParticles(ParticleTypes.SWEEP_ATTACK, p.x, p.y, p.z, 1, 0, 0, 0, 0);
 		}
-		target.hurtServer(level, level.damageSources().mobAttack(boss), 14f);
+		target.hurtServer(level, level.damageSources().mobAttack(boss), 8f);
 	}
 
 	private static void summonVexes(ServerLevel level, LivingEntity boss, ServerPlayer target) {
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 2; i++) {
 			Vex vex = EntityType.VEX.create(level, EntitySpawnReason.MOB_SUMMONED);
 			if (vex != null) {
 				vex.setPos(boss.getX() + (i - 1) * 1.5, boss.getY() + 2.5, boss.getZ());
@@ -265,7 +264,7 @@ public final class Guardian {
 				if (next.y <= center.y + 0.4) {
 					level.sendParticles(ParticleTypes.EXPLOSION, next.x, next.y + 0.5, next.z, 1, 0, 0, 0, 0);
 					for (LivingEntity e : level.getEntitiesOfClass(LivingEntity.class, AABB.ofSize(next, 6, 6, 6), e -> e != boss && !isGuardian(e))) {
-						e.hurtServer(level, level.damageSources().mobAttack(boss), 9f);
+						e.hurtServer(level, level.damageSources().mobAttack(boss), 5f);
 					}
 					level.playSound(null, BlockPos.containing(next), SoundEvents.FIREWORK_ROCKET_LARGE_BLAST, SoundSource.HOSTILE, 1.5f, 0.6f);
 					stars[i].discard();
@@ -298,7 +297,7 @@ public final class Guardian {
 			}
 			for (LivingEntity e : level.getEntitiesOfClass(LivingEntity.class, AABB.ofSize(center, r * 2 + 1, 4, r * 2 + 1),
 					e -> e != boss && !isGuardian(e) && Math.abs(Math.sqrt(e.distanceToSqr(center.x, e.getY(), center.z)) - r) < 0.8)) {
-				e.hurtServer(level, level.damageSources().mobAttack(boss), 8f);
+				e.hurtServer(level, level.damageSources().mobAttack(boss), 5f);
 				Vec3 out = e.position().subtract(center).multiply(1, 0, 1).normalize().scale(1.4);
 				e.push(out.x, 0.6, out.z);
 				e.hurtMarked = true;
