@@ -24,7 +24,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Vex;
-import net.minecraft.world.entity.monster.WitherSkeleton;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.AABB;
@@ -52,7 +52,7 @@ public final class Guardian {
 	}
 
 	public static void summon(ServerLevel level, BlockPos pos) {
-		WitherSkeleton boss = EntityType.WITHER_SKELETON.create(level, EntitySpawnReason.TRIGGERED);
+		Mob boss = EntityType.WITHER_SKELETON.create(level, EntitySpawnReason.TRIGGERED);
 		if (boss == null) {
 			return;
 		}

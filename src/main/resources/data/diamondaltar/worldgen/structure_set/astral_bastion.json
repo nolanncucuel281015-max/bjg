@@ -1,0 +1,15 @@
+{
+	"placement": {
+		"type": "minecraft:random_spread",
+		"salt": 71830211,
+		"separation": 12,
+		"spacing": 30,
+		"spread_type": "triangular"
+	},
+	"structures": [
+		{
+			"structure": "diamondaltar:astral_bastion",
+			"weight": 1
+		}
+	]
+}

@@ -1,0 +1,14 @@
+{
+	"layers": {
+		"humanoid": [
+			{
+				"texture": "diamondaltar:astral"
+			}
+		],
+		"humanoid_leggings": [
+			{
+				"texture": "diamondaltar:astral"
+			}
+		]
+	}
+}

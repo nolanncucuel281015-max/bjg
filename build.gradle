@@ -14,6 +14,14 @@ loom {
 	accessWidenerPath = file("src/main/resources/diamondaltar.classtweaker")
 	splitEnvironmentSourceSets()
 
+	runs {
+		server {
+			// Auto-test de la Dimension Astrale par la compilation GitHub.
+			vmArg "-Ddiamondaltar.selftest=" + (System.getenv("DIAMONDALTAR_SELFTEST") ?: "false")
+			programArg "--nogui"
+		}
+	}
+
 	mods {
 		"diamondaltar" {
 			sourceSet sourceSets.main

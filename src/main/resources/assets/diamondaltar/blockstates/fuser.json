@@ -1,0 +1,19 @@
+{
+	"variants": {
+		"facing=north": {
+			"model": "diamondaltar:block/fuser"
+		},
+		"facing=east": {
+			"model": "diamondaltar:block/fuser",
+			"y": 90
+		},
+		"facing=south": {
+			"model": "diamondaltar:block/fuser",
+			"y": 180
+		},
+		"facing=west": {
+			"model": "diamondaltar:block/fuser",
+			"y": 270
+		}
+	}
+}

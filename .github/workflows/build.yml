@@ -12,22 +12,17 @@ jobs:
           java-version: 25
       - name: Build mod
         run: chmod +x gradlew && ./gradlew build --no-daemon
-      - name: Inspect vanilla data (temporaire)
-        continue-on-error: true
-        run: |
-          set +e
-          JAR=$HOME/.gradle/caches/fabric-loom/1.21.11/minecraft-extracted_server.jar
-          mkdir -p /tmp/v && cd /tmp/v && unzip -q -o "$JAR" 'data/minecraft/*'
-          for f in worldgen/world_preset/normal.json worldgen/biome/end_highlands.json worldgen/biome/crimson_forest.json worldgen/structure/bastion_remnant.json worldgen/structure/end_city.json worldgen/structure_set/end_cities.json worldgen/template_pool/end_city/start.json recipe/netherite_sword_smithing.json recipe/iron_ingot_from_smelting_raw_iron.json recipe/iron_ingot_from_blasting_raw_iron.json worldgen/configured_feature/ore_diamond.json worldgen/placed_feature/ore_diamond.json worldgen/configured_feature/end_island.json loot_table/chests/bastion_treasure.json tags/timeline/in_end.json; do echo "===== $f"; cat data/minecraft/$f; echo; done
-          ls data/minecraft/timeline; ls data/minecraft/tags/timeline
-          echo "===== noise_settings/floating_islands"; cat data/minecraft/worldgen/noise_settings/floating_islands.json | tr -d ' \n'
-          echo
-          echo "===== biome/plains"; cat data/minecraft/worldgen/biome/plains.json | tr -d ' \n' | head -c 5000
-          echo
       - uses: actions/upload-artifact@v4
         with:
           name: diamond-altar-mod
           path: build/libs/*.jar
+      - name: Auto-test (serveur Minecraft + Dimension Astrale)
+        continue-on-error: true
+        run: |
+          mkdir -p run && echo "eula=true" > run/eula.txt
+          DIAMONDALTAR_SELFTEST=true timeout 900 ./gradlew runServer --no-daemon > server.log 2>&1 || true
+          grep -E "SELFTEST|^(OK|FAIL|WARN|INFO) |    at |ERROR|Exception|Failed to|Couldn't|Missing|missing" server.log | grep -v "Dfabric" | head -150
+          grep -q "SELFTEST RESULT: PASS" server.log
       - name: Build plugin + resource pack
         run: ./gradlew -p plugin build --no-daemon
       - uses: actions/upload-artifact@v4

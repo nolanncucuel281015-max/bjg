@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "building",
+	"pattern": [
+		" L ",
+		"LGL",
+		" L "
+	],
+	"key": {
+		"L": "diamondaltar:lunarite",
+		"G": "minecraft:glowstone"
+	},
+	"result": {
+		"id": "diamondaltar:astral_lamp",
+		"count": 1
+	}
+}

@@ -1,4 +1,13 @@
 {
 	"replace": false,
-	"values": ["diamondaltar:infusion_altar"]
+	"values": [
+		"diamondaltar:infusion_altar",
+		"diamondaltar:fuser",
+		"diamondaltar:astral_stone",
+		"diamondaltar:astral_bricks",
+		"diamondaltar:chiseled_astral_bricks",
+		"diamondaltar:astral_frame",
+		"diamondaltar:lunarite_ore",
+		"diamondaltar:astralite_ore"
+	]
 }

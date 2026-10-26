@@ -1,0 +1,53 @@
+{
+	"attributes": {
+		"minecraft:visual/sky_color": "#0b0420",
+		"minecraft:visual/fog_color": "#24124a"
+	},
+	"carvers": [],
+	"downfall": 0.0,
+	"effects": {
+		"water_color": "#9b4bff"
+	},
+	"features": [
+		[],
+		[],
+		[],
+		[],
+		[],
+		[],
+		[
+			"diamondaltar:ore_lunarite",
+			"diamondaltar:ore_astralite"
+		],
+		[],
+		[],
+		[],
+		[]
+	],
+	"has_precipitation": false,
+	"spawn_costs": {},
+	"spawners": {
+		"ambient": [],
+		"axolotls": [],
+		"creature": [],
+		"misc": [],
+		"monster": [
+			{
+				"type": "minecraft:enderman",
+				"maxCount": 2,
+				"minCount": 1,
+				"weight": 10
+			},
+			{
+				"type": "minecraft:phantom",
+				"maxCount": 2,
+				"minCount": 1,
+				"weight": 4
+			}
+		],
+		"underground_water_creature": [],
+		"water_ambient": [],
+		"water_creature": []
+	},
+	"temperature": 0.5
+}

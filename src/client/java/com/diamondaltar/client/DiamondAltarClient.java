@@ -3,6 +3,7 @@ package com.diamondaltar.client;
 import com.diamondaltar.DiamondAltar;
 import com.diamondaltar.ModComponents;
 import com.diamondaltar.ModParticles;
+import com.diamondaltar.astral.AstralContent;
 import com.diamondaltar.ability.FlashPayload;
 import com.diamondaltar.ability.Abilities;
 import com.diamondaltar.ability.ArmorActionPayload;
@@ -17,6 +18,8 @@ import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.fabricmc.fabric.api.event.client.player.ClientPreAttackCallback;
@@ -46,6 +49,8 @@ public class DiamondAltarClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		BlockEntityRenderers.register(ModBlocks.INFUSION_ALTAR_ENTITY, InfusionAltarRenderer::new);
+		BlockRenderLayerMap.putBlock(AstralContent.ASTRAL_PORTAL, ChunkSectionLayer.TRANSLUCENT);
+		BlockRenderLayerMap.putBlock(AstralContent.FUSER, ChunkSectionLayer.CUTOUT);
 
 		// Halos lumineux (une couleur par type de particule).
 		ParticleFactoryRegistry particles = ParticleFactoryRegistry.getInstance();

@@ -1,0 +1,13 @@
+{
+	"type": "minecraft:jigsaw",
+	"biomes": "#diamondaltar:has_astral_structures",
+	"max_distance_from_center": 80,
+	"size": 1,
+	"spawn_overrides": {},
+	"start_height": {
+		"absolute": 64
+	},
+	"start_pool": "diamondaltar:astral_bastion/start",
+	"step": "surface_structures",
+	"use_expansion_hack": false
+}

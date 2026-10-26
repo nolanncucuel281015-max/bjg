@@ -1,0 +1,15 @@
+{
+	"type": "diamondaltar:astralis",
+	"generator": {
+		"type": "minecraft:noise",
+		"biome_source": {
+			"type": "minecraft:checkerboard",
+			"biomes": [
+				"diamondaltar:lunar_plains",
+				"diamondaltar:crystal_fields"
+			],
+			"scale": 4
+		},
+		"settings": "diamondaltar:astralis"
+	}
+}

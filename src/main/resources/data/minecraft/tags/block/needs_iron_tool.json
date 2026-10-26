@@ -1,4 +1,7 @@
 {
 	"replace": false,
-	"values": ["diamondaltar:infusion_altar"]
+	"values": [
+		"diamondaltar:infusion_altar",
+		"diamondaltar:lunarite_ore"
+	]
 }

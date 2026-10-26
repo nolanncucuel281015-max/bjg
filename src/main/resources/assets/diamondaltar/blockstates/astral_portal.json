@@ -1,0 +1,10 @@
+{
+	"variants": {
+		"axis=x": {
+			"model": "diamondaltar:block/astral_portal_ns"
+		},
+		"axis=z": {
+			"model": "diamondaltar:block/astral_portal_ew"
+		}
+	}
+}
