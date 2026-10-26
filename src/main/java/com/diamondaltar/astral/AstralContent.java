@@ -127,6 +127,7 @@ public final class AstralContent {
 	}
 
 	public static void register() {
+		SurfaceStructure.register();
 		AstralEvents.register();
 	}
 }
