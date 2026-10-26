@@ -75,6 +75,8 @@ gemmes violettes) :
    À la table de forge : gabarit + outil/armure en **netherite** + Lingot d'Astralite →
    **équipement Astral** (plus fort que la netherite).
 
+![Dimension Astrale](docs/astral.png)
+
 Tout est aussi dans l'onglet créatif **Diamond Altar** (avec l'équipement déjà infusé).
 
 ## Version plugin (serveur Paper)
