@@ -153,10 +153,10 @@
 	"item.diamondaltar.astral_leggings": "Astral Leggings",
 	"item.diamondaltar.astral_boots": "Astral Boots",
 	"entity.diamondaltar.guardian": "Astral Guardian",
-	"itemGroup.diamondaltar.astral": "Astral Dimension",
 	"diamondaltar.fuser.status": "Lava: %s · Water: %s · Galaxy essence: %s",
 	"diamondaltar.fuser.full": "full",
 	"diamondaltar.fuser.empty": "empty",
 	"biome.diamondaltar.lunar_plains": "Lunar Plains",
-	"biome.diamondaltar.crystal_fields": "Crystal Fields"
+	"biome.diamondaltar.crystal_fields": "Crystal Fields",
+	"itemGroup.diamondaltar.main": "Diamond Altar"
 }

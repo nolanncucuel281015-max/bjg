@@ -15,6 +15,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.ToolMaterial;
 import net.minecraft.world.item.equipment.ArmorMaterial;
@@ -103,11 +104,22 @@ public final class AstralContent {
 	public static final Item ASTRAL_LEGGINGS = armor("astral_leggings", ArmorType.LEGGINGS);
 	public static final Item ASTRAL_BOOTS = armor("astral_boots", ArmorType.BOOTS);
 
-	public static final CreativeModeTab TAB = Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, DiamondAltar.id("astral"),
+	/** Onglet créatif « Diamond Altar » : l'autel, tout l'équipement déjà infusé, et tout le contenu astral. */
+	public static final CreativeModeTab TAB = Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, DiamondAltar.id("main"),
 			FabricItemGroup.builder()
-					.title(Component.translatable("itemGroup.diamondaltar.astral"))
-					.icon(() -> new ItemStack(GALAXY_ESSENCE_BUCKET))
-					.displayItems((params, out) -> TAB_ITEMS.forEach(out::accept))
+					.title(Component.translatable("itemGroup.diamondaltar.main"))
+					.icon(() -> new ItemStack(com.diamondaltar.block.ModBlocks.INFUSION_ALTAR_ITEM))
+					.displayItems((params, out) -> {
+						out.accept(com.diamondaltar.block.ModBlocks.INFUSION_ALTAR_ITEM);
+						for (Item item : List.of(Items.DIAMOND_SWORD, Items.DIAMOND_SPEAR, Items.DIAMOND_PICKAXE, Items.DIAMOND_AXE,
+								Items.DIAMOND_SHOVEL, Items.DIAMOND_HOE, Items.MACE, Items.DIAMOND_HELMET, Items.DIAMOND_CHESTPLATE,
+								Items.DIAMOND_LEGGINGS, Items.DIAMOND_BOOTS)) {
+							ItemStack infused = new ItemStack(item);
+							com.diamondaltar.ModComponents.infuse(infused);
+							out.accept(infused);
+						}
+						TAB_ITEMS.forEach(out::accept);
+					})
 					.build());
 
 	private AstralContent() {
