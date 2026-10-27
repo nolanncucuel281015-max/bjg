@@ -1,4 +1,7 @@
-# Diamond Altar (mod Fabric 1.21.11)
+# Les 7 Dimensions (mod Fabric 1.21.11)
+
+Sept dimensions à conquérir, chacune avec son boss, son minerai et son armure légendaire, plus la Dimension
+Astrale, l'Autel d'Infusion et l'Épée des Sept Royaumes (voir **Les 7 Royaumes** plus bas).
 
 Un **Autel d'Infusion** (blanc, 4 piliers à bobines dorées) qui transforme ton équipement
 en diamant en armes légendaires, avec une animation : l'objet flotte, tourne de plus en plus
@@ -12,7 +15,7 @@ Chaque objet infusé a sa propre texture animée (reflet de diamant qui passe + 
 
 ## Manuel en jeu
 
-Chaque joueur reçoit le **Manuel Diamond Altar** en rejoignant le monde (sinon : un livre + un diamant
+Chaque joueur reçoit le **Manuel des 7 Dimensions** en rejoignant le monde (sinon : un livre + un diamant
 sur la table de craft, ou l'onglet créatif). Clic droit pour l'ouvrir : sommaire, touches, toutes les
 capacités, l'armure, la Dimension Astrale, les mobs, le Gardien et tous les crafts avec les vrais objets.
 
@@ -87,7 +90,7 @@ gemmes violettes) :
 
 ![Dimension Astrale](docs/astral.png)
 
-Tout est aussi dans l'onglet créatif **Diamond Altar** (avec l'équipement déjà infusé).
+Tout est aussi dans l'onglet créatif **Les 7 Dimensions** (avec l'équipement déjà infusé).
 
 ## Les 7 Royaumes
 
@@ -176,4 +179,4 @@ Le `.jar` est dans `build/libs/`. Mets-le dans `.minecraft/mods` avec **Fabric L
 **Fabric API** pour Minecraft 1.21.11.
 
 Chaque push sur GitHub compile aussi le mod automatiquement (onglet **Actions** → dernier
-build → artefact `diamond-altar-mod`).
+build → artefact `les-7-dimensions`).

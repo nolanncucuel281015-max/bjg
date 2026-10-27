@@ -33,6 +33,6 @@ public class DiamondAltar implements ModInitializer {
 		});
 		ServerLifecycleEvents.SERVER_STOPPING.register(server -> EffectManager.stopAll());
 		ServerLivingEntityEvents.ALLOW_DAMAGE.register((entity, source, amount) -> !ArmorPassives.cancelsDamage(entity, source));
-		LOGGER.info("Diamond Altar chargé !");
+		LOGGER.info("Les 7 Dimensions chargé !");
 	}
 }

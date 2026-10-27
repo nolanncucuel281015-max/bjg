@@ -89,7 +89,7 @@ public final class AstralContent {
 	/** Manuel du mod : s'ouvre en jeu (clic droit) et explique tout, avec les objets et les crafts. */
 	public static final Item MANUAL = item("diamond_manual", Item::new, new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
 
-	/** Onglet créatif « Diamond Altar » : l'autel, tout l'équipement déjà infusé, et tout le contenu astral. */
+	/** Onglet créatif « Les 7 Dimensions » : l'autel, tout l'équipement déjà infusé, et tout le contenu astral. */
 	public static final CreativeModeTab TAB = Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, DiamondAltar.id("main"),
 			Compat.tabBuilder()
 					.title(Component.translatable("itemGroup.diamondaltar.main"))

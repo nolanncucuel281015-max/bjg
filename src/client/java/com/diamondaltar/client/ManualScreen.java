@@ -59,7 +59,7 @@ public class ManualScreen extends Screen {
 
 	/** @param guide true : le Guide des Portails (comment construire et allumer chaque portail) */
 	public ManualScreen(boolean guide) {
-		super(Component.literal(guide ? "Guide des Portails" : "Manuel Diamond Altar"));
+		super(Component.literal(guide ? "Guide des Portails" : "Manuel des 7 Dimensions"));
 		if (guide) {
 			buildGuide();
 		} else {
@@ -91,7 +91,7 @@ public class ManualScreen extends Screen {
 		ItemStack altar = st(ModBlocks.INFUSION_ALTAR_ITEM);
 		chapter("Bienvenue",
 				big(altar, 4),
-				text("Bienvenue dans Diamond Altar ! Infuse ton équipement en diamant sur l'Autel d'Infusion pour lui donner des capacités lunaires et galactiques, puis pars dans la Dimension Astrale vaincre son Gardien."),
+				text("Bienvenue dans Les 7 Dimensions ! Infuse ton équipement en diamant sur l'Autel d'Infusion pour lui donner des capacités lunaires et galactiques, puis pars dans la Dimension Astrale vaincre son Gardien."),
 				text("Utilise les flèches en bas pour tourner les pages, ou le bouton Sommaire pour aller à un chapitre.", MUTED));
 
 		chapter("L'Autel d'Infusion",
@@ -292,7 +292,7 @@ public class ManualScreen extends Screen {
 
 		chapter("Le Guide",
 				craft(new ItemStack[]{null, null, null, st(Items.BOOK), st(Items.IRON_INGOT), null, null, null, null}, st(RealmContent.PORTAL_GUIDE)),
-				text("Un livre et un lingot de fer, sans forme. Le Manuel Diamond Altar (livre + diamant) explique tout le reste du mod.", MUTED));
+				text("Un livre et un lingot de fer, sans forme. Le Manuel des 7 Dimensions (livre + diamant) explique tout le reste du mod.", MUTED));
 
 		paginate();
 	}
