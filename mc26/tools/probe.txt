@@ -1,1 +1,2 @@
-find BlockRenderLayer|ChunkSectionLayer|RenderLayerMap|ItemBlockRenderTypes
+cat data/minecraft/dimension_type/the_end.json
+cat data/minecraft/dimension_type/overworld.json

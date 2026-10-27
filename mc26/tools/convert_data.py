@@ -105,6 +105,7 @@ write("diamondaltar/worldgen/material_rule/astralis.json", rule(old["surface_rul
 # ---- type de dimension
 d = json.loads((SRC / "diamondaltar/dimension_type/astralis.json").read_text())
 d["default_clock"] = "minecraft:the_end"
+d["has_ender_dragon_fight"] = False
 bed = d.get("attributes", {}).get("minecraft:gameplay/bed_rule")
 if bed and "explodes" in bed:
     bed["destroy_on_use"] = bed.pop("explodes")
