@@ -8,6 +8,21 @@
 		"diamondaltar:chiseled_astral_bricks",
 		"diamondaltar:astral_frame",
 		"diamondaltar:lunarite_ore",
-		"diamondaltar:astralite_ore"
+		"diamondaltar:astralite_ore",
+		"diamondaltar:ember_stone",
+		"diamondaltar:frost_stone",
+		"diamondaltar:storm_stone",
+		"diamondaltar:sylvan_stone",
+		"diamondaltar:abyss_stone",
+		"diamondaltar:shadow_stone",
+		"diamondaltar:solar_stone",
+		"diamondaltar:pyronite_ore",
+		"diamondaltar:cryonite_ore",
+		"diamondaltar:fulgurite_ore",
+		"diamondaltar:verdite_ore",
+		"diamondaltar:abyssite_ore",
+		"diamondaltar:umbrite_ore",
+		"diamondaltar:solarite_ore",
+		"diamondaltar:realm_frame"
 	]
 }

@@ -89,6 +89,38 @@ gemmes violettes) :
 
 Tout est aussi dans l'onglet créatif **Diamond Altar** (avec l'équipement déjà infusé).
 
+## Les 7 Royaumes
+
+Sept nouvelles dimensions (îles flottantes), à visiter dans l'ordre. Chacune a sa pierre, son sol, son décor,
+son **minerai**, son **boss unique** et son **armure légendaire**.
+
+| Royaume | Minerai | Boss | Bonus de l'armure complète |
+|---|---|---|---|
+| **Braise** (basalte, magma) | Pyronite | **Seigneur des Braises** (blaze géant, 300 PV) : anneaux de flammes | Résistance au feu, Force, immunité au feu |
+| **Givre** (neige, pics de glace) | Cryonite | **Reine du Givre** (vagabonde à l'arc, 350 PV) : blizzard | Vitesse II, Résistance, immunité au gel |
+| **Tempêtes** (orage, pylônes) | Fulgurite | **Titan de la Tempête** (breeze colossal, 400 PV) : foudre | Vitesse III, Saut III, Célérité II, pas de chute ni de foudre |
+| **Sylvestre** (grands arbres) | Verdite | **Béhémoth Sylvestre** (ravageur, 450 PV) : racines, soin | Régénération II, saturation, immunité au poison |
+| **Abysses** (sable bleu, coraux) | Abyssite | **Léviathan des Abysses** (noyé au trident, 500 PV) : raz-de-marée | Respiration, Grâce du dauphin, Force des conduits, Force II |
+| **Ombres** (ténèbres, obsidienne) | Umbrite | **Roi des Ombres** (squelette wither, 550 PV) : ténèbres, téléportation, Ombres | Vision nocturne, Force II, invisible accroupi |
+| **Soleil** (sable doré, obélisques) | Solarite | **Paladin Solaire** (vindicateur, 600 PV) : colonnes de lumière, soin | Résistance II, Régénération, Force II, Absorption IV |
+
+1. **Cadre des Royaumes** : 8 obsidiennes autour d'un **Lingot d'Astralite** → 8 cadres. Construis un cadre comme un
+   portail du Nether (4×5) et fais clic droit dedans avec la **Clé** du royaume (elle n'est pas consommée).
+2. **Clés** : 2 lingots du royaume précédent (Astralite pour la 1re) + 2 objets du thème + un œil de l'Ender
+   (poudre de blaze, glace bleue, paratonnerre, mousse, cristaux de prismarine, éclat d'écho, poudre lumineuse).
+3. **Minerais** : le minerai brut se cuit en lingot (four ou haut fourneau). Pioche en fer pour les 3 premiers, en diamant ensuite.
+4. **Boss** : le **Sceau** du royaume (4 lingots + un diamant), clic droit dans son royaume → rituel de 3 s → le boss
+   apparaît. Barrage tombant du ciel, onde de choc et attaque signature ; il enrage sous 40 % de PV.
+   Il lâche l'**Éclat** de son royaume, des lingots et du minerai brut.
+5. **Armures légendaires** : forme de craft habituelle avec les lingots, incassables, de plus en plus solides
+   (jusqu'à +8 PV et 15 d'armure par pièce pour le Soleil).
+6. **Épée des Sept Royaumes** : les **7 éclats** autour d'une **épée en netherite**, une **étoile du Nether** en bas
+   au milieu. 30 dégâts, incassable ; chaque coup brûle, gèle, empoisonne, flétrit et parfois foudroie.
+   **Clic droit** : *Jugement des Sept Royaumes*, sept colonnes de lumière qui explosent autour de toi (recharge 8 s).
+
+Les textures et toutes les données des royaumes sont générées par `python3 tools/realms_gen.py`
+(puis `python3 mc26/tools/convert_data.py` pour la version 26.3).
+
 ## Version plugin (serveur Paper)
 
 Un 2ᵉ téléchargement, **`diamond-altar-plugin`**, contient un plugin pour serveur **Paper 1.21.11**

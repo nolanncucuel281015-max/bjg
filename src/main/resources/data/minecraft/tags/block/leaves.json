@@ -1,6 +1,7 @@
 {
 	"replace": false,
 	"values": [
-		"diamondaltar:astral_leaves"
+		"diamondaltar:astral_leaves",
+		"diamondaltar:sylvan_leaves"
 	]
 }

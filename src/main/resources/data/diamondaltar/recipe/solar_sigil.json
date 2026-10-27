@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"pattern": [
+		" I ",
+		"IDI",
+		" I "
+	],
+	"key": {
+		"I": "diamondaltar:solarite_ingot",
+		"D": "minecraft:diamond"
+	},
+	"result": {
+		"id": "diamondaltar:solar_sigil",
+		"count": 1
+	}
+}

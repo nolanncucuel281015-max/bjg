@@ -82,14 +82,8 @@ for f in (SRC / "diamondaltar/worldgen/configured_feature").glob("*.json"):
     write(pathlib.Path("diamondaltar/worldgen/feature") / f.name, flat)
     removed.append(f"main/resources/data/diamondaltar/worldgen/configured_feature/{f.name}")
 
-# ---- réglages de bruit : ceux de floating_islands 26.3, retexturés, + règle de matériaux
-base = json.loads(pathlib.Path("mc26/tools/vanilla_floating_islands.json").read_text())
-old = json.loads((SRC / "diamondaltar/worldgen/noise_settings/astralis.json").read_text())
-base["default_block"] = "diamondaltar:astral_stone"
-base["default_fluid"] = "minecraft:air"
-base["material_rule"] = "diamondaltar:astralis"
-base.pop("debug_functions", None)
-write("diamondaltar/worldgen/noise_settings/astralis.json", base)
+# ---- réglages de bruit : ceux de floating_islands 26.3, retexturés, + règle de matériaux (une par dimension)
+base0 = json.loads(pathlib.Path("mc26/tools/vanilla_floating_islands.json").read_text())
 
 def rule(r):
     if isinstance(r, list):
@@ -100,16 +94,26 @@ def rule(r):
     for k, v in r.items():
         out[k] = state_str(v) if k == "result_state" else rule(v)
     return out
-write("diamondaltar/worldgen/material_rule/astralis.json", rule(old["surface_rule"]))
 
-# ---- type de dimension
-d = json.loads((SRC / "diamondaltar/dimension_type/astralis.json").read_text())
-d["default_clock"] = "minecraft:the_end"
-d["has_ender_dragon_fight"] = False
-bed = d.get("attributes", {}).get("minecraft:gameplay/bed_rule")
-if bed and "explodes" in bed:
-    bed["destroy_on_use"] = bed.pop("explodes")
-write("diamondaltar/dimension_type/astralis.json", d)
+for f in sorted((SRC / "diamondaltar/worldgen/noise_settings").glob("*.json")):
+    old = json.loads(f.read_text())
+    base = json.loads(json.dumps(base0))
+    base["default_block"] = state_str(old["default_block"])
+    base["default_fluid"] = "minecraft:air"
+    base["material_rule"] = f"diamondaltar:{f.stem}"
+    base.pop("debug_functions", None)
+    write(f"diamondaltar/worldgen/noise_settings/{f.name}", base)
+    write(f"diamondaltar/worldgen/material_rule/{f.name}", rule(old["surface_rule"]))
+
+# ---- types de dimension
+for f in sorted((SRC / "diamondaltar/dimension_type").glob("*.json")):
+    d = json.loads(f.read_text())
+    d["default_clock"] = "minecraft:the_end"
+    d["has_ender_dragon_fight"] = False
+    bed = d.get("attributes", {}).get("minecraft:gameplay/bed_rule")
+    if bed and "explodes" in bed:
+        bed["destroy_on_use"] = bed.pop("explodes")
+    write(f"diamondaltar/dimension_type/{f.name}", d)
 
 # ---- liste des fichiers 1.21.11 à ne pas copier en 26.3
 lines = [l for l in REMOVED.read_text().splitlines() if not l.startswith("main/resources/data/")] if REMOVED.exists() else []

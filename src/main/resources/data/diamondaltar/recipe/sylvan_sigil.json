@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"pattern": [
+		" I ",
+		"IDI",
+		" I "
+	],
+	"key": {
+		"I": "diamondaltar:verdite_ingot",
+		"D": "minecraft:diamond"
+	},
+	"result": {
+		"id": "diamondaltar:sylvan_sigil",
+		"count": 1
+	}
+}

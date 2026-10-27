@@ -1,0 +1,45 @@
+{
+	"attributes": {
+		"minecraft:visual/sky_color": "#ffd36b",
+		"minecraft:visual/fog_color": "#fff0c0",
+		"minecraft:gameplay/natural_mob_spawns": {
+			"argument": {
+				"spawn_costs": {},
+				"spawns_by_category": {
+					"monster": [
+						{
+							"type": "minecraft:husk",
+							"count": 3,
+							"weight": 10
+						}
+					]
+				}
+			},
+			"modifier": "overlay"
+		}
+	},
+	"carvers": [],
+	"downfall": 0.0,
+	"effects": {
+		"water_color": "#ffd040"
+	},
+	"features": [
+		[],
+		[],
+		[],
+		[],
+		[],
+		[],
+		[
+			"diamondaltar:ore_solarite"
+		],
+		[],
+		[],
+		[
+			"diamondaltar:decor_solar"
+		],
+		[]
+	],
+	"has_precipitation": false,
+	"temperature": 0.5
+}

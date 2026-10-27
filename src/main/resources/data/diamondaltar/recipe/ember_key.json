@@ -1,0 +1,18 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"pattern": [
+		" T ",
+		"PEP",
+		" T "
+	],
+	"key": {
+		"T": "minecraft:blaze_powder",
+		"P": "diamondaltar:astralite_ingot",
+		"E": "minecraft:ender_eye"
+	},
+	"result": {
+		"id": "diamondaltar:ember_key",
+		"count": 1
+	}
+}

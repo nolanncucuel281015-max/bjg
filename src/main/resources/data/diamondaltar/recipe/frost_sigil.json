@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"pattern": [
+		" I ",
+		"IDI",
+		" I "
+	],
+	"key": {
+		"I": "diamondaltar:cryonite_ingot",
+		"D": "minecraft:diamond"
+	},
+	"result": {
+		"id": "diamondaltar:frost_sigil",
+		"count": 1
+	}
+}

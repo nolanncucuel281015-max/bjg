@@ -1,0 +1,16 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "equipment",
+	"pattern": [
+		"III",
+		"I I",
+		"I I"
+	],
+	"key": {
+		"I": "diamondaltar:cryonite_ingot"
+	},
+	"result": {
+		"id": "diamondaltar:cryonite_leggings",
+		"count": 1
+	}
+}

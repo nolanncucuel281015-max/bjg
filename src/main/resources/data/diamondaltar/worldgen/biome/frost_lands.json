@@ -1,0 +1,54 @@
+{
+	"attributes": {
+		"minecraft:visual/sky_color": "#9fd8ff",
+		"minecraft:visual/fog_color": "#d8f2ff"
+	},
+	"carvers": [],
+	"downfall": 0.0,
+	"effects": {
+		"water_color": "#7fd4ff"
+	},
+	"features": [
+		[],
+		[],
+		[],
+		[],
+		[],
+		[],
+		[
+			"diamondaltar:ore_cryonite"
+		],
+		[],
+		[],
+		[
+			"diamondaltar:decor_frost"
+		],
+		[]
+	],
+	"has_precipitation": false,
+	"spawn_costs": {},
+	"spawners": {
+		"ambient": [],
+		"axolotls": [],
+		"creature": [],
+		"misc": [],
+		"underground_water_creature": [],
+		"water_ambient": [],
+		"water_creature": [],
+		"monster": [
+			{
+				"type": "minecraft:stray",
+				"maxCount": 3,
+				"minCount": 1,
+				"weight": 10
+			},
+			{
+				"type": "minecraft:skeleton",
+				"maxCount": 2,
+				"minCount": 1,
+				"weight": 4
+			}
+		]
+	},
+	"temperature": 0.5
+}

@@ -4,6 +4,8 @@ import com.diamondaltar.ModComponents;
 import com.diamondaltar.ability.Abilities;
 import com.diamondaltar.astral.AstralContent;
 import com.diamondaltar.block.ModBlocks;
+import com.diamondaltar.realms.Realm;
+import com.diamondaltar.realms.RealmContent;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -189,6 +191,8 @@ public class ManualScreen extends Screen {
 						st(AstralContent.CELESTIAL_HEART), "Forge"),
 				text("5. Avec le Cœur Céleste, fabrique l'Autel d'Infusion !", GOLD));
 
+		buildRealms();
+
 		chapter("Autres crafts",
 				craft(new ItemStack[]{st(AstralContent.ASTRAL_STONE), st(AstralContent.ASTRAL_STONE), null,
 						st(AstralContent.ASTRAL_STONE), st(AstralContent.ASTRAL_STONE), null, null, null, null}, st(AstralContent.ASTRAL_BRICKS, 4)),
@@ -199,6 +203,92 @@ public class ManualScreen extends Screen {
 				text("Le manuel : un livre et un diamant, sans forme.", MUTED));
 
 		paginate();
+	}
+
+	/** Les 7 Royaumes : dimensions, portails, boss, armures légendaires et Épée des Sept Royaumes. */
+	private void buildRealms() {
+		String[] realms = {"Royaume de Braise", "Royaume de Givre", "Royaume des Tempêtes", "Royaume Sylvestre",
+				"Royaume des Abysses", "Royaume des Ombres", "Royaume du Soleil"};
+		String[] looks = {"Îles de basalte et de cendres, flèches de magma.", "Îles enneigées hérissées de pics de glace.",
+				"Ciel d'orage, pylônes foudroyés et gravier noirci.", "Îles de mousse couvertes de grands arbres lumineux.",
+				"Îles de sable bleu sous un ciel noir, coraux de prismarine.", "Ténèbres presque totales, éclats d'obsidienne pleureuse.",
+				"Sable doré et obélisques de lumière sous un soleil éternel."};
+		String[] bosses = {"Seigneur des Braises", "Reine du Givre", "Titan de la Tempête", "Béhémoth Sylvestre",
+				"Léviathan des Abysses", "Roi des Ombres", "Paladin Solaire"};
+		String[] bossDesc = {"Blaze géant, 300 PV. Anneaux de flammes qui embrasent tout.",
+				"Vagabonde géante à l'arc, 350 PV. Blizzard qui gèle et ralentit.",
+				"Breeze colossal, 400 PV. La foudre tombe sur chaque cercle d'avertissement.",
+				"Ravageur, 450 PV. Racines qui immobilisent ; il se soigne.",
+				"Noyé géant au trident, 500 PV. Raz-de-marée qui emporte tout.",
+				"Squelette wither, 550 PV. Ténèbres, téléportation et armée d'Ombres.",
+				"Vindicateur à la hache, 600 PV. Colonnes de lumière ; il se soigne."};
+		String[] sets = {"Résistance au feu, Force, immunité au feu.", "Vitesse II, Résistance, immunité au gel.",
+				"Vitesse III, Saut III, Célérité II, immunité à la foudre et aux chutes.", "Régénération II, saturation, immunité au poison.",
+				"Respiration aquatique, Grâce du dauphin, Force des conduits, Force II.",
+				"Vision nocturne, Force II, immunité aux ténèbres, invisible accroupi.",
+				"Résistance II, Régénération, Force II, Absorption IV toutes les 30 s."};
+		String[] thematic = {"poudre de blaze", "glace bleue", "paratonnerre", "bloc de mousse", "cristaux de prismarine",
+				"éclat d'écho", "poudre de pierre lumineuse"};
+
+		List<Element> intro = new ArrayList<>();
+		intro.add(text("Sept nouvelles dimensions, à visiter dans l'ordre. Chacune a sa pierre, son sol, son minerai, son boss et son armure légendaire."));
+		intro.add(sub("Le portail"));
+		intro.add(craft(new ItemStack[]{st(Items.OBSIDIAN), st(Items.OBSIDIAN), st(Items.OBSIDIAN), st(Items.OBSIDIAN),
+				st(AstralContent.ASTRALITE_INGOT), st(Items.OBSIDIAN), st(Items.OBSIDIAN), st(Items.OBSIDIAN), st(Items.OBSIDIAN)},
+				st(RealmContent.REALM_FRAME, 8)));
+		intro.add(text("Construis un cadre de Cadres des Royaumes comme un portail du Nether (4 × 5), puis clic droit dedans avec la Clé du royaume. La clé n'est pas consommée."));
+		intro.add(sub("Les clés"));
+		intro.add(craft(new ItemStack[]{null, st(Items.BLAZE_POWDER), null, st(AstralContent.ASTRALITE_INGOT), st(Items.ENDER_EYE),
+				st(AstralContent.ASTRALITE_INGOT), null, st(Items.BLAZE_POWDER), null}, st(RealmContent.KEY[0])));
+		intro.add(text("La 1re clé demande des lingots d'Astralite. Chaque clé suivante demande les lingots du royaume précédent :", MUTED));
+		for (Realm r : Realm.values()) {
+			int i = r.ordinal();
+			intro.add(icon(st(RealmContent.KEY[i]), realms[i], (i == 0 ? "Astralite" : "Lingots du royaume précédent")
+					+ " + " + thematic[i] + " + œil de l'Ender."));
+		}
+		chapters.add(new Chapter("Les 7 Royaumes", intro));
+
+		List<Element> lands = new ArrayList<>();
+		lands.add(text("Les minerais se cuisent en lingots (four ou haut fourneau). Les 3 premiers se minent à la pioche en fer, les suivants en diamant.", MUTED));
+		for (Realm r : Realm.values()) {
+			int i = r.ordinal();
+			lands.add(sub(realms[i]));
+			lands.add(text(looks[i]));
+			lands.add(row(st(RealmContent.STONE[i]), st(RealmContent.SOIL[i]), st(RealmContent.ORE[i]), st(RealmContent.RAW[i]), st(RealmContent.INGOT[i])));
+		}
+		lands.add(row(st(RealmContent.SYLVAN_LOG), st(RealmContent.SYLVAN_LEAVES)));
+		chapters.add(new Chapter("Visiter les Royaumes", lands));
+
+		List<Element> boss = new ArrayList<>();
+		boss.add(text("Fabrique le Sceau du royaume avec 4 lingots et un diamant, puis clic droit avec dans son royaume : après un rituel de 3 s, le boss apparaît."));
+		boss.add(craft(new ItemStack[]{null, st(RealmContent.INGOT[0]), null, st(RealmContent.INGOT[0]), st(Items.DIAMOND),
+				st(RealmContent.INGOT[0]), null, st(RealmContent.INGOT[0]), null}, st(RealmContent.SIGIL[0])));
+		boss.add(text("Chaque boss alterne trois attaques : un barrage qui tombe du ciel (cercle au sol : bouge !), une onde de choc, et son attaque signature. Sous 40 % de PV, il enrage.", MUTED));
+		for (Realm r : Realm.values()) {
+			int i = r.ordinal();
+			boss.add(icon(st(RealmContent.SIGIL[i]), bosses[i], bossDesc[i]));
+		}
+		boss.add(sub("Butin"));
+		boss.add(text("L'Éclat du royaume (pour l'épée ultime), 3 à 5 lingots, du minerai brut, et parfois un lingot du royaume suivant."));
+		boss.add(row(st(RealmContent.SHARD[0]), st(RealmContent.SHARD[1]), st(RealmContent.SHARD[2]), st(RealmContent.SHARD[3]),
+				st(RealmContent.SHARD[4]), st(RealmContent.SHARD[5]), st(RealmContent.SHARD[6])));
+		chapters.add(new Chapter("Les boss des Royaumes", boss));
+
+		List<Element> gear = new ArrayList<>();
+		gear.add(text("Chaque minerai donne une armure légendaire et incassable (même forme de craft que l'armure en fer), de plus en plus solide d'un royaume à l'autre. L'armure complète donne un bonus :"));
+		for (Realm r : Realm.values()) {
+			int i = r.ordinal();
+			gear.add(row(st(RealmContent.ARMOR[i][0]), st(RealmContent.ARMOR[i][1]), st(RealmContent.ARMOR[i][2]), st(RealmContent.ARMOR[i][3])));
+			gear.add(text(sets[i], MUTED));
+		}
+		gear.add(sub("L'Épée des Sept Royaumes"));
+		gear.add(craft(new ItemStack[]{st(RealmContent.SHARD[0]), st(RealmContent.SHARD[1]), st(RealmContent.SHARD[2]),
+				st(RealmContent.SHARD[3]), st(Items.NETHERITE_SWORD), st(RealmContent.SHARD[4]),
+				st(RealmContent.SHARD[5]), st(Items.NETHER_STAR), st(RealmContent.SHARD[6])}, st(RealmContent.SEVEN_REALMS_SWORD)));
+		gear.add(text("Les 7 éclats des boss + une épée en netherite + une étoile du Nether. 30 dégâts, incassable, portée +1,5."));
+		gear.add(text("Chaque coup : feu, gel, poison, flétrissement, lumière, et parfois la foudre.", GOLD));
+		gear.add(text("Clic droit : Jugement des Sept Royaumes. Sept colonnes, une par royaume, jaillissent autour de toi puis explosent (recharge 8 s).", GOLD));
+		chapters.add(new Chapter("Armures et épée ultime", gear));
 	}
 
 	private void abilities(String title, Item item, String use) {
@@ -428,8 +518,9 @@ public class ManualScreen extends Screen {
 		addRenderableWidget(Button.builder(Component.literal(">"), b -> go(page + 1)).bounds(l + W - 30, t + H - 24, 20, 18).build());
 		addRenderableWidget(Button.builder(Component.literal("Sommaire"), b -> go(0)).bounds(l + W / 2 - 35, t + H - 24, 70, 18).build());
 		if (page == 0) {
-			int colW = (W - PAD * 2 - 6) / 2;
-			int perCol = (chapters.size() + 1) / 2;
+			int cols = chapters.size() > 20 ? 3 : 2;
+			int colW = (W - PAD * 2 - 6 * (cols - 1)) / cols;
+			int perCol = (chapters.size() + cols - 1) / cols;
 			for (int c = 0; c < chapters.size(); c++) {
 				int target = chapterStart.get(c);
 				int col = c / perCol, r = c % perCol;

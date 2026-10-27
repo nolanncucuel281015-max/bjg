@@ -1,0 +1,18 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"pattern": [
+		" T ",
+		"PEP",
+		" T "
+	],
+	"key": {
+		"T": "minecraft:echo_shard",
+		"P": "diamondaltar:abyssite_ingot",
+		"E": "minecraft:ender_eye"
+	},
+	"result": {
+		"id": "diamondaltar:shadow_key",
+		"count": 1
+	}
+}

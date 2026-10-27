@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"pattern": [
+		" I ",
+		"IDI",
+		" I "
+	],
+	"key": {
+		"I": "diamondaltar:fulgurite_ingot",
+		"D": "minecraft:diamond"
+	},
+	"result": {
+		"id": "diamondaltar:storm_sigil",
+		"count": 1
+	}
+}

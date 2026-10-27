@@ -1,0 +1,14 @@
+{
+	"layers": {
+		"humanoid": [
+			{
+				"texture": "diamondaltar:umbrite"
+			}
+		],
+		"humanoid_leggings": [
+			{
+				"texture": "diamondaltar:umbrite"
+			}
+		]
+	}
+}

@@ -1,0 +1,10 @@
+{
+	"type": "minecraft:smelting",
+	"category": "misc",
+	"ingredient": "diamondaltar:raw_cryonite",
+	"result": {
+		"id": "diamondaltar:cryonite_ingot"
+	},
+	"experience": 1.5,
+	"cookingtime": 200
+}

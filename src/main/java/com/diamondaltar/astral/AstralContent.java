@@ -123,11 +123,11 @@ public final class AstralContent {
 		return ResourceKey.create(Registries.ITEM, DiamondAltar.id(name));
 	}
 
-	private static Block blockNoItem(String name, Function<BlockBehaviour.Properties, Block> factory, BlockBehaviour.Properties props) {
+	public static Block blockNoItem(String name, Function<BlockBehaviour.Properties, Block> factory, BlockBehaviour.Properties props) {
 		return Registry.register(BuiltInRegistries.BLOCK, blockKey(name), factory.apply(props.setId(blockKey(name))));
 	}
 
-	private static Block block(String name, Function<BlockBehaviour.Properties, Block> factory, BlockBehaviour.Properties props) {
+	public static Block block(String name, Function<BlockBehaviour.Properties, Block> factory, BlockBehaviour.Properties props) {
 		Block block = blockNoItem(name, factory, props);
 		Item item = Registry.register(BuiltInRegistries.ITEM, itemKey(name),
 				new BlockItem(block, new Item.Properties().setId(itemKey(name)).useBlockDescriptionPrefix()));
@@ -135,7 +135,7 @@ public final class AstralContent {
 		return block;
 	}
 
-	private static Item item(String name, Function<Item.Properties, Item> factory, Item.Properties props) {
+	public static Item item(String name, Function<Item.Properties, Item> factory, Item.Properties props) {
 		Item item = Registry.register(BuiltInRegistries.ITEM, itemKey(name), factory.apply(props.setId(itemKey(name))));
 		TAB_ITEMS.add(item);
 		return item;
@@ -145,5 +145,6 @@ public final class AstralContent {
 		SurfaceStructure.register();
 		AstralFeatures.register();
 		AstralEvents.register();
+		com.diamondaltar.realms.RealmContent.register();
 	}
 }

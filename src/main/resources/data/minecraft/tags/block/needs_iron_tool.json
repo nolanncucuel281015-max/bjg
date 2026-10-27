@@ -2,6 +2,9 @@
 	"replace": false,
 	"values": [
 		"diamondaltar:infusion_altar",
-		"diamondaltar:lunarite_ore"
+		"diamondaltar:lunarite_ore",
+		"diamondaltar:pyronite_ore",
+		"diamondaltar:cryonite_ore",
+		"diamondaltar:fulgurite_ore"
 	]
 }

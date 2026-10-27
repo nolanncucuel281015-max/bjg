@@ -1,0 +1,18 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"pattern": [
+		" T ",
+		"PEP",
+		" T "
+	],
+	"key": {
+		"T": "minecraft:lightning_rod",
+		"P": "diamondaltar:cryonite_ingot",
+		"E": "minecraft:ender_eye"
+	},
+	"result": {
+		"id": "diamondaltar:storm_key",
+		"count": 1
+	}
+}

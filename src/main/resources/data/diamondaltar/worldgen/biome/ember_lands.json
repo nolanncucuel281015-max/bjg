@@ -1,0 +1,54 @@
+{
+	"attributes": {
+		"minecraft:visual/sky_color": "#3a0f05",
+		"minecraft:visual/fog_color": "#6b200a"
+	},
+	"carvers": [],
+	"downfall": 0.0,
+	"effects": {
+		"water_color": "#ff5a1a"
+	},
+	"features": [
+		[],
+		[],
+		[],
+		[],
+		[],
+		[],
+		[
+			"diamondaltar:ore_pyronite"
+		],
+		[],
+		[],
+		[
+			"diamondaltar:decor_ember"
+		],
+		[]
+	],
+	"has_precipitation": false,
+	"spawn_costs": {},
+	"spawners": {
+		"ambient": [],
+		"axolotls": [],
+		"creature": [],
+		"misc": [],
+		"underground_water_creature": [],
+		"water_ambient": [],
+		"water_creature": [],
+		"monster": [
+			{
+				"type": "minecraft:magma_cube",
+				"maxCount": 3,
+				"minCount": 1,
+				"weight": 10
+			},
+			{
+				"type": "minecraft:blaze",
+				"maxCount": 2,
+				"minCount": 1,
+				"weight": 6
+			}
+		]
+	},
+	"temperature": 0.5
+}

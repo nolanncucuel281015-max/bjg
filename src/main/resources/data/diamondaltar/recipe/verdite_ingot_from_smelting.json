@@ -1,0 +1,10 @@
+{
+	"type": "minecraft:smelting",
+	"category": "misc",
+	"ingredient": "diamondaltar:raw_verdite",
+	"result": {
+		"id": "diamondaltar:verdite_ingot"
+	},
+	"experience": 2.5,
+	"cookingtime": 200
+}

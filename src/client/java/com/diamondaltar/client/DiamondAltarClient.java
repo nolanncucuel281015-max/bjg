@@ -11,6 +11,8 @@ import com.diamondaltar.ability.ShakePayload;
 import com.diamondaltar.ability.SlashPayload;
 import com.diamondaltar.ability.SwitchAbilityPayload;
 import com.diamondaltar.block.ModBlocks;
+import com.diamondaltar.realms.Realm;
+import com.diamondaltar.realms.RealmContent;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -53,6 +55,8 @@ public class DiamondAltarClient implements ClientModInitializer {
 		BlockRenderLayerMap.putBlock(AstralContent.ASTRAL_PORTAL, ChunkSectionLayer.TRANSLUCENT);
 		BlockRenderLayerMap.putBlock(AstralContent.FUSER, ChunkSectionLayer.CUTOUT);
 		BlockRenderLayerMap.putBlock(AstralContent.ASTRAL_LEAVES, ChunkSectionLayer.CUTOUT);
+		BlockRenderLayerMap.putBlock(RealmContent.REALM_PORTAL, ChunkSectionLayer.TRANSLUCENT);
+		BlockRenderLayerMap.putBlock(RealmContent.SYLVAN_LEAVES, ChunkSectionLayer.CUTOUT);
 		// #endif
 
 		// Manuel : clic droit pour l'ouvrir.
@@ -119,6 +123,26 @@ public class DiamondAltarClient implements ClientModInitializer {
 				ClientPlayNetworking.send(new SlashPayload());
 			}
 			return false;
+		});
+
+		// Infobulles des 7 Royaumes : bonus d'armure complète, épée, clés et sceaux.
+		ItemTooltipCallback.EVENT.register((stack, context, type, lines) -> {
+			Realm armor = RealmContent.armorRealm(stack.getItem());
+			if (armor != null) {
+				lines.add(Component.translatable("diamondaltar.realm_armor.set").withStyle(armor.chat, ChatFormatting.BOLD));
+				lines.add(Component.translatable("diamondaltar.realm_armor.set." + armor.id).withStyle(ChatFormatting.GRAY));
+			}
+			if (stack.is(RealmContent.SEVEN_REALMS_SWORD)) {
+				lines.add(Component.translatable("diamondaltar.seven_realms.hit").withStyle(ChatFormatting.GRAY));
+				lines.add(Component.translatable("diamondaltar.seven_realms.use").withStyle(ChatFormatting.GOLD));
+			}
+			for (Realm r : Realm.values()) {
+				if (stack.is(RealmContent.KEY[r.ordinal()]) || stack.is(RealmContent.SIGIL[r.ordinal()])) {
+					lines.add(Component.translatable(r.nameKey()).withStyle(r.chat));
+					lines.add(Component.translatable(stack.is(RealmContent.KEY[r.ordinal()]) ? "diamondaltar.key.desc" : "diamondaltar.sigil.desc")
+							.withStyle(ChatFormatting.GRAY));
+				}
+			}
 		});
 
 		ItemTooltipCallback.EVENT.register((stack, context, type, lines) -> {

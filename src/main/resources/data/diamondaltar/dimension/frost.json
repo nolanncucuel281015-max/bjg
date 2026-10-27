@@ -1,0 +1,11 @@
+{
+	"type": "diamondaltar:frost",
+	"generator": {
+		"type": "minecraft:noise",
+		"biome_source": {
+			"type": "minecraft:fixed",
+			"biome": "diamondaltar:frost_lands"
+		},
+		"settings": "diamondaltar:frost"
+	}
+}

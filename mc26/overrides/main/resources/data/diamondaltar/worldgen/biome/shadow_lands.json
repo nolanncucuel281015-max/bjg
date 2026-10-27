@@ -1,0 +1,50 @@
+{
+	"attributes": {
+		"minecraft:visual/sky_color": "#05020a",
+		"minecraft:visual/fog_color": "#140a20",
+		"minecraft:gameplay/natural_mob_spawns": {
+			"argument": {
+				"spawn_costs": {},
+				"spawns_by_category": {
+					"monster": [
+						{
+							"type": "minecraft:enderman",
+							"count": 2,
+							"weight": 10
+						},
+						{
+							"type": "minecraft:wither_skeleton",
+							"count": 2,
+							"weight": 6
+						}
+					]
+				}
+			},
+			"modifier": "overlay"
+		}
+	},
+	"carvers": [],
+	"downfall": 0.0,
+	"effects": {
+		"water_color": "#2a0a3a"
+	},
+	"features": [
+		[],
+		[],
+		[],
+		[],
+		[],
+		[],
+		[
+			"diamondaltar:ore_umbrite"
+		],
+		[],
+		[],
+		[
+			"diamondaltar:decor_shadow"
+		],
+		[]
+	],
+	"has_precipitation": false,
+	"temperature": 0.5
+}

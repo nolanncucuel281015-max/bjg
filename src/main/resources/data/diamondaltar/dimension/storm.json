@@ -1,0 +1,11 @@
+{
+	"type": "diamondaltar:storm",
+	"generator": {
+		"type": "minecraft:noise",
+		"biome_source": {
+			"type": "minecraft:fixed",
+			"biome": "diamondaltar:storm_lands"
+		},
+		"settings": "diamondaltar:storm"
+	}
+}

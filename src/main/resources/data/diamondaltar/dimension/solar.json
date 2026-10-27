@@ -1,0 +1,11 @@
+{
+	"type": "diamondaltar:solar",
+	"generator": {
+		"type": "minecraft:noise",
+		"biome_source": {
+			"type": "minecraft:fixed",
+			"biome": "diamondaltar:solar_lands"
+		},
+		"settings": "diamondaltar:solar"
+	}
+}

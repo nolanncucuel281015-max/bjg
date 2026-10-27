@@ -47,6 +47,12 @@ public final class Compat {
 	public static final EntityType<LightningBolt> LIGHTNING_BOLT = EntityType.LIGHTNING_BOLT;
 	public static final EntityType<Display.ItemDisplay> ITEM_DISPLAY = EntityType.ITEM_DISPLAY;
 	public static final EntityType<Display.BlockDisplay> BLOCK_DISPLAY = EntityType.BLOCK_DISPLAY;
+	public static final EntityType<? extends Mob> BLAZE = EntityType.BLAZE;
+	public static final EntityType<? extends Mob> STRAY = EntityType.STRAY;
+	public static final EntityType<? extends Mob> BREEZE = EntityType.BREEZE;
+	public static final EntityType<? extends Mob> RAVAGER = EntityType.RAVAGER;
+	public static final EntityType<? extends Mob> DROWNED = EntityType.DROWNED;
+	public static final EntityType<? extends Mob> VINDICATOR = EntityType.VINDICATOR;
 	// #else
 	//? public static final EntityType<? extends Mob> WITHER_SKELETON = net.minecraft.world.entity.EntityTypes.WITHER_SKELETON;
 	//? public static final EntityType<? extends Mob> SKELETON = net.minecraft.world.entity.EntityTypes.SKELETON;
@@ -58,6 +64,12 @@ public final class Compat {
 	//? public static final EntityType<LightningBolt> LIGHTNING_BOLT = net.minecraft.world.entity.EntityTypes.LIGHTNING_BOLT;
 	//? public static final EntityType<Display.ItemDisplay> ITEM_DISPLAY = net.minecraft.world.entity.EntityTypes.ITEM_DISPLAY;
 	//? public static final EntityType<Display.BlockDisplay> BLOCK_DISPLAY = net.minecraft.world.entity.EntityTypes.BLOCK_DISPLAY;
+	//? public static final EntityType<? extends Mob> BLAZE = net.minecraft.world.entity.EntityTypes.BLAZE;
+	//? public static final EntityType<? extends Mob> STRAY = net.minecraft.world.entity.EntityTypes.STRAY;
+	//? public static final EntityType<? extends Mob> BREEZE = net.minecraft.world.entity.EntityTypes.BREEZE;
+	//? public static final EntityType<? extends Mob> RAVAGER = net.minecraft.world.entity.EntityTypes.RAVAGER;
+	//? public static final EntityType<? extends Mob> DROWNED = net.minecraft.world.entity.EntityTypes.DROWNED;
+	//? public static final EntityType<? extends Mob> VINDICATOR = net.minecraft.world.entity.EntityTypes.VINDICATOR;
 	// #endif
 
 	// ---------------------------------------------------------------- blocs colorés

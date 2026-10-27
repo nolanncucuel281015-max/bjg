@@ -2,6 +2,11 @@
 	"replace": false,
 	"values": [
 		"diamondaltar:astralite_ore",
-		"diamondaltar:astral_frame"
+		"diamondaltar:astral_frame",
+		"diamondaltar:verdite_ore",
+		"diamondaltar:abyssite_ore",
+		"diamondaltar:umbrite_ore",
+		"diamondaltar:solarite_ore",
+		"diamondaltar:realm_frame"
 	]
 }

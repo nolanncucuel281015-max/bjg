@@ -1,0 +1,54 @@
+{
+	"attributes": {
+		"minecraft:visual/sky_color": "#8fe08a",
+		"minecraft:visual/fog_color": "#b8f0a0"
+	},
+	"carvers": [],
+	"downfall": 0.0,
+	"effects": {
+		"water_color": "#3fbf7a"
+	},
+	"features": [
+		[],
+		[],
+		[],
+		[],
+		[],
+		[],
+		[
+			"diamondaltar:ore_verdite"
+		],
+		[],
+		[],
+		[
+			"diamondaltar:decor_sylvan"
+		],
+		[]
+	],
+	"has_precipitation": false,
+	"spawn_costs": {},
+	"spawners": {
+		"ambient": [],
+		"axolotls": [],
+		"creature": [],
+		"misc": [],
+		"underground_water_creature": [],
+		"water_ambient": [],
+		"water_creature": [],
+		"monster": [
+			{
+				"type": "minecraft:spider",
+				"maxCount": 2,
+				"minCount": 1,
+				"weight": 10
+			},
+			{
+				"type": "minecraft:zombie",
+				"maxCount": 3,
+				"minCount": 1,
+				"weight": 8
+			}
+		]
+	},
+	"temperature": 0.5
+}

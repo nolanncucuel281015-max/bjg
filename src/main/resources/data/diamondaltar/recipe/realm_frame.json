@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "building",
+	"pattern": [
+		"OOO",
+		"OAO",
+		"OOO"
+	],
+	"key": {
+		"O": "minecraft:obsidian",
+		"A": "diamondaltar:astralite_ingot"
+	},
+	"result": {
+		"id": "diamondaltar:realm_frame",
+		"count": 8
+	}
+}

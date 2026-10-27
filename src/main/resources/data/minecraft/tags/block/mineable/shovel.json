@@ -1,6 +1,13 @@
 {
 	"replace": false,
 	"values": [
-		"diamondaltar:lunar_regolith"
+		"diamondaltar:lunar_regolith",
+		"diamondaltar:ember_soil",
+		"diamondaltar:frost_soil",
+		"diamondaltar:storm_soil",
+		"diamondaltar:sylvan_soil",
+		"diamondaltar:abyss_soil",
+		"diamondaltar:shadow_soil",
+		"diamondaltar:solar_soil"
 	]
 }

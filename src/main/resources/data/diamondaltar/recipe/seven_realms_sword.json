@@ -1,0 +1,24 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "equipment",
+	"pattern": [
+		"ABC",
+		"DSE",
+		"FNG"
+	],
+	"key": {
+		"A": "diamondaltar:ember_shard",
+		"B": "diamondaltar:frost_shard",
+		"C": "diamondaltar:storm_shard",
+		"D": "diamondaltar:sylvan_shard",
+		"S": "minecraft:netherite_sword",
+		"E": "diamondaltar:abyss_shard",
+		"F": "diamondaltar:shadow_shard",
+		"N": "minecraft:nether_star",
+		"G": "diamondaltar:solar_shard"
+	},
+	"result": {
+		"id": "diamondaltar:seven_realms_sword",
+		"count": 1
+	}
+}

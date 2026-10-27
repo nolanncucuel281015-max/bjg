@@ -1,0 +1,50 @@
+{
+	"attributes": {
+		"minecraft:visual/sky_color": "#8fe08a",
+		"minecraft:visual/fog_color": "#b8f0a0",
+		"minecraft:gameplay/natural_mob_spawns": {
+			"argument": {
+				"spawn_costs": {},
+				"spawns_by_category": {
+					"monster": [
+						{
+							"type": "minecraft:spider",
+							"count": 2,
+							"weight": 10
+						},
+						{
+							"type": "minecraft:zombie",
+							"count": 3,
+							"weight": 8
+						}
+					]
+				}
+			},
+			"modifier": "overlay"
+		}
+	},
+	"carvers": [],
+	"downfall": 0.0,
+	"effects": {
+		"water_color": "#3fbf7a"
+	},
+	"features": [
+		[],
+		[],
+		[],
+		[],
+		[],
+		[],
+		[
+			"diamondaltar:ore_verdite"
+		],
+		[],
+		[],
+		[
+			"diamondaltar:decor_sylvan"
+		],
+		[]
+	],
+	"has_precipitation": false,
+	"temperature": 0.5
+}

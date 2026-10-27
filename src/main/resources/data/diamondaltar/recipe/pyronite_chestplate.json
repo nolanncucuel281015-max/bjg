@@ -1,0 +1,16 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "equipment",
+	"pattern": [
+		"I I",
+		"III",
+		"III"
+	],
+	"key": {
+		"I": "diamondaltar:pyronite_ingot"
+	},
+	"result": {
+		"id": "diamondaltar:pyronite_chestplate",
+		"count": 1
+	}
+}

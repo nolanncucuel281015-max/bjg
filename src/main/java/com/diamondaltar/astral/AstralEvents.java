@@ -315,6 +315,8 @@ public final class AstralEvents {
 			boolean lit = AstralPortals.tryIgnite(overworld, base);
 			report.append(lit ? "OK" : "FAIL").append(" allumage d'un cadre de diamant 4x5\n");
 			ok &= lit;
+			// Les 7 Royaumes : dimensions, portails, boss, butin et épée ultime.
+			ok &= com.diamondaltar.realms.RealmEvents.selfTest(server, report);
 		} catch (Throwable t) {
 			report.append("FAIL exception : ").append(t).append('\n');
 			for (StackTraceElement el : t.getStackTrace()) {

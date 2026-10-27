@@ -1,0 +1,46 @@
+{
+	"variants": {
+		"axis=x,realm=0": {
+			"model": "diamondaltar:block/realm_portal_ember_ns"
+		},
+		"axis=z,realm=0": {
+			"model": "diamondaltar:block/realm_portal_ember_ew"
+		},
+		"axis=x,realm=1": {
+			"model": "diamondaltar:block/realm_portal_frost_ns"
+		},
+		"axis=z,realm=1": {
+			"model": "diamondaltar:block/realm_portal_frost_ew"
+		},
+		"axis=x,realm=2": {
+			"model": "diamondaltar:block/realm_portal_storm_ns"
+		},
+		"axis=z,realm=2": {
+			"model": "diamondaltar:block/realm_portal_storm_ew"
+		},
+		"axis=x,realm=3": {
+			"model": "diamondaltar:block/realm_portal_sylvan_ns"
+		},
+		"axis=z,realm=3": {
+			"model": "diamondaltar:block/realm_portal_sylvan_ew"
+		},
+		"axis=x,realm=4": {
+			"model": "diamondaltar:block/realm_portal_abyss_ns"
+		},
+		"axis=z,realm=4": {
+			"model": "diamondaltar:block/realm_portal_abyss_ew"
+		},
+		"axis=x,realm=5": {
+			"model": "diamondaltar:block/realm_portal_shadow_ns"
+		},
+		"axis=z,realm=5": {
+			"model": "diamondaltar:block/realm_portal_shadow_ew"
+		},
+		"axis=x,realm=6": {
+			"model": "diamondaltar:block/realm_portal_solar_ns"
+		},
+		"axis=z,realm=6": {
+			"model": "diamondaltar:block/realm_portal_solar_ew"
+		}
+	}
+}

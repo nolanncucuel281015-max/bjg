@@ -1,0 +1,14 @@
+{
+	"layers": {
+		"humanoid": [
+			{
+				"texture": "diamondaltar:solarite"
+			}
+		],
+		"humanoid_leggings": [
+			{
+				"texture": "diamondaltar:solarite"
+			}
+		]
+	}
+}

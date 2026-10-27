@@ -1,0 +1,6 @@
+{
+	"parent": "minecraft:item/handheld",
+	"textures": {
+		"layer0": "diamondaltar:item/seven_realms_sword"
+	}
+}

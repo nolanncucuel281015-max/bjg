@@ -1,0 +1,50 @@
+{
+	"attributes": {
+		"minecraft:visual/sky_color": "#9fd8ff",
+		"minecraft:visual/fog_color": "#d8f2ff",
+		"minecraft:gameplay/natural_mob_spawns": {
+			"argument": {
+				"spawn_costs": {},
+				"spawns_by_category": {
+					"monster": [
+						{
+							"type": "minecraft:stray",
+							"count": 3,
+							"weight": 10
+						},
+						{
+							"type": "minecraft:skeleton",
+							"count": 2,
+							"weight": 4
+						}
+					]
+				}
+			},
+			"modifier": "overlay"
+		}
+	},
+	"carvers": [],
+	"downfall": 0.0,
+	"effects": {
+		"water_color": "#7fd4ff"
+	},
+	"features": [
+		[],
+		[],
+		[],
+		[],
+		[],
+		[],
+		[
+			"diamondaltar:ore_cryonite"
+		],
+		[],
+		[],
+		[
+			"diamondaltar:decor_frost"
+		],
+		[]
+	],
+	"has_precipitation": false,
+	"temperature": 0.5
+}

@@ -1,0 +1,18 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"pattern": [
+		" T ",
+		"PEP",
+		" T "
+	],
+	"key": {
+		"T": "minecraft:moss_block",
+		"P": "diamondaltar:fulgurite_ingot",
+		"E": "minecraft:ender_eye"
+	},
+	"result": {
+		"id": "diamondaltar:sylvan_key",
+		"count": 1
+	}
+}

@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:block",
+	"pools": [
+		{
+			"rolls": 1,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "diamondaltar:frost_stone"
+				}
+			],
+			"condition": {
+				"type": "minecraft:survives_explosion"
+			}
+		}
+	]
+}

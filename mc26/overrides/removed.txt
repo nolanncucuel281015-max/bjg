@@ -1,5 +1,19 @@
 # Fichiers de src/ qui n'existent pas dans la version 26.3 (un par ligne, ex. main/java/com/diamondaltar/X.java)
 main/resources/data/diamondaltar/worldgen/configured_feature/astral_rock.json
 main/resources/data/diamondaltar/worldgen/configured_feature/astral_tree.json
+main/resources/data/diamondaltar/worldgen/configured_feature/ore_abyssite.json
 main/resources/data/diamondaltar/worldgen/configured_feature/ore_astralite.json
+main/resources/data/diamondaltar/worldgen/configured_feature/ore_cryonite.json
+main/resources/data/diamondaltar/worldgen/configured_feature/ore_fulgurite.json
 main/resources/data/diamondaltar/worldgen/configured_feature/ore_lunarite.json
+main/resources/data/diamondaltar/worldgen/configured_feature/ore_pyronite.json
+main/resources/data/diamondaltar/worldgen/configured_feature/ore_solarite.json
+main/resources/data/diamondaltar/worldgen/configured_feature/ore_umbrite.json
+main/resources/data/diamondaltar/worldgen/configured_feature/ore_verdite.json
+main/resources/data/diamondaltar/worldgen/configured_feature/realm_decor_abyss.json
+main/resources/data/diamondaltar/worldgen/configured_feature/realm_decor_ember.json
+main/resources/data/diamondaltar/worldgen/configured_feature/realm_decor_frost.json
+main/resources/data/diamondaltar/worldgen/configured_feature/realm_decor_shadow.json
+main/resources/data/diamondaltar/worldgen/configured_feature/realm_decor_solar.json
+main/resources/data/diamondaltar/worldgen/configured_feature/realm_decor_storm.json
+main/resources/data/diamondaltar/worldgen/configured_feature/realm_decor_sylvan.json

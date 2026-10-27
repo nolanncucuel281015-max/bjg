@@ -1,0 +1,54 @@
+{
+	"attributes": {
+		"minecraft:visual/sky_color": "#05020a",
+		"minecraft:visual/fog_color": "#140a20"
+	},
+	"carvers": [],
+	"downfall": 0.0,
+	"effects": {
+		"water_color": "#2a0a3a"
+	},
+	"features": [
+		[],
+		[],
+		[],
+		[],
+		[],
+		[],
+		[
+			"diamondaltar:ore_umbrite"
+		],
+		[],
+		[],
+		[
+			"diamondaltar:decor_shadow"
+		],
+		[]
+	],
+	"has_precipitation": false,
+	"spawn_costs": {},
+	"spawners": {
+		"ambient": [],
+		"axolotls": [],
+		"creature": [],
+		"misc": [],
+		"underground_water_creature": [],
+		"water_ambient": [],
+		"water_creature": [],
+		"monster": [
+			{
+				"type": "minecraft:enderman",
+				"maxCount": 2,
+				"minCount": 1,
+				"weight": 10
+			},
+			{
+				"type": "minecraft:wither_skeleton",
+				"maxCount": 2,
+				"minCount": 1,
+				"weight": 6
+			}
+		]
+	},
+	"temperature": 0.5
+}

@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:block",
+	"pools": [
+		{
+			"rolls": 1,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "diamondaltar:realm_frame"
+				}
+			],
+			"condition": {
+				"type": "minecraft:survives_explosion"
+			}
+		}
+	]
+}

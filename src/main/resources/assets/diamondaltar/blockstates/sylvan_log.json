@@ -1,0 +1,16 @@
+{
+	"variants": {
+		"axis=y": {
+			"model": "diamondaltar:block/sylvan_log"
+		},
+		"axis=z": {
+			"model": "diamondaltar:block/sylvan_log",
+			"x": 90
+		},
+		"axis=x": {
+			"model": "diamondaltar:block/sylvan_log",
+			"x": 90,
+			"y": 90
+		}
+	}
+}

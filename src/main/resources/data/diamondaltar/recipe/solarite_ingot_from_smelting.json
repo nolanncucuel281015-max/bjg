@@ -1,0 +1,10 @@
+{
+	"type": "minecraft:smelting",
+	"category": "misc",
+	"ingredient": "diamondaltar:raw_solarite",
+	"result": {
+		"id": "diamondaltar:solarite_ingot"
+	},
+	"experience": 4.0,
+	"cookingtime": 200
+}

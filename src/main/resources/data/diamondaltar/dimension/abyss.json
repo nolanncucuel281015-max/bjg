@@ -1,0 +1,11 @@
+{
+	"type": "diamondaltar:abyss",
+	"generator": {
+		"type": "minecraft:noise",
+		"biome_source": {
+			"type": "minecraft:fixed",
+			"biome": "diamondaltar:abyss_lands"
+		},
+		"settings": "diamondaltar:abyss"
+	}
+}

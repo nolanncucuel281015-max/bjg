@@ -1,0 +1,18 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"pattern": [
+		" T ",
+		"PEP",
+		" T "
+	],
+	"key": {
+		"T": "minecraft:glowstone_dust",
+		"P": "diamondaltar:umbrite_ingot",
+		"E": "minecraft:ender_eye"
+	},
+	"result": {
+		"id": "diamondaltar:solar_key",
+		"count": 1
+	}
+}
