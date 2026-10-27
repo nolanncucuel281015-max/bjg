@@ -218,15 +218,15 @@ public class ManualScreen extends Screen {
 
 	/** Matériaux du cadre de chaque royaume : autour (X) et en haut au milieu (Y). Même ordre que les recettes. */
 	private static final Item[][] FRAME_MATERIALS = {
-			{Items.MAGMA_BLOCK, Items.BLAZE_ROD}, {Items.PACKED_ICE, Items.BLUE_ICE}, {Items.GOLD_INGOT, Items.LIGHTNING_ROD},
+			{Items.MAGMA_BLOCK, Items.BLAZE_ROD}, {Items.PACKED_ICE, Items.BLUE_ICE}, {Items.GOLD_INGOT, Items.BREEZE_ROD},
 			{Items.EMERALD, Items.EMERALD_BLOCK}, {Items.DIAMOND, Items.HEART_OF_THE_SEA}, {Items.DIAMOND_BLOCK, Items.ECHO_SHARD},
 			{Items.NETHERITE_INGOT, Items.NETHER_STAR}};
-	private static final Item[] KEY_THEMATIC = {Items.BLAZE_POWDER, Items.BLUE_ICE, Items.LIGHTNING_ROD, Items.MOSS_BLOCK,
+	private static final Item[] KEY_THEMATIC = {Items.BLAZE_POWDER, Items.BLUE_ICE, Items.BREEZE_ROD, Items.MOSS_BLOCK,
 			Items.PRISMARINE_CRYSTALS, Items.ECHO_SHARD, Items.GLOWSTONE_DUST};
 	private static final String[] REALM_NAMES = {"Royaume de Braise", "Royaume de Givre", "Royaume des Tempêtes", "Royaume Sylvestre",
 			"Royaume des Abysses", "Royaume des Ombres", "Royaume du Soleil"};
 	private static final String[] MATERIAL_NAMES = {"blocs de magma + bâton de blaze", "glace compactée + glace bleue",
-			"lingots d'or + paratonnerre", "émeraudes + bloc d'émeraude", "diamants + cœur de la mer",
+			"lingots d'or + bâton de breeze", "émeraudes + bloc d'émeraude", "diamants + cœur de la mer",
 			"blocs de diamant + éclat d'écho", "lingots de netherite + étoile du Nether"};
 	private static final String[] BOSS_NAMES = {"Seigneur des Braises", "Reine du Givre", "Titan de la Tempête", "Béhémoth Sylvestre",
 			"Léviathan des Abysses", "Roi des Ombres", "Paladin Solaire"};
@@ -349,7 +349,7 @@ public class ManualScreen extends Screen {
 				"Respiration aquatique, Grâce du dauphin, Force des conduits, Force II.",
 				"Vision nocturne, Force II, immunité aux ténèbres, invisible accroupi.",
 				"Résistance II, Régénération, Force II, Absorption IV toutes les 30 s."};
-		String[] thematic = {"poudre de blaze", "glace bleue", "paratonnerre", "bloc de mousse", "cristaux de prismarine",
+		String[] thematic = {"poudre de blaze", "glace bleue", "bâton de breeze", "bloc de mousse", "cristaux de prismarine",
 				"éclat d'écho", "poudre de pierre lumineuse"};
 
 		List<Element> intro = new ArrayList<>();

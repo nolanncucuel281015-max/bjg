@@ -29,7 +29,7 @@ REALMS = [
          stone=[(22, 22, 36), (62, 64, 90), (120, 124, 160)], soil=[(45, 45, 55), (95, 95, 110), (150, 150, 170)],
          metal=[(70, 60, 10), (240, 210, 60), (255, 255, 200)], sky="#2a2f45", fog="#454c6b", sky_light="#fff2a0",
          ambient=0.15, patch="minecraft:tuff", skybox="overworld", water="#6b78a8",
-         thematic="minecraft:lightning_rod", monsters=[("minecraft:creeper", 10, 1, 2), ("minecraft:phantom", 5, 1, 2)]),
+         thematic="minecraft:breeze_rod", monsters=[("minecraft:creeper", 10, 1, 2), ("minecraft:phantom", 5, 1, 2)]),
     dict(id="sylvan", ore="verdite", tier=3,
          stone=[(30, 42, 28), (70, 92, 60), (120, 140, 100)], soil=[(30, 70, 20), (70, 150, 45), (150, 220, 90)],
          metal=[(10, 50, 15), (60, 200, 70), (210, 255, 150)], sky="#8fe08a", fog="#b8f0a0", sky_light="#d8ffb0",
@@ -94,7 +94,7 @@ ARMOR = ["helmet", "chestplate", "leggings", "boots"]
 FRAME_MATERIALS = [
     ("minecraft:magma_block", "minecraft:blaze_rod"),
     ("minecraft:packed_ice", "minecraft:blue_ice"),
-    ("minecraft:gold_ingot", "minecraft:lightning_rod"),
+    ("minecraft:gold_ingot", "minecraft:breeze_rod"),
     ("minecraft:emerald", "minecraft:emerald_block"),
     ("minecraft:diamond", "minecraft:heart_of_the_sea"),
     ("minecraft:diamond_block", "minecraft:echo_shard"),
