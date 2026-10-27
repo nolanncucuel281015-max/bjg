@@ -1,2 +1,5 @@
-cat data/minecraft/dimension_type/the_end.json
-cat data/minecraft/dimension_type/overworld.json
+class net.minecraft.world.entity.Entity [Ii]nvulner|lastHurt
+class net.minecraft.world.entity.LivingEntity [Ii]nvulner|lastHurt|hurtServer|actuallyHurt
+class net.minecraft.world.level.levelgen.feature.TreeFeature
+cat data/minecraft/worldgen/placed_feature/oak_checked.json
+cat data/minecraft/worldgen/feature/oak.json
