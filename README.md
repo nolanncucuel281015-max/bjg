@@ -127,12 +127,15 @@ son **minerai**, son **boss unique** et son **armure légendaire**.
 2. **Clés** : 2 lingots du royaume précédent (Astralite pour la 1re) + 2 objets du thème + un œil de l'Ender
    (poudre de blaze, glace bleue, bâton de breeze, mousse, cristaux de prismarine, éclat d'écho, poudre lumineuse).
 3. **Minerais** : le minerai brut se cuit en lingot (four ou haut fourneau). Pioche en fer pour les 3 premiers, en diamant ensuite.
-4. **Boss** : le **Sceau** du royaume (4 lingots + un diamant), clic droit dans son royaume → rituel de 3 s → le boss
+4. **Sanctuaires** : dans chaque royaume, des sanctuaires (dalle, 4 piliers et un **Autel**) sont générés un peu
+   partout (environ un tous les 8 tronçons) ; quand tu t'approches de l'autel, **le boss du royaume s'éveille**.
+   Les **Châteaux Astraux** (le Gardien) sont aussi 3 fois plus fréquents qu'avant.
+5. **Boss** : le **Sceau** du royaume (4 lingots + un diamant), clic droit dans son royaume → rituel de 3 s → le boss
    apparaît. Barrage tombant du ciel, onde de choc et attaque signature ; il enrage sous 40 % de PV.
    Il lâche l'**Éclat** de son royaume, des lingots et du minerai brut.
-5. **Armures légendaires** : forme de craft habituelle avec les lingots, incassables, de plus en plus solides
+6. **Armures légendaires** : forme de craft habituelle avec les lingots, incassables, de plus en plus solides
    (jusqu'à +8 PV et 15 d'armure par pièce pour le Soleil).
-6. **Épée des Sept Royaumes** : les **7 éclats** autour d'une **épée en netherite**, une **étoile du Nether** en bas
+7. **Épée des Sept Royaumes** : les **7 éclats** autour d'une **épée en netherite**, une **étoile du Nether** en bas
    au milieu. 30 dégâts, incassable ; chaque coup brûle, gèle, empoisonne, flétrit et parfois foudroie.
    **Clic droit** : *Jugement des Sept Royaumes*, sept colonnes de lumière qui explosent autour de toi (recharge 8 s).
 

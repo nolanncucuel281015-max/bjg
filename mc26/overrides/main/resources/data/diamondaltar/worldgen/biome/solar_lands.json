@@ -28,7 +28,9 @@
 		[],
 		[],
 		[],
-		[],
+		[
+			"diamondaltar:shrine_solar"
+		],
 		[],
 		[
 			"diamondaltar:ore_solarite"

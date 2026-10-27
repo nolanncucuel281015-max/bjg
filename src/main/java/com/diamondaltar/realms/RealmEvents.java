@@ -431,6 +431,20 @@ public final class RealmEvents {
 			report.append(terrain ? "OK" : "FAIL").append(" royaume ").append(r.id).append(" : ").append(solid)
 					.append(" blocs du royaume, ").append(ores).append(" minerais, ").append(decor).append(" blocs de decor\n");
 			ok &= terrain;
+			// Les sanctuaires : on les cherche sur un carré de 9 × 9 tronçons (environ 10 attendus).
+			int shrines = 0;
+			for (int cx = -4; cx <= 4; cx++) {
+				for (int cz = -4; cz <= 4; cz++) {
+					var chunk = level.getChunk(cx, cz);
+					for (var be : chunk.getBlockEntities().values()) {
+						if (be instanceof RealmAltarBlockEntity) {
+							shrines++;
+						}
+					}
+				}
+			}
+			report.append(shrines > 0 ? "OK" : "WARN").append(" sanctuaires du boss ").append(r.id).append(" : ").append(shrines)
+					.append(" dans 81 troncons\n");
 			if (ores == 0) {
 				report.append("WARN aucun minerai de ").append(r.ore).append(" echantillonne\n");
 			}

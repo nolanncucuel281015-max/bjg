@@ -242,6 +242,9 @@ def textures():
     for r in REALMS:
         save(recolor(TEX / "block/astral_frame.png", [(12, 8, 16), r["metal"][1], r["metal"][2]], contrast=1.2),
              f"block/{r['id']}_portal_frame.png")
+        for face in ("top", "side"):
+            save(recolor(TEX / f"block/guardian_altar_{face}.png", [(10, 6, 14), r["metal"][1], r["metal"][2]]),
+                 f"block/realm_altar_{r['id']}_{face}.png")
     save(recolor(TEX / "item/diamond_manual.png", [(40, 15, 10), (200, 120, 50), (255, 230, 150)]), "item/portal_guide.png")
 
 
@@ -344,6 +347,13 @@ def assets():
     for r in REALMS:
         cube(f"{r['id']}_portal_frame")
     flat_item("portal_guide")
+    variants = {}
+    for i, r in enumerate(REALMS):
+        name = f"realm_altar_{r['id']}"
+        dump(ASSETS / f"models/block/{name}.json", {"parent": "minecraft:block/cube_bottom_top", "textures": {
+            "top": f"{NS}:block/{name}_top", "bottom": f"{NS}:block/{name}_side", "side": f"{NS}:block/{name}_side"}})
+        variants[f"realm={i}"] = {"model": f"{NS}:block/{name}"}
+    dump(ASSETS / "blockstates/realm_altar.json", {"variants": variants})
     cube("sylvan_leaves")
     dump(ASSETS / "models/block/sylvan_log.json", {"parent": "minecraft:block/cube_column", "textures": {
         "end": f"{NS}:block/sylvan_log_top", "side": f"{NS}:block/sylvan_log"}})
@@ -397,7 +407,7 @@ def dimensions():
         dump(DATA / f"worldgen/biome/{rid}_lands.json", {
             "attributes": {"minecraft:visual/sky_color": r["sky"], "minecraft:visual/fog_color": r["fog"]},
             "carvers": [], "downfall": 0.0, "effects": {"water_color": r["water"]},
-            "features": [[], [], [], [], [], [], [f"{NS}:ore_{ore}"], [], [], [f"{NS}:decor_{rid}"], []],
+            "features": [[], [], [], [], [f"{NS}:shrine_{rid}"], [], [f"{NS}:ore_{ore}"], [], [], [f"{NS}:decor_{rid}"], []],
             "has_precipitation": False, "spawn_costs": {},
             "spawners": dict(empty, monster=[{"type": m, "maxCount": mx, "minCount": mn, "weight": w} for m, w, mn, mx in r["monsters"]]),
             "temperature": 0.5})
@@ -411,6 +421,11 @@ def dimensions():
                                                           "max_inclusive": {"absolute": 200}}},
             {"type": "minecraft:biome"}]})
         dump(DATA / f"worldgen/configured_feature/realm_decor_{rid}.json", {"type": f"{NS}:realm_decor_{rid}", "config": {}})
+        # Sanctuaire du boss : environ 1 tronçon sur 8.
+        dump(DATA / f"worldgen/configured_feature/realm_shrine_{rid}.json", {"type": f"{NS}:realm_shrine_{rid}", "config": {}})
+        dump(DATA / f"worldgen/placed_feature/shrine_{rid}.json", {"feature": f"{NS}:realm_shrine_{rid}", "placement": [
+            {"type": "minecraft:rarity_filter", "chance": 8}, {"type": "minecraft:in_square"},
+            {"type": "minecraft:heightmap", "heightmap": "WORLD_SURFACE_WG"}, {"type": "minecraft:biome"}]})
         dump(DATA / f"worldgen/placed_feature/decor_{rid}.json", {"feature": f"{NS}:realm_decor_{rid}", "placement": [
             {"type": "minecraft:count", "count": 4 if rid == "sylvan" else 2}, {"type": "minecraft:in_square"},
             {"type": "minecraft:heightmap", "heightmap": "MOTION_BLOCKING"}, {"type": "minecraft:biome"}]})
@@ -545,6 +560,7 @@ def lang():
                 f"{NS}.key.desc": "Clic droit dans le cadre du portail de ce royaume : ouvre le portail.",
                 f"{NS}.key.wrong_frame": "Ce cadre s'ouvre avec la %s",
                 f"item.{NS}.portal_guide": "Guide des Portails",
+                f"block.{NS}.realm_altar": "Autel du Sanctuaire",
                 f"{NS}.portal_guide.desc": "Clic droit : comment construire et allumer chaque portail",
                 f"{NS}.realm_armor.set": "Armure complète :",
                 f"{NS}.seven_realms.cooldown": "Jugement des Sept Royaumes : encore %s s",
@@ -586,6 +602,7 @@ def lang():
                 f"{NS}.key.desc": "Right-click inside this realm's portal frame: opens the portal.",
                 f"{NS}.key.wrong_frame": "This frame opens with the %s",
                 f"item.{NS}.portal_guide": "Portal Guide",
+                f"block.{NS}.realm_altar": "Shrine Altar",
                 f"{NS}.portal_guide.desc": "Right-click: how to build and light every portal",
                 f"{NS}.realm_armor.set": "Full set:",
                 f"{NS}.seven_realms.cooldown": "Judgement of the Seven Realms: %s s left",

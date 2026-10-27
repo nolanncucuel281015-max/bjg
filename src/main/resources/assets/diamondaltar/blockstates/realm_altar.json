@@ -1,0 +1,25 @@
+{
+	"variants": {
+		"realm=0": {
+			"model": "diamondaltar:block/realm_altar_ember"
+		},
+		"realm=1": {
+			"model": "diamondaltar:block/realm_altar_frost"
+		},
+		"realm=2": {
+			"model": "diamondaltar:block/realm_altar_storm"
+		},
+		"realm=3": {
+			"model": "diamondaltar:block/realm_altar_sylvan"
+		},
+		"realm=4": {
+			"model": "diamondaltar:block/realm_altar_abyss"
+		},
+		"realm=5": {
+			"model": "diamondaltar:block/realm_altar_shadow"
+		},
+		"realm=6": {
+			"model": "diamondaltar:block/realm_altar_solar"
+		}
+	}
+}

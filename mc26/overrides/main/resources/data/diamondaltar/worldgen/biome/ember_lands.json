@@ -33,7 +33,9 @@
 		[],
 		[],
 		[],
-		[],
+		[
+			"diamondaltar:shrine_ember"
+		],
 		[],
 		[
 			"diamondaltar:ore_pyronite"

@@ -310,5 +310,6 @@
 	"block.diamondaltar.solar_portal_frame": "Solar Portal Frame",
 	"diamondaltar.key.wrong_frame": "This frame opens with the %s",
 	"item.diamondaltar.portal_guide": "Portal Guide",
-	"diamondaltar.portal_guide.desc": "Right-click: how to build and light every portal"
+	"diamondaltar.portal_guide.desc": "Right-click: how to build and light every portal",
+	"block.diamondaltar.realm_altar": "Shrine Altar"
 }

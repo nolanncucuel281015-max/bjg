@@ -278,7 +278,7 @@ public class ManualScreen extends Screen {
 					sub("Là-bas"),
 					row(st(RealmContent.STONE[i]), st(RealmContent.SOIL[i]), st(RealmContent.ORE[i]), st(RealmContent.INGOT[i]), st(RealmContent.SIGIL[i]),
 							st(RealmContent.SHARD[i])),
-					icon(st(RealmContent.SIGIL[i]), BOSS_NAMES[i], "Le boss : invoque-le avec le Sceau (4 lingots + un diamant). Il lâche l'Éclat du royaume."));
+					icon(st(RealmContent.SIGIL[i]), BOSS_NAMES[i], "Le boss : il s'éveille quand tu t'approches de l'autel d'un Sanctuaire, ou invoque-le avec le Sceau (4 lingots + un diamant). Il lâche l'Éclat du royaume."));
 		}
 
 		chapter("Le Cadre universel",
@@ -383,7 +383,8 @@ public class ManualScreen extends Screen {
 		chapters.add(new Chapter("Visiter les Royaumes", lands));
 
 		List<Element> boss = new ArrayList<>();
-		boss.add(text("Fabrique le Sceau du royaume avec 4 lingots et un diamant, puis clic droit avec dans son royaume : après un rituel de 3 s, le boss apparaît."));
+		boss.add(text("Dans chaque royaume, des Sanctuaires (dalle, 4 piliers, un autel au centre) sont générés un peu partout : approche-toi de l'autel et le boss s'éveille !", GOLD));
+		boss.add(text("Ou fabrique le Sceau du royaume avec 4 lingots et un diamant, puis clic droit avec dans son royaume : après un rituel de 3 s, le boss apparaît."));
 		boss.add(craft(new ItemStack[]{null, st(RealmContent.INGOT[0]), null, st(RealmContent.INGOT[0]), st(Items.DIAMOND),
 				st(RealmContent.INGOT[0]), null, st(RealmContent.INGOT[0]), null}, st(RealmContent.SIGIL[0])));
 		boss.add(text("Chaque boss alterne trois attaques : un barrage qui tombe du ciel (cercle au sol : bouge !), une onde de choc, et son attaque signature. Sous 40 % de PV, il enrage.", MUTED));

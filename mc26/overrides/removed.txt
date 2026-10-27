@@ -17,3 +17,10 @@ main/resources/data/diamondaltar/worldgen/configured_feature/realm_decor_shadow.
 main/resources/data/diamondaltar/worldgen/configured_feature/realm_decor_solar.json
 main/resources/data/diamondaltar/worldgen/configured_feature/realm_decor_storm.json
 main/resources/data/diamondaltar/worldgen/configured_feature/realm_decor_sylvan.json
+main/resources/data/diamondaltar/worldgen/configured_feature/realm_shrine_abyss.json
+main/resources/data/diamondaltar/worldgen/configured_feature/realm_shrine_ember.json
+main/resources/data/diamondaltar/worldgen/configured_feature/realm_shrine_frost.json
+main/resources/data/diamondaltar/worldgen/configured_feature/realm_shrine_shadow.json
+main/resources/data/diamondaltar/worldgen/configured_feature/realm_shrine_solar.json
+main/resources/data/diamondaltar/worldgen/configured_feature/realm_shrine_storm.json
+main/resources/data/diamondaltar/worldgen/configured_feature/realm_shrine_sylvan.json

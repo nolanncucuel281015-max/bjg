@@ -33,7 +33,9 @@
 		[],
 		[],
 		[],
-		[],
+		[
+			"diamondaltar:shrine_frost"
+		],
 		[],
 		[
 			"diamondaltar:ore_cryonite"

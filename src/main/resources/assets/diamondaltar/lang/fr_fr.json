@@ -310,5 +310,6 @@
 	"block.diamondaltar.solar_portal_frame": "Cadre de Portail du Soleil",
 	"diamondaltar.key.wrong_frame": "Ce cadre s'ouvre avec la %s",
 	"item.diamondaltar.portal_guide": "Guide des Portails",
-	"diamondaltar.portal_guide.desc": "Clic droit : comment construire et allumer chaque portail"
+	"diamondaltar.portal_guide.desc": "Clic droit : comment construire et allumer chaque portail",
+	"block.diamondaltar.realm_altar": "Autel du Sanctuaire"
 }

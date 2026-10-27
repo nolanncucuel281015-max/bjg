@@ -33,7 +33,9 @@
 		[],
 		[],
 		[],
-		[],
+		[
+			"diamondaltar:shrine_shadow"
+		],
 		[],
 		[
 			"diamondaltar:ore_umbrite"

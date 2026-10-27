@@ -81,6 +81,13 @@ public final class RealmContent {
 		}
 	}
 
+	/** Autel des Sanctuaires des Royaumes (structure générée) : réveille le boss du royaume. */
+	public static final Block REALM_ALTAR = AstralContent.blockNoItem("realm_altar", RealmAltarBlock::new, BlockBehaviour.Properties.of()
+			.mapColor(MapColor.COLOR_BLACK).strength(-1f, 3600000f).sound(SoundType.LODESTONE).lightLevel(s -> 12).noLootTable());
+	public static final net.minecraft.world.level.block.entity.BlockEntityType<RealmAltarBlockEntity> REALM_ALTAR_ENTITY =
+			net.minecraft.core.Registry.register(net.minecraft.core.registries.BuiltInRegistries.BLOCK_ENTITY_TYPE, DiamondAltar.id("realm_altar"),
+					net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder.create(RealmAltarBlockEntity::new, REALM_ALTAR).build());
+
 	public static final Block REALM_PORTAL = AstralContent.blockNoItem("realm_portal", RealmPortalBlock::new, BlockBehaviour.Properties.of()
 			.noCollision().strength(-1f, 3600000f).sound(SoundType.GLASS).lightLevel(s -> 13).noLootTable().pushReaction(Compat.PUSH_BLOCKED));
 	public static final Block SYLVAN_LOG = AstralContent.block("sylvan_log", RotatedPillarBlock::new, BlockBehaviour.Properties.of()

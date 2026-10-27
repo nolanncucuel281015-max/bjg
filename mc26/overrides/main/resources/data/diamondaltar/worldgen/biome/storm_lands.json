@@ -33,7 +33,9 @@
 		[],
 		[],
 		[],
-		[],
+		[
+			"diamondaltar:shrine_storm"
+		],
 		[],
 		[
 			"diamondaltar:ore_fulgurite"

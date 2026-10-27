@@ -23,10 +23,13 @@ public final class RealmFeatures {
 	public static void register() {
 		for (Realm r : Realm.values()) {
 			// #if 1.21.11
-			Registry.register(BuiltInRegistries.FEATURE, DiamondAltar.id("realm_decor_" + r.id), new Decor(r));
+			Registry.register(BuiltInRegistries.FEATURE, DiamondAltar.id("realm_decor_" + r.id), new Decor(r, false));
+			Registry.register(BuiltInRegistries.FEATURE, DiamondAltar.id("realm_shrine_" + r.id), new Decor(r, true));
 			// #else
-			//? Decor d = new Decor(r);
+			//? Decor d = new Decor(r, false);
 			//? Registry.register(BuiltInRegistries.FEATURE_TYPE, DiamondAltar.id("realm_decor_" + r.id), d.codec);
+			//? Decor shrine = new Decor(r, true);
+			//? Registry.register(BuiltInRegistries.FEATURE_TYPE, DiamondAltar.id("realm_shrine_" + r.id), shrine.codec);
 			// #endif
 		}
 	}
@@ -34,24 +37,29 @@ public final class RealmFeatures {
 	// #if 1.21.11
 	static final class Decor extends net.minecraft.world.level.levelgen.feature.Feature<net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration> {
 		private final Realm realm;
+		private final boolean shrine;
 
-		Decor(Realm realm) {
+		Decor(Realm realm, boolean shrine) {
 			super(net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration.CODEC);
 			this.realm = realm;
+			this.shrine = shrine;
 		}
 
 		@Override
 		public boolean place(net.minecraft.world.level.levelgen.feature.FeaturePlaceContext<net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration> ctx) {
-			return RealmFeatures.place(realm, ctx.level(), ctx.random(), ctx.origin());
+			return shrine ? RealmFeatures.shrine(realm, ctx.level(), ctx.random(), ctx.origin())
+					: RealmFeatures.place(realm, ctx.level(), ctx.random(), ctx.origin());
 		}
 	}
 	// #else
 	//? static final class Decor implements net.minecraft.world.level.levelgen.feature.Feature {
 	//? 	private final Realm realm;
+	//? 	private final boolean shrine;
 	//? 	final com.mojang.serialization.MapCodec<Decor> codec;
 	//?
-	//? 	Decor(Realm realm) {
+	//? 	Decor(Realm realm, boolean shrine) {
 	//? 		this.realm = realm;
+	//? 		this.shrine = shrine;
 	//? 		this.codec = com.mojang.serialization.MapCodec.unit(this);
 	//? 	}
 	//?
@@ -62,7 +70,7 @@ public final class RealmFeatures {
 	//?
 	//? 	@Override
 	//? 	public boolean place(WorldGenLevel level, net.minecraft.world.level.chunk.ChunkGenerator generator, RandomSource random, BlockPos origin) {
-	//? 		return RealmFeatures.place(realm, level, random, origin);
+	//? 		return shrine ? RealmFeatures.shrine(realm, level, random, origin) : RealmFeatures.place(realm, level, random, origin);
 	//? 	}
 	//? }
 	// #endif
@@ -99,6 +107,54 @@ public final class RealmFeatures {
 			case SHADOW -> spike(level, random, base, Blocks.OBSIDIAN.defaultBlockState(), Blocks.CRYING_OBSIDIAN.defaultBlockState(), 4 + random.nextInt(7));
 			case SOLAR -> spire(level, random, base, Blocks.SMOOTH_SANDSTONE.defaultBlockState(), Blocks.GLOWSTONE.defaultBlockState(), 3 + random.nextInt(5));
 		}
+		return true;
+	}
+
+	/**
+	 * Sanctuaire du royaume : une dalle de 9 × 9 en pierre du royaume, 4 piliers en Cadres de Portail du royaume
+	 * surmontés de minerai, des marches, et au centre l'Autel qui réveille le boss quand un joueur approche.
+	 */
+	static boolean shrine(Realm realm, WorldGenLevel level, RandomSource random, BlockPos base) {
+		if (!isGround(realm, level.getBlockState(base.below())) || base.getY() + 12 >= level.getMaxY() || base.getY() < level.getMinY() + 8) {
+			return false;
+		}
+		int i = realm.ordinal();
+		BlockState stone = RealmContent.STONE[i].defaultBlockState();
+		BlockState frame = RealmContent.PORTAL_FRAME[i].defaultBlockState();
+		BlockState air = Blocks.AIR.defaultBlockState();
+		for (int dx = -4; dx <= 4; dx++) {
+			for (int dz = -4; dz <= 4; dz++) {
+				BlockPos floor = base.offset(dx, -1, dz);
+				level.setBlock(floor, stone, 2);
+				// fondations, pour ne pas flotter au bord d'une île
+				for (int d = 1; d <= 3 && level.getBlockState(floor.below(d)).isAir(); d++) {
+					level.setBlock(floor.below(d), stone, 2);
+				}
+				for (int dy = 0; dy < 7; dy++) {
+					level.setBlock(base.offset(dx, dy, dz), air, 2);
+				}
+				boolean edge = Math.abs(dx) == 4 || Math.abs(dz) == 4;
+				if (edge && (dx + dz) % 2 == 0) {
+					level.setBlock(base.offset(dx, 0, dz), frame, 2);
+				}
+			}
+		}
+		for (int sx = -1; sx <= 1; sx += 2) {
+			for (int sz = -1; sz <= 1; sz += 2) {
+				BlockPos pillar = base.offset(sx * 3, 0, sz * 3);
+				for (int dy = 0; dy < 4; dy++) {
+					level.setBlock(pillar.above(dy), frame, 2);
+				}
+				level.setBlock(pillar.above(4), RealmContent.ORE[i].defaultBlockState(), 2);
+			}
+		}
+		// estrade et autel
+		for (int dx = -1; dx <= 1; dx++) {
+			for (int dz = -1; dz <= 1; dz++) {
+				level.setBlock(base.offset(dx, 0, dz), frame, 2);
+			}
+		}
+		level.setBlock(base.above(), RealmContent.REALM_ALTAR.defaultBlockState().setValue(RealmAltarBlock.REALM, i), 2);
 		return true;
 	}
 
