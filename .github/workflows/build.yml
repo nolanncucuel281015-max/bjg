@@ -32,3 +32,26 @@ jobs:
             plugin/build/libs/*.jar
             plugin/build/libs/*.zip
             plugin/LISEZMOI.txt
+
+  # Version Minecraft 26.3 (mêmes sources + mc26/overrides)
+  build-26:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 25
+      - name: Build mod 26.3
+        run: chmod +x gradlew && ./gradlew -p mc26 build --no-daemon
+      - uses: actions/upload-artifact@v4
+        with:
+          name: diamond-altar-mod-26.3
+          path: mc26/build/libs/*.jar
+      - name: Auto-test 26.3 (serveur Minecraft + Dimension Astrale)
+        continue-on-error: true
+        run: |
+          mkdir -p mc26/run && echo "eula=true" > mc26/run/eula.txt
+          DIAMONDALTAR_SELFTEST=true timeout 900 ./gradlew -p mc26 runServer --no-daemon > server26.log 2>&1 || true
+          grep -E "SELFTEST|^(OK|FAIL|WARN|INFO) |    at |ERROR|Exception|Failed to|Couldn't|Missing|missing" server26.log | grep -v "Dfabric" | head -200
+          grep -q "SELFTEST RESULT: PASS" server26.log

@@ -1,0 +1,1 @@
+# Fichiers de src/ qui n'existent pas dans la version 26.3 (un par ligne, ex. main/java/com/diamondaltar/X.java)

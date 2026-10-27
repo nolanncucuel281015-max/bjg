@@ -1,0 +1,23 @@
+{
+	"schemaVersion": 1,
+	"id": "diamondaltar",
+	"version": "${version}",
+	"name": "Diamond Altar",
+	"description": "Un autel d'infusion qui transforme ton équipement en diamant en armes légendaires avec des capacités spéciales.",
+	"authors": ["bjg"],
+	"license": "MIT",
+	"icon": "assets/diamondaltar/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": ["com.diamondaltar.DiamondAltar"],
+		"client": ["com.diamondaltar.client.DiamondAltarClient"]
+	},
+	"accessWidener": "diamondaltar.classtweaker",
+	"mixins": ["diamondaltar.mixins.json"],
+	"depends": {
+		"fabricloader": ">=0.18.0",
+		"minecraft": "~26.3",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}

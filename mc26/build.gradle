@@ -1,0 +1,92 @@
+// Version 26.3 du mod : mêmes sources que la version 1.21.11 (dossier racine src/),
+// plus les fichiers de mc26/overrides/ qui remplacent ceux qui diffèrent en 26.3.
+plugins {
+	id 'net.fabricmc.fabric-loom' version "${loom_version}"
+}
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+	archivesName = project.archives_base_name
+}
+
+def synced = layout.buildDirectory.dir("synced")
+def syncTask = { String name, String set, String kind ->
+	tasks.register(name, Sync) {
+		from("overrides/${set}/${kind}")       // prioritaire
+		from("../src/${set}/${kind}") {
+			// fichiers supprimés en 26.3 (liste dans overrides/removed.txt)
+			def removed = file("overrides/removed.txt")
+			if (removed.exists()) {
+				exclude(removed.readLines().findAll { it.trim() && !it.startsWith("#") && it.startsWith("${set}/${kind}/") }
+						.collect { it.substring("${set}/${kind}/".length()) })
+			}
+		}
+		duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+		into(synced.map { it.dir("${set}/${kind}") })
+	}
+}
+def syncMainJava = syncTask("syncMainJava", "main", "java")
+def syncMainRes = syncTask("syncMainResources", "main", "resources")
+def syncClientJava = syncTask("syncClientJava", "client", "java")
+
+loom {
+	accessWidenerPath = file("overrides/main/resources/diamondaltar.classtweaker").exists()
+			? file("overrides/main/resources/diamondaltar.classtweaker")
+			: file("../src/main/resources/diamondaltar.classtweaker")
+	splitEnvironmentSourceSets()
+
+	runs {
+		server {
+			vmArg "-Ddiamondaltar.selftest=" + (System.getenv("DIAMONDALTAR_SELFTEST") ?: "false")
+			programArg "--nogui"
+		}
+	}
+
+	mods {
+		"diamondaltar" {
+			sourceSet sourceSets.main
+			sourceSet sourceSets.client
+		}
+	}
+}
+
+sourceSets {
+	main {
+		java.srcDirs = [synced.map { it.dir("main/java") }]
+		resources.srcDirs = [synced.map { it.dir("main/resources") }]
+	}
+	client {
+		java.srcDirs = [synced.map { it.dir("client/java") }]
+		resources.srcDirs = []
+	}
+}
+
+tasks.named("compileJava") { dependsOn syncMainJava }
+tasks.named("compileClientJava") { dependsOn syncClientJava }
+tasks.named("processResources") { dependsOn syncMainRes }
+tasks.matching { it.name == "sourcesJar" }.configureEach { dependsOn syncMainJava, syncMainRes, syncClientJava }
+
+dependencies {
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+}
+
+processResources {
+	inputs.property "version", project.version
+	filesMatching("fabric.mod.json") {
+		expand "version": project.version
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 25
+	it.options.encoding = "UTF-8"
+}
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_25
+	targetCompatibility = JavaVersion.VERSION_25
+}
