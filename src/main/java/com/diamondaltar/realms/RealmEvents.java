@@ -411,6 +411,16 @@ public final class RealmEvents {
 			boolean portalOk = st.is(RealmContent.REALM_PORTAL) && st.getValue(RealmPortalBlock.REALM) == i;
 			report.append(portalOk ? "OK" : "FAIL").append(" portail du royaume ").append(r.id).append('\n');
 			ok &= portalOk;
+			// Arène de pierre sous le boss (sinon, au-dessus du vide, il tombe avec son butin).
+			BlockPos floor = new BlockPos(3010, portal.getY() - 1, 3000);
+			for (int dx = -6; dx <= 6; dx++) {
+				for (int dz = -6; dz <= 6; dz++) {
+					level.setBlockAndUpdate(floor.offset(dx, 0, dz), RealmContent.STONE[i].defaultBlockState());
+					for (int dy = 1; dy <= 8; dy++) {
+						level.setBlockAndUpdate(floor.offset(dx, dy, dz), net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
+					}
+				}
+			}
 			Vec3 arena = new Vec3(3010.5, portal.getY(), 3000.5);
 			LivingEntity boss = RealmBoss.summon(level, r, arena);
 			boolean bossOk = boss != null && RealmBoss.isBoss(boss) && RealmBoss.realmOf(boss) == r
@@ -431,7 +441,8 @@ public final class RealmEvents {
 				RealmBoss.onDeath(level, boss);
 				long shards = level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, boss.getBoundingBox().inflate(8),
 						e -> e.getItem().is(RealmContent.SHARD[i])).size();
-				report.append(shards > 0 ? "OK" : "FAIL").append(" butin du boss ").append(r.id).append(" : eclat\n");
+				report.append(shards > 0 ? "OK" : "FAIL").append(" butin du boss ").append(r.id).append(" : eclat (boss en ")
+						.append(boss.blockPosition()).append(")\n");
 				ok &= shards > 0;
 				boss.discard();
 			}
