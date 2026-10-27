@@ -48,5 +48,5 @@ jobs:
         run: |
           mkdir -p mc26/run && echo "eula=true" > mc26/run/eula.txt
           DIAMONDALTAR_SELFTEST=true timeout 900 ./gradlew -p mc26 runServer --no-daemon > server26.log 2>&1 || true
-          grep -E "SELFTEST|arbre astral|^(OK|FAIL|WARN|INFO) |    at |ERROR|Exception|Failed to|Couldn't|Missing|missing" server26.log | grep -v "Dfabric" | head -200
+          grep -E "SELFTEST|^(OK|FAIL|WARN|INFO) |    at |ERROR|Exception|Failed to|Couldn't|Missing|missing" server26.log | grep -v "Dfabric" | head -200
           grep -q "SELFTEST RESULT: PASS" server26.log

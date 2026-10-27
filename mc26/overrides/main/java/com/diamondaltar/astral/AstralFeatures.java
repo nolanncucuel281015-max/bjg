@@ -27,14 +27,6 @@ public final class AstralFeatures {
 		Registry.register(BuiltInRegistries.FEATURE_TYPE, DiamondAltar.id("astral_rock"), ROCK_CODEC);
 	}
 
-	private static int debugCount;
-
-	static void debug(String msg) {
-		if (debugCount++ < 30) {
-			DiamondAltar.LOGGER.info("[arbre astral] " + msg);
-		}
-	}
-
 	static boolean isGround(BlockState state) {
 		return state.is(AstralContent.LUNAR_REGOLITH) || state.is(AstralContent.ASTRAL_STONE)
 				|| state.is(net.minecraft.world.level.block.Blocks.AMETHYST_BLOCK);
@@ -54,20 +46,16 @@ public final class AstralFeatures {
 
 		@Override
 		public boolean place(WorldGenLevel level, ChunkGenerator generator, RandomSource random, BlockPos base) {
-			debug("appel en " + base);
 			if (!isGround(level.getBlockState(base.below()))) {
-				debug("sol " + level.getBlockState(base.below()) + " en " + base);
 				return false;
 			}
 			boolean tall = random.nextInt(4) == 0;
 			int height = tall ? 9 + random.nextInt(4) : 5 + random.nextInt(3);
 			if (base.getY() + height + 4 >= level.getMaxY()) {
-				debug("trop haut " + base + " maxY=" + level.getMaxY());
 				return false;
 			}
 			for (int y = 0; y <= height + 2; y++) {
 				if (!replaceable(level, base.above(y))) {
-					debug("bloque par " + level.getBlockState(base.above(y)) + " en " + base.above(y));
 					return false;
 				}
 			}
