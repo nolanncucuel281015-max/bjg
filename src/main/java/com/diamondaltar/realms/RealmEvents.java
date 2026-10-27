@@ -431,20 +431,22 @@ public final class RealmEvents {
 			report.append(terrain ? "OK" : "FAIL").append(" royaume ").append(r.id).append(" : ").append(solid)
 					.append(" blocs du royaume, ").append(ores).append(" minerais, ").append(decor).append(" blocs de decor\n");
 			ok &= terrain;
-			// Les sanctuaires : on les cherche sur un carré de 9 × 9 tronçons (environ 10 attendus).
+			// Les sanctuaires : on cherche les autels à la surface, sur 9 × 9 tronçons (environ 10 attendus).
 			int shrines = 0;
-			for (int cx = -4; cx <= 4; cx++) {
-				for (int cz = -4; cz <= 4; cz++) {
-					var chunk = level.getChunk(cx, cz);
-					for (var be : chunk.getBlockEntities().values()) {
-						if (be instanceof RealmAltarBlockEntity) {
-							shrines++;
+			int ticking = 0;
+			for (int x = -64; x < 80; x++) {
+				for (int z = -64; z < 80; z++) {
+					BlockPos top = new BlockPos(x, level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.WORLD_SURFACE, x, z) - 1, z);
+					if (level.getBlockState(top).is(RealmContent.REALM_ALTAR)) {
+						shrines++;
+						if (level.getBlockEntity(top) instanceof RealmAltarBlockEntity) {
+							ticking++;
 						}
 					}
 				}
 			}
-			report.append(shrines > 0 ? "OK" : "WARN").append(" sanctuaires du boss ").append(r.id).append(" : ").append(shrines)
-					.append(" dans 81 troncons\n");
+			report.append(shrines > 0 && ticking == shrines ? "OK" : "WARN").append(" sanctuaires du boss ").append(r.id).append(" : ")
+					.append(shrines).append(" autel(s) dans 81 troncons, ").append(ticking).append(" actif(s)\n");
 			if (ores == 0) {
 				report.append("WARN aucun minerai de ").append(r.ore).append(" echantillonne\n");
 			}
