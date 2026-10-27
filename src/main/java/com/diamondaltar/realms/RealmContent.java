@@ -114,29 +114,98 @@ public final class RealmContent {
 							AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
 					.build()));
 
+	// ---------- Aetherite : le métal le plus rare, lâché surtout par les boss les plus forts ----------
+	public static final Item AETHERITE_INGOT = AstralContent.item("aetherite_ingot", Item::new, new Item.Properties()
+			.rarity(Rarity.EPIC).fireResistant().component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true));
+	public static final Item[] AETHERITE_ARMOR = new Item[4];
+
+	static {
+		ResourceKey<EquipmentAsset> asset = ResourceKey.create(EquipmentAssets.ROOT_ID, DiamondAltar.id("aetherite"));
+		for (int k = 0; k < 4; k++) {
+			EquipmentSlot slot = ARMOR_SLOTS[k];
+			AETHERITE_ARMOR[k] = AstralContent.item("aetherite_" + ARMOR_NAMES[k], Item::new, new Item.Properties().stacksTo(1)
+					.rarity(Rarity.EPIC).fireResistant()
+					.component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true)
+					.component(DataComponents.EQUIPPABLE, Equippable.builder(slot).setAsset(asset).build())
+					.component(DataComponents.ATTRIBUTE_MODIFIERS, armorModifiers("aetherite_" + slot.getSerializedName(), slot,
+							6, 16, 12, 7, 0.25, 10))
+					.component(DataComponents.UNBREAKABLE, Unit.INSTANCE));
+		}
+	}
+
+	/** Épée en Aetherite : 22 dégâts, incassable. */
+	public static final Item AETHERITE_SWORD = AstralContent.item("aetherite_sword", Item::new, new Item.Properties().stacksTo(1)
+			.rarity(Rarity.EPIC).fireResistant()
+			.component(DataComponents.UNBREAKABLE, Unit.INSTANCE)
+			.component(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.builder()
+					.add(Attributes.ATTACK_DAMAGE, new AttributeModifier(DiamondAltar.id("aetherite_sword_damage"), 21,
+							AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
+					.add(Attributes.ATTACK_SPEED, new AttributeModifier(DiamondAltar.id("aetherite_sword_speed"), -2.0,
+							AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
+					.build()));
+	/** Pioche en Aetherite : mine tout (niveau netherite) à une vitesse folle, incassable. */
+	public static final Item AETHERITE_PICKAXE = AstralContent.item("aetherite_pickaxe", Item::new, Compat.pickaxe(new Item.Properties())
+			.stacksTo(1).rarity(Rarity.EPIC).fireResistant()
+			.component(DataComponents.UNBREAKABLE, Unit.INSTANCE)
+			.component(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.builder()
+					.add(Attributes.ATTACK_DAMAGE, new AttributeModifier(DiamondAltar.id("aetherite_pickaxe_damage"), 9,
+							AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
+					.add(Attributes.ATTACK_SPEED, new AttributeModifier(DiamondAltar.id("aetherite_pickaxe_speed"), -2.6,
+							AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
+					.add(Attributes.MINING_EFFICIENCY, new AttributeModifier(DiamondAltar.id("aetherite_pickaxe_mining"), 60,
+							AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
+					.build()));
+
+	// ---------- Moyens de transport ----------
+	/** Ailes de l'Aurore (Paladin Solaire) : des élytres incassables qui se propulsent toutes seules. */
+	public static final Item DAWN_WINGS = AstralContent.item("dawn_wings", Item::new, new Item.Properties().stacksTo(1)
+			.rarity(Rarity.EPIC).fireResistant()
+			.component(DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.CHEST)
+					.setAsset(ResourceKey.create(EquipmentAssets.ROOT_ID, DiamondAltar.id("dawn_wings"))).build())
+			.component(DataComponents.GLIDER, Unit.INSTANCE)
+			.component(DataComponents.UNBREAKABLE, Unit.INSTANCE));
+	/** Perle des Royaumes (Roi des Ombres) : téléporte dans le monde choisi (Overworld, Astral ou un des 7 Royaumes). */
+	public static final Item REALM_PEARL = AstralContent.item("realm_pearl", Item::new, new Item.Properties().stacksTo(1)
+			.rarity(Rarity.EPIC).fireResistant().component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true));
+
 	private RealmContent() {
+	}
+
+	private static ItemAttributeModifiers armorModifiers(String name, EquipmentSlot slot, double headFeet, double chest, double legs,
+			double toughness, double knockback, double health) {
+		double armor = switch (slot) {
+			case HEAD, FEET -> headFeet;
+			case CHEST -> chest;
+			case LEGS -> legs;
+			default -> 0;
+		};
+		EquipmentSlotGroup group = EquipmentSlotGroup.bySlot(slot);
+		return ItemAttributeModifiers.builder()
+				.add(Attributes.ARMOR, new AttributeModifier(DiamondAltar.id("armor_" + name), armor, AttributeModifier.Operation.ADD_VALUE), group)
+				.add(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(DiamondAltar.id("toughness_" + name), toughness,
+						AttributeModifier.Operation.ADD_VALUE), group)
+				.add(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(DiamondAltar.id("knockback_" + name), knockback,
+						AttributeModifier.Operation.ADD_VALUE), group)
+				.add(Attributes.MAX_HEALTH, new AttributeModifier(DiamondAltar.id("health_" + name), health,
+						AttributeModifier.Operation.ADD_VALUE), group)
+				.build();
+	}
+
+	/** Armure complète en Aetherite ? */
+	public static boolean fullAetherite(net.minecraft.world.entity.LivingEntity e) {
+		for (int k = 0; k < 4; k++) {
+			if (!e.getItemBySlot(ARMOR_SLOTS[k]).is(AETHERITE_ARMOR[k])) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/** Armure légendaire : de plus en plus solide d'un royaume à l'autre (Braise < … < Soleil). */
 	private static ItemAttributeModifiers armorStats(Realm realm, EquipmentSlot slot) {
 		int t = realm.tier();
-		double armor = switch (slot) {
-			case HEAD, FEET -> 4 + t * 0.5;
-			case CHEST -> 9 + t;
-			case LEGS -> 7 + t * 0.75;
-			default -> 0;
-		};
-		EquipmentSlotGroup group = EquipmentSlotGroup.bySlot(slot);
-		String name = realm.ore + "_" + slot.getSerializedName();
-		return ItemAttributeModifiers.builder()
-				.add(Attributes.ARMOR, new AttributeModifier(DiamondAltar.id("armor_" + name), armor, AttributeModifier.Operation.ADD_VALUE), group)
-				.add(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(DiamondAltar.id("toughness_" + name), 3 + t * 0.5,
-						AttributeModifier.Operation.ADD_VALUE), group)
-				.add(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(DiamondAltar.id("knockback_" + name), 0.1 + t * 0.02,
-						AttributeModifier.Operation.ADD_VALUE), group)
-				.add(Attributes.MAX_HEALTH, new AttributeModifier(DiamondAltar.id("health_" + name), 2 + t,
-						AttributeModifier.Operation.ADD_VALUE), group)
-				.build();
+		return armorModifiers(realm.ore + "_" + slot.getSerializedName(), slot, 4 + t * 0.5, 9 + t, 7 + t * 0.75,
+				3 + t * 0.5, 0.1 + t * 0.02, 2 + t);
 	}
 
 	/** Le royaume de l'armure légendaire, ou null si ce n'en est pas une. */

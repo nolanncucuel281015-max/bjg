@@ -49,7 +49,7 @@ import java.util.UUID;
  * Les 7 boss des Royaumes, invoqués avec le Sceau de leur royaume. Chacun a une barre de boss, une aura,
  * et trois attaques spéciales qui tournent : un barrage qui tombe du ciel, une onde de choc et une attaque
  * signature propre à son royaume. Ils sont de plus en plus forts d'un royaume à l'autre et accélèrent
- * quand ils perdent leurs PV. À leur mort : l'Éclat du royaume (pour l'Épée des Sept Royaumes) et des lingots.
+ * quand ils perdent leurs PV. À leur mort : voir {@link RealmRewards} (plus le boss est fort, plus le butin l'est).
  */
 public final class RealmBoss {
 	public static final String TAG = "diamondaltar_realm_boss";
@@ -427,14 +427,7 @@ public final class RealmBoss {
 		if (realm == null) {
 			return;
 		}
-		int i = realm.ordinal();
-		boss.spawnAtLocation(level, new ItemStack(RealmContent.SHARD[i]));
-		boss.spawnAtLocation(level, new ItemStack(RealmContent.INGOT[i], 3 + level.getRandom().nextInt(3)));
-		boss.spawnAtLocation(level, new ItemStack(RealmContent.RAW[i], 2 + level.getRandom().nextInt(4)));
-		if (realm.ordinal() + 1 < Realm.values().length && level.getRandom().nextFloat() < 0.5f) {
-			// Un coup de pouce pour la suite : des lingots du royaume suivant.
-			boss.spawnAtLocation(level, new ItemStack(RealmContent.INGOT[i + 1], 1));
-		}
+		RealmRewards.drop(level, boss, realm);
 		level.sendParticles(ParticleTypes.EXPLOSION_EMITTER, boss.getX(), boss.getY() + 1, boss.getZ(), 3, 1, 1, 1, 0);
 		level.sendParticles(new DustParticleOptions(realm.color, 3f), boss.getX(), boss.getY() + 2, boss.getZ(), 250, 1.5, 2, 1.5, 0);
 		level.sendParticles(ParticleTypes.TOTEM_OF_UNDYING, boss.getX(), boss.getY() + 2, boss.getZ(), 150, 1, 1.5, 1, 0.6);

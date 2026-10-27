@@ -118,6 +118,27 @@ son **minerai**, son **boss unique** et son **armure légendaire**.
    au milieu. 30 dégâts, incassable ; chaque coup brûle, gèle, empoisonne, flétrit et parfois foudroie.
    **Clic droit** : *Jugement des Sept Royaumes*, sept colonnes de lumière qui explosent autour de toi (recharge 8 s).
 
+### Récompenses : plus le boss est fort, plus le butin l'est
+
+| Boss | Équipement en diamant | Netherite | Aetherite | Équipement en Aetherite | Spécial |
+|---|---|---|---|---|---|
+| Braise, Givre | 1 pièce, parfois | – | – | – | |
+| Tempêtes | 1 pièce, souvent | oui | – | 2 % | |
+| Sylvestre | 1 pièce sûre | oui | – | 4 % | |
+| Abysses | 2 pièces | oui | 1 lingot (1 fois sur 2) | 7 % | |
+| Ombres | 4 pièces | oui | 1 à 2 lingots | 12 % | **Perle des Royaumes** |
+| **Soleil** | **tout l'équipement** (épée, pioche, hache, armure) | oui | **2 à 4 lingots** | 20 % | **Ailes de l'Aurore** |
+
+Les pièces en diamant sont parfois déjà **infusées**. Chaque boss lâche aussi son Éclat, des lingots et des diamants.
+
+- **Aetherite** : le métal le plus rare. Armure (6/16/12/6, robustesse 7, +10 PV par pièce), **Épée** (22 dégâts) et
+  **Pioche** (mine tout, très vite), toutes incassables, aussi fabricables avec des lingots d'Aetherite. Armure complète :
+  Force III, Résistance II, Vitesse II, Régénération II, vision nocturne ; immunité au feu, aux chutes, au gel, à la foudre et à la noyade.
+- **Ailes de l'Aurore** (moyen de transport) : des élytres incassables qui se **propulsent toutes seules** dans la
+  direction du regard (accroupi : planer sans propulsion).
+- **Perle des Royaumes** (moyen de transport) : **accroupi + clic droit** pour choisir le monde (Overworld, Astral ou un
+  des 7 Royaumes), **clic droit** pour s'y téléporter (recharge 20 s).
+
 Les textures et toutes les données des royaumes sont générées par `python3 tools/realms_gen.py`
 (puis `python3 mc26/tools/convert_data.py` pour la version 26.3).
 

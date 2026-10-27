@@ -132,6 +132,22 @@ public class DiamondAltarClient implements ClientModInitializer {
 				lines.add(Component.translatable("diamondaltar.realm_armor.set").withStyle(armor.chat, ChatFormatting.BOLD));
 				lines.add(Component.translatable("diamondaltar.realm_armor.set." + armor.id).withStyle(ChatFormatting.GRAY));
 			}
+			for (net.minecraft.world.item.Item piece : RealmContent.AETHERITE_ARMOR) {
+				if (stack.is(piece)) {
+					lines.add(Component.translatable("diamondaltar.aetherite.set").withStyle(ChatFormatting.AQUA));
+				}
+			}
+			if (stack.is(RealmContent.AETHERITE_INGOT) || stack.is(RealmContent.AETHERITE_SWORD) || stack.is(RealmContent.AETHERITE_PICKAXE)) {
+				lines.add(Component.translatable("diamondaltar.aetherite.rare").withStyle(ChatFormatting.AQUA));
+			}
+			if (stack.is(RealmContent.DAWN_WINGS)) {
+				lines.add(Component.translatable("diamondaltar.wings.desc").withStyle(ChatFormatting.GOLD));
+			}
+			if (stack.is(RealmContent.REALM_PEARL)) {
+				lines.add(Component.translatable("diamondaltar.pearl.selected",
+						com.diamondaltar.realms.RealmTravel.destinationName(com.diamondaltar.realms.RealmTravel.selected(stack))));
+				lines.add(Component.translatable("diamondaltar.pearl.desc").withStyle(ChatFormatting.GRAY));
+			}
 			if (stack.is(RealmContent.SEVEN_REALMS_SWORD)) {
 				lines.add(Component.translatable("diamondaltar.seven_realms.hit").withStyle(ChatFormatting.GRAY));
 				lines.add(Component.translatable("diamondaltar.seven_realms.use").withStyle(ChatFormatting.GOLD));

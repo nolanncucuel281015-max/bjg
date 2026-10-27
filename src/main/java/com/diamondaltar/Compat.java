@@ -177,6 +177,11 @@ public final class Compat {
 		}
 	}
 
+	/** Propriétés d'une pioche (niveau netherite : mine tous les blocs). */
+	public static net.minecraft.world.item.Item.Properties pickaxe(net.minecraft.world.item.Item.Properties p) {
+		return p.pickaxe(net.minecraft.world.item.ToolMaterial.NETHERITE, 5f, -2.8f);
+	}
+
 	// ---------------------------------------------------------------- recettes
 	public static <T extends RecipeInput> ItemStack assemble(Recipe<T> recipe, T input, HolderLookup.Provider registries) {
 		// #if 1.21.11

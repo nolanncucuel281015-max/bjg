@@ -227,6 +227,66 @@ def textures():
             c = tuple(int(min(255, base[i] * (0.35 + l * 1.1) + 60 * max(0, l - 0.75))) for i in range(3))
             out.putpixel((x, y), c + (px[3],))
     save(out, "item/seven_realms_sword.png", src)
+    extra_textures()
+
+
+AETHER = [(40, 50, 90), (150, 225, 255), (255, 250, 225)]
+
+
+def extra_textures():
+    # Aetherite : blanc nacré et cyan céleste.
+    save(recolor(TEX / "item/astralite_ingot.png", AETHER), "item/aetherite_ingot.png")
+    for piece in ARMOR + ["sword", "pickaxe"]:
+        src = TEX / f"item/infused_diamond_{piece}.png"
+        save(recolor(src, AETHER), f"item/aetherite_{piece}.png", src)
+    for layer in ("humanoid", "humanoid_leggings"):
+        save(recolor(TEX / f"entity/equipment/{layer}/infused_diamond.png", AETHER), f"entity/equipment/{layer}/aetherite.png")
+    # Ailes de l'Aurore : plumes dorées (aile de l'élytre : boîte 10×20×2 en (22, 0) de la texture 64×32).
+    wings = Image.new("RGBA", (64, 32), (0, 0, 0, 0))
+    gold = [(150, 70, 10), (255, 190, 50), (255, 255, 230)]
+    for y in range(22):
+        for x in range(22, 46):
+            feather = ((x - 22) % 3 == 0)
+            t = 1 - y / 22 * 0.7 - (0.15 if feather else 0)
+            wings.putpixel((x, y), grad(gold, t) + (255,))
+    save(wings, "entity/equipment/wings/dawn_wings.png")
+    icon = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    shape = ["................",
+             ".##..........##.",
+             ".#o#........#o#.",
+             ".#oo#......#oo#.",
+             ".#ooo#....#ooo#.",
+             ".#oooo#..#oooo#.",
+             ".#ooooo##ooooo#.",
+             ".#oooooooooooo#.",
+             "..#oooooooooo#..",
+             "..#oooo##oooo#..",
+             "...#oo#..#oo#...",
+             "...#o#....#o#...",
+             "....#......#....",
+             "................",
+             "................",
+             "................"]
+    for y, row in enumerate(shape):
+        for x, c in enumerate(row):
+            if c == "#":
+                icon.putpixel((x, y), gold[0] + (255,))
+            elif c == "o":
+                icon.putpixel((x, y), grad(gold, 1 - y / 13 * 0.6 - (0.2 if x % 3 == 0 else 0)) + (255,))
+    save(icon, "item/dawn_wings.png")
+    # Perle des Royaumes : sphère aux 7 couleurs.
+    pearl = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    cols = [r["metal"][1] for r in REALMS]
+    for y in range(16):
+        for x in range(16):
+            dx, dy = x - 7.5, y - 7.5
+            d = (dx * dx + dy * dy) ** 0.5
+            if d <= 6.2:
+                base = cols[int((x + y) / 31 * 7) % 7]
+                light = max(0.0, 1 - ((x - 5) ** 2 + (y - 5) ** 2) ** 0.5 / 7)
+                c = tuple(int(min(255, base[i] * (0.55 + 0.3 * light) + 140 * light ** 3)) for i in range(3))
+                pearl.putpixel((x, y), (c if d < 5.6 else tuple(int(v * 0.5) for v in c)) + (255,))
+    save(pearl, "item/realm_pearl.png")
 
 
 # ------------------------------------------------------------------ modèles et états de blocs
@@ -275,6 +335,13 @@ def assets():
         "axis=x": {"model": f"{NS}:block/sylvan_log", "x": 90, "y": 90}}})
     dump(ASSETS / "items/sylvan_log.json", {"model": {"type": "minecraft:model", "model": f"{NS}:block/sylvan_log"}})
     flat_item("seven_realms_sword", handheld=True)
+    for item in ["aetherite_ingot", "dawn_wings", "realm_pearl"] + [f"aetherite_{p}" for p in ARMOR]:
+        flat_item(item)
+    flat_item("aetherite_sword", handheld=True)
+    flat_item("aetherite_pickaxe", handheld=True)
+    dump(ASSETS / "equipment/aetherite.json", {"layers": {
+        "humanoid": [{"texture": f"{NS}:aetherite"}], "humanoid_leggings": [{"texture": f"{NS}:aetherite"}]}})
+    dump(ASSETS / "equipment/dawn_wings.json", {"layers": {"wings": [{"texture": f"{NS}:dawn_wings"}]}})
     portal_models()
 
 
@@ -375,6 +442,12 @@ def recipes_and_loot():
         {"type": "minecraft:item", "name": f"{NS}:sylvan_leaves"}], "conditions": [{"condition": "minecraft:match_tool",
                                                                                     "predicate": {"items": "minecraft:shears"}}]}]})
     shaped("realm_frame", ["OOO", "OAO", "OOO"], {"O": "minecraft:obsidian", "A": f"{NS}:astralite_ingot"}, f"{NS}:realm_frame", 8, "building")
+    A = f"{NS}:aetherite_ingot"
+    for piece, pat in (("helmet", ["III", "I I"]), ("chestplate", ["I I", "III", "III"]),
+                       ("leggings", ["III", "I I", "I I"]), ("boots", ["I I", "I I"])):
+        shaped(f"aetherite_{piece}", pat, {"I": A}, f"{NS}:aetherite_{piece}", category="equipment")
+    shaped("aetherite_sword", ["I", "I", "S"], {"I": A, "S": "minecraft:stick"}, f"{NS}:aetherite_sword", category="equipment")
+    shaped("aetherite_pickaxe", ["III", " S ", " S "], {"I": A, "S": "minecraft:stick"}, f"{NS}:aetherite_pickaxe", category="equipment")
     shaped("seven_realms_sword", ["ABC", "DSE", "FNG"], {
         "A": f"{NS}:ember_shard", "B": f"{NS}:frost_shard", "C": f"{NS}:storm_shard", "D": f"{NS}:sylvan_shard",
         "S": "minecraft:netherite_sword", "E": f"{NS}:abyss_shard", "F": f"{NS}:shadow_shard", "N": "minecraft:nether_star",
@@ -447,6 +520,24 @@ def lang():
                 f"{NS}.seven_realms.cooldown": "Jugement des Sept Royaumes : encore %s s",
                 f"{NS}.seven_realms.hit": "Chaque coup : feu, gel, poison, flétrissement, lumière, et parfois la foudre",
                 f"{NS}.seven_realms.use": "Clic droit : Jugement des Sept Royaumes (7 colonnes, recharge 8 s)",
+                f"item.{NS}.aetherite_ingot": "Lingot d'Aetherite",
+                f"item.{NS}.aetherite_helmet": "Casque en Aetherite",
+                f"item.{NS}.aetherite_chestplate": "Plastron en Aetherite",
+                f"item.{NS}.aetherite_leggings": "Jambières en Aetherite",
+                f"item.{NS}.aetherite_boots": "Bottes en Aetherite",
+                f"item.{NS}.aetherite_sword": "Épée en Aetherite",
+                f"item.{NS}.aetherite_pickaxe": "Pioche en Aetherite",
+                f"item.{NS}.dawn_wings": "Ailes de l'Aurore",
+                f"item.{NS}.realm_pearl": "Perle des Royaumes",
+                f"{NS}.aetherite.set": "Armure complète : Force III, Résistance II, Vitesse II, Régénération II, Résistance au feu, Respiration, Vision nocturne ; immunité au feu, aux chutes, au gel, à la foudre et à la noyade",
+                f"{NS}.aetherite.rare": "Le métal le plus rare : seuls les boss les plus forts en lâchent",
+                f"{NS}.wings.desc": "Des élytres incassables qui se propulsent toutes seules (accroupi : planer sans propulsion)",
+                f"{NS}.pearl.desc": "Accroupi + clic droit : choisir le monde · Clic droit : s'y téléporter (recharge 20 s)",
+                f"{NS}.pearl.selected": "Destination : %s",
+                f"{NS}.pearl.cooldown": "Perle des Royaumes : encore %s s",
+                f"{NS}.pearl.already": "Tu es déjà dans : %s",
+                f"{NS}.pearl.overworld": "Overworld",
+                f"{NS}.pearl.astral": "Dimension Astrale",
             })
         else:
             d.update({
@@ -467,6 +558,24 @@ def lang():
                 f"{NS}.seven_realms.cooldown": "Judgement of the Seven Realms: %s s left",
                 f"{NS}.seven_realms.hit": "Every hit: fire, frost, poison, wither, light, and sometimes lightning",
                 f"{NS}.seven_realms.use": "Right-click: Judgement of the Seven Realms (7 pillars, 8 s cooldown)",
+                f"item.{NS}.aetherite_ingot": "Aetherite Ingot",
+                f"item.{NS}.aetherite_helmet": "Aetherite Helmet",
+                f"item.{NS}.aetherite_chestplate": "Aetherite Chestplate",
+                f"item.{NS}.aetherite_leggings": "Aetherite Leggings",
+                f"item.{NS}.aetherite_boots": "Aetherite Boots",
+                f"item.{NS}.aetherite_sword": "Aetherite Sword",
+                f"item.{NS}.aetherite_pickaxe": "Aetherite Pickaxe",
+                f"item.{NS}.dawn_wings": "Wings of Dawn",
+                f"item.{NS}.realm_pearl": "Realm Pearl",
+                f"{NS}.aetherite.set": "Full set: Strength III, Resistance II, Speed II, Regeneration II, Fire Resistance, Water Breathing, Night Vision; immune to fire, falls, freezing, lightning and drowning",
+                f"{NS}.aetherite.rare": "The rarest metal: only the strongest bosses drop it",
+                f"{NS}.wings.desc": "Unbreakable elytra that propel themselves (sneak: glide without thrust)",
+                f"{NS}.pearl.desc": "Sneak + right-click: choose the world · Right-click: teleport there (20 s cooldown)",
+                f"{NS}.pearl.selected": "Destination: %s",
+                f"{NS}.pearl.cooldown": "Realm Pearl: %s s left",
+                f"{NS}.pearl.already": "You are already in: %s",
+                f"{NS}.pearl.overworld": "Overworld",
+                f"{NS}.pearl.astral": "Astral Dimension",
             })
         dump(p, d)
 

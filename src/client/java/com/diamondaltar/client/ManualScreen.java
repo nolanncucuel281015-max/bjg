@@ -289,6 +289,20 @@ public class ManualScreen extends Screen {
 		gear.add(text("Chaque coup : feu, gel, poison, flétrissement, lumière, et parfois la foudre.", GOLD));
 		gear.add(text("Clic droit : Jugement des Sept Royaumes. Sept colonnes, une par royaume, jaillissent autour de toi puis explosent (recharge 8 s).", GOLD));
 		chapters.add(new Chapter("Armures et épée ultime", gear));
+
+		List<Element> loot = new ArrayList<>();
+		loot.add(text("Plus le boss est fort, plus son butin l'est. Chacun lâche son Éclat, des lingots et des diamants, et en plus :"));
+		loot.add(icon(st(Items.DIAMOND_CHESTPLATE), "Équipement en diamant", "Rare chez les premiers boss, 1 pièce sûre à la Sylvestre, 2 aux Abysses, 4 aux Ombres et TOUT l'équipement chez le Paladin Solaire. Parfois déjà infusé !"));
+		loot.add(icon(st(Items.NETHERITE_INGOT), "Lingots de netherite", "À partir du Titan de la Tempête."));
+		loot.add(icon(st(RealmContent.AETHERITE_INGOT), "Lingots d'Aetherite", "Le métal le plus rare : parfois aux Abysses, 1 ou 2 aux Ombres, 2 à 4 chez le Paladin Solaire."));
+		loot.add(icon(st(RealmContent.AETHERITE_ARMOR[1]), "Équipement en Aetherite", "Très rare : de 2 % (Tempêtes) à 20 % (Paladin Solaire). Se fabrique aussi avec des lingots d'Aetherite."));
+		loot.add(row(st(RealmContent.AETHERITE_ARMOR[0]), st(RealmContent.AETHERITE_ARMOR[1]), st(RealmContent.AETHERITE_ARMOR[2]),
+				st(RealmContent.AETHERITE_ARMOR[3]), st(RealmContent.AETHERITE_SWORD), st(RealmContent.AETHERITE_PICKAXE)));
+		loot.add(text("Armure complète en Aetherite : Force III, Résistance II, Vitesse II, Régénération II, Vision nocturne ; plus de feu, de chute, de gel, de foudre ni de noyade. Épée : 22 dégâts. Pioche : mine tout, à une vitesse folle.", MUTED));
+		loot.add(sub("Voyager"));
+		loot.add(icon(st(RealmContent.REALM_PEARL), "Perle des Royaumes", "Lâchée par le Roi des Ombres. Accroupi + clic droit pour choisir le monde (Overworld, Astral ou un des 7 Royaumes), clic droit pour s'y téléporter. Recharge 20 s."));
+		loot.add(icon(st(RealmContent.DAWN_WINGS), "Ailes de l'Aurore", "Lâchées par le Paladin Solaire. Des élytres incassables qui se propulsent toutes seules dans la direction où tu regardes. Accroupi : planer sans propulsion."));
+		chapters.add(new Chapter("Récompenses et voyages", loot));
 	}
 
 	private void abilities(String title, Item item, String use) {

@@ -47,6 +47,7 @@ public final class RealmEvents {
 	public static void register() {
 		ServerTickEvents.END_SERVER_TICK.register(server -> {
 			RealmPortals.tick(server);
+			RealmTravel.tick(server);
 			for (Realm r : Realm.values()) {
 				ServerLevel level = server.getLevel(r.dimension);
 				if (level != null) {
@@ -77,6 +78,12 @@ public final class RealmEvents {
 					}
 					return InteractionResult.SUCCESS;
 				}
+			}
+			if (stack.is(RealmContent.REALM_PEARL)) {
+				if (level instanceof ServerLevel sl && player instanceof ServerPlayer sp) {
+					RealmTravel.usePearl(sl, sp, stack);
+				}
+				return InteractionResult.SUCCESS;
 			}
 			if (stack.is(RealmContent.SEVEN_REALMS_SWORD)) {
 				if (level instanceof ServerLevel sl && player instanceof ServerPlayer sp) {
@@ -157,6 +164,20 @@ public final class RealmEvents {
 	private static void armorBonuses(MinecraftServer server) {
 		for (ServerLevel level : server.getAllLevels()) {
 			for (ServerPlayer p : level.players()) {
+				if (RealmContent.fullAetherite(p)) {
+					// Armure en Aetherite : le meilleur de tous les royaumes.
+					effect(p, MobEffects.STRENGTH, 2);
+					effect(p, MobEffects.RESISTANCE, 1);
+					effect(p, MobEffects.SPEED, 1);
+					effect(p, MobEffects.REGENERATION, 1);
+					effect(p, MobEffects.FIRE_RESISTANCE, 0);
+					effect(p, MobEffects.WATER_BREATHING, 0);
+					p.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 300, 0, true, false));
+					if (level.getGameTime() % 40 == 0) {
+						level.sendParticles(ParticleTypes.END_ROD, p.getX(), p.getY() + 1, p.getZ(), 4, 0.4, 0.6, 0.4, 0.01);
+					}
+					continue;
+				}
 				Realm set = fullSet(p);
 				if (set == null) {
 					continue;
@@ -221,6 +242,10 @@ public final class RealmEvents {
 	private static boolean armorCancels(LivingEntity entity, DamageSource source) {
 		if (!(entity instanceof Player)) {
 			return false;
+		}
+		if (RealmContent.fullAetherite(entity)) {
+			return source.is(DamageTypeTags.IS_FIRE) || source.is(DamageTypeTags.IS_FALL) || source.is(DamageTypeTags.IS_FREEZING)
+					|| source.is(DamageTypeTags.IS_LIGHTNING) || source.is(DamageTypeTags.IS_DROWNING);
 		}
 		Realm set = fullSet(entity);
 		if (set == null) {
@@ -448,6 +473,35 @@ public final class RealmEvents {
 				ok &= shards > 0;
 				boss.discard();
 			}
+		}
+		// Récompenses : plus le boss est fort, plus le butin l'est.
+		var rnd = net.minecraft.util.RandomSource.create(42);
+		var solar = RealmRewards.roll(Realm.SOLAR, rnd);
+		var ember = RealmRewards.roll(Realm.EMBER, rnd);
+		java.util.function.BiFunction<java.util.List<ItemStack>, net.minecraft.world.item.Item, Integer> count = (list, item) ->
+				list.stream().filter(st -> st.is(item)).mapToInt(ItemStack::getCount).sum();
+		int diamondGear = 0;
+		for (var item : java.util.List.of(net.minecraft.world.item.Items.DIAMOND_SWORD, net.minecraft.world.item.Items.DIAMOND_PICKAXE,
+				net.minecraft.world.item.Items.DIAMOND_AXE, net.minecraft.world.item.Items.DIAMOND_HELMET, net.minecraft.world.item.Items.DIAMOND_CHESTPLATE,
+				net.minecraft.world.item.Items.DIAMOND_LEGGINGS, net.minecraft.world.item.Items.DIAMOND_BOOTS)) {
+			diamondGear += count.apply(solar, item);
+		}
+		boolean rewards = diamondGear == 7 && count.apply(solar, RealmContent.AETHERITE_INGOT) >= 2
+				&& count.apply(solar, RealmContent.DAWN_WINGS) == 1 && count.apply(ember, RealmContent.AETHERITE_INGOT) == 0;
+		report.append(rewards ? "OK" : "FAIL").append(" butin du Paladin Solaire : ").append(diamondGear).append(" pieces en diamant, ")
+				.append(count.apply(solar, RealmContent.AETHERITE_INGOT)).append(" lingots d'Aetherite, ailes ; Braise : pas d'Aetherite\n");
+		ok &= rewards;
+		boolean glider = new ItemStack(RealmContent.DAWN_WINGS).has(net.minecraft.core.component.DataComponents.GLIDER);
+		boolean pick = new ItemStack(RealmContent.AETHERITE_PICKAXE).isCorrectToolForDrops(net.minecraft.world.level.block.Blocks.OBSIDIAN.defaultBlockState());
+		report.append(glider && pick ? "OK" : "FAIL").append(" ailes de l'Aurore (planeur) : ").append(glider)
+				.append(", pioche en Aetherite mine l'obsidienne : ").append(pick).append('\n');
+		ok &= glider && pick;
+		ServerLevel solarLevel = server.getLevel(Realm.SOLAR.dimension);
+		if (solarLevel != null) {
+			BlockPos spot = RealmTravel.safeSpot(solarLevel, 5000, 5000, 2 + Realm.SOLAR.ordinal());
+			boolean safe = !solarLevel.getBlockState(spot.below()).isAir() && solarLevel.getBlockState(spot).isAir();
+			report.append(safe ? "OK" : "FAIL").append(" Perle des Royaumes : arrivee sure en ").append(spot).append('\n');
+			ok &= safe;
 		}
 		// Recette de l'épée : les 7 éclats + une épée en netherite + une étoile du Nether.
 		var recipes = server.getRecipeManager();

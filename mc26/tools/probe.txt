@@ -1,5 +1,4 @@
-class net.minecraft.world.entity.Entity [Ii]nvulner|lastHurt
-class net.minecraft.world.entity.LivingEntity [Ii]nvulner|lastHurt|hurtServer|actuallyHurt
-class net.minecraft.world.level.levelgen.feature.TreeFeature
-cat data/minecraft/worldgen/placed_feature/oak_checked.json
-cat data/minecraft/worldgen/feature/oak.json
+class net.minecraft.world.item.Item$Properties pickaxe|sword|axe|tool|repairable
+class net.minecraft.world.item.ToolMaterial NETHERITE|DIAMOND|<init>
+class net.minecraft.core.component.DataComponents GLIDER|TOOL
+class net.minecraft.world.entity.LivingEntity isFallFlying|FallFlying

@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "equipment",
+	"pattern": [
+		"I",
+		"I",
+		"S"
+	],
+	"key": {
+		"I": "diamondaltar:aetherite_ingot",
+		"S": "minecraft:stick"
+	},
+	"result": {
+		"id": "diamondaltar:aetherite_sword",
+		"count": 1
+	}
+}
