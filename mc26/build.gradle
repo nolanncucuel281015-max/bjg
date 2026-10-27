@@ -83,6 +83,7 @@ processResources {
 
 tasks.withType(JavaCompile).configureEach {
 	it.options.release = 25
+	it.options.compilerArgs += ["-Xmaxerrs", "2000"]
 	it.options.encoding = "UTF-8"
 }
 

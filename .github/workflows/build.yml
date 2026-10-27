@@ -44,6 +44,10 @@ jobs:
           java-version: 25
       - name: Build mod 26.3
         run: chmod +x gradlew && ./gradlew -p mc26 build --no-daemon
+      - name: Sonde API 26.3 (aide au portage)
+        if: always()
+        continue-on-error: true
+        run: python3 mc26/tools/probe.py
       - uses: actions/upload-artifact@v4
         with:
           name: diamond-altar-mod-26.3
