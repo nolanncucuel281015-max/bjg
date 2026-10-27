@@ -21,6 +21,26 @@ base {
  */
 class Mc26Preprocess extends FilterReader {
 	Mc26Preprocess(Reader r) { super(new StringReader(transform(r.text))) }
+	/** Renommages automatiques 1.21.11 -> 26.3 (affichage client et Fabric API). */
+	static final List<List<String>> RENAMES = [
+		[/\bnet\.minecraft\.client\.gui\.GuiGraphics\b/, "net.minecraft.client.gui.GuiGraphicsExtractor"],
+		[/\bGuiGraphics\b/, "GuiGraphicsExtractor"],
+		[/\.drawString\(/, ".text("],
+		[/\.drawWordWrap\(/, ".textWithWordWrap("],
+		[/\.renderItemDecorations\(/, ".itemDecorations("],
+		[/\.renderItem\(/, ".item("],
+		[/public void render\(GuiGraphicsExtractor /, "public void extractRenderState(GuiGraphicsExtractor "],
+		[/super\.render\(/, "super.extractRenderState("],
+		[/public void renderBackground\(GuiGraphicsExtractor /, "public void extractBackground(GuiGraphicsExtractor "],
+		[/super\.renderBackground\(/, "super.extractBackground("],
+		[/net\.fabricmc\.fabric\.api\.client\.keybinding\.v1\.KeyBindingHelper/, "net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper"],
+		[/KeyBindingHelper\.registerKeyBinding\(/, "KeyMappingHelper.registerKeyMapping("],
+		[/\bKeyBindingHelper\b/, "KeyMappingHelper"],
+		[/net\.fabricmc\.fabric\.api\.client\.particle\.v1\.ParticleFactoryRegistry/, "net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry"],
+		[/\bParticleFactoryRegistry\b/, "ParticleProviderRegistry"],
+		[/\.setScreen\(/, ".setScreenAndShow("],
+	]
+
 	static String transform(String src) {
 		def out = new StringBuilder()
 		String mode = "both"
@@ -34,7 +54,11 @@ class Mc26Preprocess extends FilterReader {
 			if (t.endsWith("// @1.21.11")) return
 			out.append(line).append('\n')
 		}
-		return out.toString()
+		String result = out.toString()
+		for (r in RENAMES) {
+			result = result.replaceAll(r[0], java.util.regex.Matcher.quoteReplacement(r[1]))
+		}
+		return result
 	}
 }
 

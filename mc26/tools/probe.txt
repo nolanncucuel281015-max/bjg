@@ -1,13 +1,8 @@
-class net.minecraft.world.level.levelgen.GenerationStep$Decoration public static final
-cat data/minecraft/world_clock/the_end.json
-cat data/minecraft/worldgen/world_preset/normal.json
-files ^data/minecraft/worldgen/structure_set/
-cat data/minecraft/worldgen/structure_set/end_cities.json
-cat data/minecraft/worldgen/template_pool/bastion/starts.json
-cat data/minecraft/loot_table/blocks/diamond_ore.json
-cat data/minecraft/loot_table/blocks/stone.json
-cat data/minecraft/loot_table/chests/end_city_treasure.json
-files ^data/minecraft/(predicate|predicates)/tool/
-cat data/minecraft/worldgen/material_rule/overworld.json
-files ^data/minecraft/worldgen/(material_rule|material_condition)/
-cat data/minecraft/worldgen/noise_settings/floating_islands.json
+cat data/minecraft/worldgen/material_rule/overworld_floating_islands.json
+cat data/minecraft/worldgen/material_rule/end.json
+cat data/minecraft/worldgen/material_rule/overworld/surface.json
+cat data/minecraft/worldgen/material_condition/on_floor.json
+cat data/minecraft/worldgen/material_rule/overworld/biome_surface/default.json
+find (ItemBlockRenderTypes|BlockRenderType|RenderTypeHelper|ChunkSectionLayers|BlockLayer)
+class net.minecraft.client.renderer.ItemBlockRenderTypes
+class net.minecraft.world.level.block.state.BlockBehaviour$Properties render|Render|layer|Layer

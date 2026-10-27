@@ -1,5 +1,7 @@
 package com.diamondaltar.block;
 
+import com.diamondaltar.Compat;
+
 import com.diamondaltar.ModComponents;
 import com.mojang.serialization.MapCodec; // @1.21.11
 import net.minecraft.core.BlockPos;

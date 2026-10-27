@@ -1,0 +1,108 @@
+{
+	"type": "minecraft:chest",
+	"pools": [
+		{
+			"rolls": {
+				"type": "minecraft:uniform",
+				"min": 5,
+				"max": 9
+			},
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "diamondaltar:raw_astralite",
+					"weight": 10,
+					"modifier": [
+						{
+							"type": "minecraft:set_count",
+							"count": {
+								"type": "minecraft:uniform",
+								"min": 1,
+								"max": 3
+							}
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "diamondaltar:astralite_fragment",
+					"weight": 4,
+					"modifier": [
+						{
+							"type": "minecraft:set_count",
+							"count": {
+								"type": "minecraft:uniform",
+								"min": 1,
+								"max": 2
+							}
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "diamondaltar:lunarite",
+					"weight": 12,
+					"modifier": [
+						{
+							"type": "minecraft:set_count",
+							"count": {
+								"type": "minecraft:uniform",
+								"min": 4,
+								"max": 10
+							}
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:netherite_ingot",
+					"weight": 4
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:diamond_block",
+					"weight": 4,
+					"modifier": [
+						{
+							"type": "minecraft:set_count",
+							"count": {
+								"type": "minecraft:uniform",
+								"min": 1,
+								"max": 2
+							}
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:enchanted_golden_apple",
+					"weight": 2
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:totem_of_undying",
+					"weight": 3
+				},
+				{
+					"type": "minecraft:item",
+					"name": "diamondaltar:galaxy_essence_bucket",
+					"weight": 3
+				}
+			]
+		},
+		{
+			"rolls": 1,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "diamondaltar:astral_upgrade_smithing_template",
+					"weight": 25
+				},
+				{
+					"type": "minecraft:empty",
+					"weight": 75
+				}
+			]
+		}
+	]
+}

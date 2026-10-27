@@ -1,1 +1,5 @@
 # Fichiers de src/ qui n'existent pas dans la version 26.3 (un par ligne, ex. main/java/com/diamondaltar/X.java)
+main/resources/data/diamondaltar/worldgen/configured_feature/astral_rock.json
+main/resources/data/diamondaltar/worldgen/configured_feature/astral_tree.json
+main/resources/data/diamondaltar/worldgen/configured_feature/ore_astralite.json
+main/resources/data/diamondaltar/worldgen/configured_feature/ore_lunarite.json

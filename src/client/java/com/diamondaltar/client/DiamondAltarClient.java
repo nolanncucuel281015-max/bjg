@@ -18,8 +18,8 @@ import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
-import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
+import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap; // @1.21.11
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer; // @1.21.11
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.fabricmc.fabric.api.event.client.player.ClientPreAttackCallback;
@@ -49,9 +49,11 @@ public class DiamondAltarClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		BlockEntityRenderers.register(ModBlocks.INFUSION_ALTAR_ENTITY, InfusionAltarRenderer::new);
+		// #if 1.21.11
 		BlockRenderLayerMap.putBlock(AstralContent.ASTRAL_PORTAL, ChunkSectionLayer.TRANSLUCENT);
 		BlockRenderLayerMap.putBlock(AstralContent.FUSER, ChunkSectionLayer.CUTOUT);
 		BlockRenderLayerMap.putBlock(AstralContent.ASTRAL_LEAVES, ChunkSectionLayer.CUTOUT);
+		// #endif
 
 		// Manuel : clic droit pour l'ouvrir.
 		net.fabricmc.fabric.api.event.player.UseItemCallback.EVENT.register((player, level, hand) -> {

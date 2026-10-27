@@ -1,5 +1,7 @@
 package com.diamondaltar.astral;
 
+import com.diamondaltar.Compat;
+
 import com.mojang.serialization.MapCodec; // @1.21.11
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

@@ -1,0 +1,74 @@
+{
+	"attributes": {
+		"minecraft:visual/sky_color": "#0b0420",
+		"minecraft:visual/fog_color": "#24124a",
+		"minecraft:gameplay/natural_mob_spawns": {
+			"argument": {
+				"spawn_costs": {},
+				"spawns_by_category": {
+					"creature": [
+						{
+							"type": "minecraft:rabbit",
+							"count": 4,
+							"weight": 8
+						},
+						{
+							"type": "minecraft:goat",
+							"count": 2,
+							"weight": 4
+						}
+					],
+					"monster": [
+						{
+							"type": "minecraft:enderman",
+							"count": 2,
+							"weight": 10
+						},
+						{
+							"type": "minecraft:skeleton",
+							"count": 3,
+							"weight": 8
+						},
+						{
+							"type": "minecraft:phantom",
+							"count": 2,
+							"weight": 4
+						},
+						{
+							"type": "minecraft:magma_cube",
+							"count": 2,
+							"weight": 3
+						}
+					]
+				}
+			},
+			"modifier": "overlay"
+		}
+	},
+	"carvers": [],
+	"downfall": 0.0,
+	"effects": {
+		"water_color": "#9b4bff"
+	},
+	"features": [
+		[],
+		[],
+		[],
+		[],
+		[],
+		[],
+		[
+			"diamondaltar:ore_lunarite",
+			"diamondaltar:ore_astralite"
+		],
+		[],
+		[],
+		[
+			"diamondaltar:rocks_lunar_plains",
+			"diamondaltar:trees_lunar_plains"
+		],
+		[]
+	],
+	"has_precipitation": false,
+	"temperature": 0.5
+}
