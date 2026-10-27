@@ -23,15 +23,6 @@ jobs:
           DIAMONDALTAR_SELFTEST=true timeout 900 ./gradlew runServer --no-daemon > server.log 2>&1 || true
           grep -E "SELFTEST|^(OK|FAIL|WARN|INFO) |    at |ERROR|Exception|Failed to|Couldn't|Missing|missing" server.log | grep -v "Dfabric" | head -150
           grep -q "SELFTEST RESULT: PASS" server.log
-      - name: Build plugin + resource pack
-        run: ./gradlew -p plugin build --no-daemon
-      - uses: actions/upload-artifact@v4
-        with:
-          name: diamond-altar-plugin
-          path: |
-            plugin/build/libs/*.jar
-            plugin/build/libs/*.zip
-            plugin/LISEZMOI.txt
 
   # Version Minecraft 26.3 (mêmes sources + mc26/overrides)
   build-26:
