@@ -1,22 +1,33 @@
-class net.minecraft.world.level.block.Blocks glass|concrete|DIAMOND_BLOCK|NETHERITE|STAINED|AMETHYST|BLACKSTONE|IRON_BLOCK
-find (Stained|Dyed|Colored)
-class net.minecraft.world.entity.EntityType SKELETON|VEX|LIGHTNING|ENDERMAN|PHANTOM|MAGMA|RABBIT|GOAT|static
-class net.minecraft.tags.BlockTags ORE|LOGS|LEAVES
-class net.minecraft.world.entity.Entity hurt|[Tt]ag|invulnerable|markHurt|velocity|impulse|DeltaMovement
-class net.minecraft.world.entity.player.Player Message|message|Overlay|actionBar
-class net.minecraft.server.level.ServerPlayer Message|message|send|Overlay
-class net.minecraft.world.entity.LivingEntity swing
-find SwingAnimation
-class net.minecraft.world.item.Item getName|getDescription
-class net.minecraft.server.level.ServerBossEvent ServerBossEvent
-class net.minecraft.world.item.crafting.Recipe assemble
-class net.minecraft.world.level.block.Block codec|Codec|simpleCodec
-class net.minecraft.world.level.block.BaseEntityBlock codec|Codec
-find levelgen\.feature\.[A-Z][a-zA-Z]*$
-class net.minecraft.world.level.levelgen.feature.Feature
-find FeaturePlaceContext|NoneFeature|FeatureConfig
-find fabric.api.*(ItemGroup|CreativeModeTab|PayloadTypeRegistry|ItemTooltip|ClientPreAttack|UseItem|PlayerBlockBreak|ServerEntityEvents|ServerLivingEntityEvents|FakePlayer|HudElementRegistry|BlockRenderLayerMap|ParticleFactoryRegistry|KeyBindingHelper|KeyMappingHelper|ServerPlayConnectionEvents)
-class net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry
-find levelgen\.structure\.(Structure|StructureType|JigsawStructure)$
-class net.minecraft.world.level.levelgen.structure.Structure static|settingsCodec|DIRECT_CODEC|findGenerationPoint|findValidGenerationPoint
-find (Heightmap|WorldGenLevel)$
+find world\.entity\.EntityTypes?$|EntityTypes
+class net.minecraft.world.level.block.ColorCollection
+class net.minecraft.world.level.material.PushReaction
+class net.minecraft.world.level.block.state.BlockBehaviour$Properties isSuffocating|isViewBlocking|pushReaction|noLootTable|lightLevel|noOcclusion|setId|strength|sound
+find BlockBehaviour\$StatePredicate|StatePredicate
+class net.minecraft.world.entity.LivingEntity drop|swing
+find \$Prediction$|\.Prediction$
+class net.minecraft.world.item.component.SwingAnimation static|public
+class net.minecraft.world.level.levelgen.feature.FeatureTypes WORLD|register|static|public
+find registries\.(BuiltInRegistries|Registries)$
+class net.minecraft.core.registries.BuiltInRegistries FEATURE|STRUCTURE_TYPE|ENTITY
+class net.minecraft.core.registries.Registries FEATURE|PLACED|CONFIGURED
+class net.minecraft.world.level.levelgen.feature.TreeFeature codec|place|MapCodec
+class net.minecraft.world.level.levelgen.feature.SimpleBlockFeature
+class net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab
+class net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents
+class net.minecraft.world.item.CreativeModeTab$ItemDisplayParameters
+class net.minecraft.world.level.block.BaseEntityBlock
+class net.minecraft.world.entity.LightningBolt LightningBolt\(
+class net.minecraft.world.entity.Display$BlockDisplay BlockDisplay\(
+class net.minecraft.client.gui.GuiGraphics drawString|renderItem|fill\(|pose|renderItemDecorations
+find client\.gui\.(GuiGraphics|GuiGraphicsExtractor|Graphics)
+class net.minecraft.client.gui.screens.Screen render|init\(|rebuildWidgets|isPauseScreen|renderBackground|addRenderableWidget
+class net.minecraft.client.KeyMapping KeyMapping\(|Category|consumeClick|isDown
+class net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper
+find fabric\.api\.client\.rendering\.v1\.(BlockRenderLayerMap|ChunkSectionLayer|.*RenderLayer|BlockEntityRenderer|EntityRenderer|hud\.VanillaHud)
+find renderer\.(chunk\.ChunkSectionLayer|blockentity\.BlockEntityRenderers|blockentity\.BlockEntityRenderer|.*SectionLayer)
+find fabric\.api\.client\.particle
+class net.minecraft.client.particle.SingleQuadParticle SingleQuadParticle\(|getLayer|Layer|extract|render
+class net.minecraft.client.renderer.blockentity.BlockEntityRenderer
+class net.minecraft.client.Minecraft setScreen|options|player |gameRenderer
+class net.minecraft.world.item.ItemStack setDamageValue|hurtAndBreak|getDamageValue
+class net.minecraft.world.item.component.ItemAttributeModifiers withModifierAdded|modifiers|EMPTY
