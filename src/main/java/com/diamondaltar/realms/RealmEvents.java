@@ -503,6 +503,7 @@ public final class RealmEvents {
 			report.append(safe ? "OK" : "FAIL").append(" Perle des Royaumes : arrivee sure en ").append(spot).append('\n');
 			ok &= safe;
 		}
+		ok &= testAllCrafts(server, report);
 		// Recette de l'épée : les 7 éclats + une épée en netherite + une étoile du Nether.
 		var recipes = server.getRecipeManager();
 		java.util.List<ItemStack> grid = new java.util.ArrayList<>();
@@ -555,6 +556,70 @@ public final class RealmEvents {
 			ok &= frame;
 		}
 		return ok;
+	}
+
+	/**
+	 * Essaie TOUTES les recettes de table de craft du mod : pour chaque fichier de recette, on pose les ingrédients
+	 * sur une table de craft comme un joueur le ferait et on vérifie que le bon objet sort.
+	 */
+	private static boolean testAllCrafts(MinecraftServer server, StringBuilder report) {
+		int tested = 0;
+		java.util.List<String> broken = new java.util.ArrayList<>();
+		var files = server.getResourceManager().listResources("recipe",
+				id -> id.getNamespace().equals(com.diamondaltar.DiamondAltar.MOD_ID) && id.getPath().endsWith(".json"));
+		for (var entry : files.entrySet()) {
+			String name = entry.getKey().getPath();
+			try (var reader = entry.getValue().openAsReader()) {
+				var json = com.google.gson.JsonParser.parseReader(reader).getAsJsonObject();
+				String type = json.get("type").getAsString();
+				java.util.List<ItemStack> grid = new java.util.ArrayList<>();
+				int w;
+				int h;
+				if (type.equals("minecraft:crafting_shaped")) {
+					var pattern = json.getAsJsonArray("pattern");
+					var key = json.getAsJsonObject("key");
+					h = pattern.size();
+					w = pattern.get(0).getAsString().length();
+					for (var row : pattern) {
+						String line = row.getAsString();
+						for (int c = 0; c < w; c++) {
+							char ch = c < line.length() ? line.charAt(c) : ' ';
+							grid.add(ch == ' ' ? ItemStack.EMPTY : stackOf(key.get(String.valueOf(ch)).getAsString()));
+						}
+					}
+				} else if (type.equals("minecraft:crafting_shapeless")) {
+					for (var ing : json.getAsJsonArray("ingredients")) {
+						grid.add(stackOf(ing.getAsString()));
+					}
+					w = 3;
+					h = 3;
+					while (grid.size() < 9) {
+						grid.add(ItemStack.EMPTY);
+					}
+				} else {
+					continue;
+				}
+				tested++;
+				String expected = json.getAsJsonObject("result").get("id").getAsString();
+				var input = net.minecraft.world.item.crafting.CraftingInput.of(w, h, grid);
+				var found = server.getRecipeManager().getRecipeFor(net.minecraft.world.item.crafting.RecipeType.CRAFTING, input, server.overworld());
+				ItemStack out = found.isPresent() ? Compat.assemble(found.get().value(), input, server.registryAccess()) : ItemStack.EMPTY;
+				String got = out.isEmpty() ? "rien" : net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(out.getItem()).toString();
+				if (!got.equals(expected)) {
+					broken.add(name + " -> " + got);
+				}
+			} catch (Exception e) {
+				broken.add(name + " : " + e);
+			}
+		}
+		boolean ok = broken.isEmpty() && tested > 50;
+		report.append(ok ? "OK" : "FAIL").append(" toutes les recettes de craft : ").append(tested).append(" testees, ")
+				.append(broken.size()).append(" cassees ").append(broken).append('\n');
+		return ok;
+	}
+
+	private static ItemStack stackOf(String id) {
+		return new ItemStack(net.minecraft.core.registries.BuiltInRegistries.ITEM.getValue(net.minecraft.resources.Identifier.parse(id)));
 	}
 
 	/** Un joueur factice comme cible des attaques pendant l'auto-test (aucun vrai joueur sur le serveur). */
