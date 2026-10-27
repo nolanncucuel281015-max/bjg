@@ -412,7 +412,9 @@ public final class RealmEvents {
 			report.append(portalOk ? "OK" : "FAIL").append(" portail du royaume ").append(r.id).append('\n');
 			ok &= portalOk;
 			// Arène de pierre sous le boss (sinon, au-dessus du vide, il tombe avec son butin).
-			BlockPos floor = new BlockPos(3010, portal.getY() - 1, 3000);
+			// (Près de l'origine : ces chunks ont été chargés par l'analyse du terrain, les entités y existent vraiment.)
+			int groundY = level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.WORLD_SURFACE, 24, 24);
+			BlockPos floor = new BlockPos(24, groundY <= level.getMinY() + 2 || groundY > level.getMaxY() - 12 ? 100 : groundY, 24);
 			for (int dx = -6; dx <= 6; dx++) {
 				for (int dz = -6; dz <= 6; dz++) {
 					level.setBlockAndUpdate(floor.offset(dx, 0, dz), RealmContent.STONE[i].defaultBlockState());
@@ -421,7 +423,7 @@ public final class RealmEvents {
 					}
 				}
 			}
-			Vec3 arena = new Vec3(3010.5, portal.getY(), 3000.5);
+			Vec3 arena = Vec3.atBottomCenterOf(floor.above());
 			LivingEntity boss = RealmBoss.summon(level, r, arena);
 			boolean bossOk = boss != null && RealmBoss.isBoss(boss) && RealmBoss.realmOf(boss) == r
 					&& boss.getMaxHealth() >= RealmBoss.maxHealth(r) - 0.5f;
