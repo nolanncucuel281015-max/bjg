@@ -1,8 +1,7 @@
-cat data/minecraft/worldgen/material_rule/overworld_floating_islands.json
-cat data/minecraft/worldgen/material_rule/end.json
-cat data/minecraft/worldgen/material_rule/overworld/surface.json
-cat data/minecraft/worldgen/material_condition/on_floor.json
-cat data/minecraft/worldgen/material_rule/overworld/biome_surface/default.json
-find (ItemBlockRenderTypes|BlockRenderType|RenderTypeHelper|ChunkSectionLayers|BlockLayer)
-class net.minecraft.client.renderer.ItemBlockRenderTypes
-class net.minecraft.world.level.block.state.BlockBehaviour$Properties render|Render|layer|Layer
+find CameraRenderState|LightTexture|LightCoords|FullBright
+class com.mojang.blaze3d.platform.InputConstants$Type
+class net.minecraft.client.Minecraft [Ss]creen|gui
+class net.minecraft.client.particle.Particle [Ll]ight|Color|tick
+class net.minecraft.client.particle.SingleQuadParticle [Ll]ight|Color
+class com.mojang.blaze3d.vertex.PoseStack mulPose|rotate|translate|scale
+class net.minecraft.client.renderer.blockentity.BlockEntityRenderer submit
