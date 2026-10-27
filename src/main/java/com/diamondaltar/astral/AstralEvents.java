@@ -234,20 +234,17 @@ public final class AstralEvents {
 					com.diamondaltar.effect.EffectManager.tickAll();
 				}
 				if (!bosses.isEmpty()) {
-					// Étourdi après son smash : il prend deux fois plus de dégâts.
+					// Étourdi après son smash : un coup de 10 lui retire 20 PV.
+					// (Un seul coup : en 26.3 un deuxième coup dans le même tick est ignoré.)
 					var b = bosses.get(0);
+					Guardian.stun(astral, b);
 					Compat.setInvulnerableTime(b, 0);
 					float h0 = b.getHealth();
 					b.hurtServer(astral, astral.damageSources().generic(), 10f);
-					float normal = h0 - b.getHealth();
-					Guardian.stun(astral, b);
-					Compat.setInvulnerableTime(b, 0);
-					h0 = b.getHealth();
-					b.hurtServer(astral, astral.damageSources().generic(), 10f);
 					float stunned = h0 - b.getHealth();
-					boolean doubled = normal > 0 && stunned > normal * 1.8f;
-					report.append(doubled ? "OK" : "FAIL").append(" Gardien etourdi : degats ").append(normal)
-							.append(" -> ").append(stunned).append('\n');
+					boolean doubled = stunned >= 18f;
+					report.append(doubled ? "OK" : "FAIL").append(" Gardien etourdi : coup de 10 -> ")
+							.append(stunned).append(" degats\n");
 					ok &= doubled;
 				}
 				if (!bosses.isEmpty()) {

@@ -36,7 +36,8 @@ public final class AstralFeatures {
 	}
 
 	static boolean isGround(BlockState state) {
-		return state.is(AstralContent.LUNAR_REGOLITH) || state.is(AstralContent.ASTRAL_STONE);
+		return state.is(AstralContent.LUNAR_REGOLITH) || state.is(AstralContent.ASTRAL_STONE)
+				|| state.is(net.minecraft.world.level.block.Blocks.AMETHYST_BLOCK);
 	}
 
 	static boolean replaceable(WorldGenLevel level, BlockPos pos) {
