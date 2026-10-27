@@ -66,6 +66,9 @@ public final class RealmEvents {
 		ServerLivingEntityEvents.ALLOW_DAMAGE.register((entity, source, amount) -> !armorCancels(entity, source));
 		ServerLivingEntityEvents.AFTER_DAMAGE.register((entity, source, baseDamage, damageTaken, blocked) ->
 				swordHit(entity, source, damageTaken));
+		// Toutes les recettes du mod sont débloquées dans le livre de recettes dès la connexion.
+		net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.JOIN.register((handler, sender, server) ->
+				handler.getPlayer().awardRecipesByKey(modRecipes(server)));
 		UseItemCallback.EVENT.register((player, level, hand) -> {
 			ItemStack stack = player.getItemInHand(hand);
 			if (player.isSpectator()) {
@@ -504,6 +507,13 @@ public final class RealmEvents {
 			ok &= safe;
 		}
 		ok &= testAllCrafts(server, report);
+		var learner = net.fabricmc.fabric.api.entity.FakePlayer.get(server.overworld());
+		var recipeKeys = modRecipes(server);
+		learner.awardRecipesByKey(recipeKeys);
+		boolean known = recipeKeys.size() > 60 && learner.getRecipeBook().contains(net.minecraft.resources.ResourceKey.create(
+				net.minecraft.core.registries.Registries.RECIPE, com.diamondaltar.DiamondAltar.id("ember_portal_frame")));
+		report.append(known ? "OK" : "FAIL").append(" livre de recettes : ").append(recipeKeys.size()).append(" recettes debloquees\n");
+		ok &= known;
 		// Recette de l'épée : les 7 éclats + une épée en netherite + une étoile du Nether.
 		var recipes = server.getRecipeManager();
 		java.util.List<ItemStack> grid = new java.util.ArrayList<>();
@@ -556,6 +566,17 @@ public final class RealmEvents {
 			ok &= frame;
 		}
 		return ok;
+	}
+
+	/** Les clés de toutes les recettes du mod (fichiers data/diamondaltar/recipe/*.json). */
+	public static java.util.List<net.minecraft.resources.ResourceKey<net.minecraft.world.item.crafting.Recipe<?>>> modRecipes(MinecraftServer server) {
+		java.util.List<net.minecraft.resources.ResourceKey<net.minecraft.world.item.crafting.Recipe<?>>> keys = new java.util.ArrayList<>();
+		for (var id : server.getResourceManager().listResources("recipe",
+				i -> i.getNamespace().equals(com.diamondaltar.DiamondAltar.MOD_ID) && i.getPath().endsWith(".json")).keySet()) {
+			String path = id.getPath().substring("recipe/".length(), id.getPath().length() - ".json".length());
+			keys.add(net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.RECIPE, com.diamondaltar.DiamondAltar.id(path)));
+		}
+		return keys;
 	}
 
 	/**
