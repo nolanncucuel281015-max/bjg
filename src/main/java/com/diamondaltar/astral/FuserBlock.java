@@ -115,7 +115,7 @@ public class FuserBlock extends BaseEntityBlock {
 		if (stack.isEmpty()) {
 			player.setItemInHand(hand, result);
 		} else if (!player.getInventory().add(result)) {
-			player.getInventory().placeItemBackInInventory(result);
+			Compat.give(player, result);
 		}
 	}
 }

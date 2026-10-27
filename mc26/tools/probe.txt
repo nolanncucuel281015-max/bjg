@@ -1,39 +1,13 @@
-files ^data/minecraft/worldgen/[a-z_]+/$|^data/minecraft/worldgen/feature/ore_iron|^data/minecraft/worldgen/placed_feature/ore_iron|^data/minecraft/worldgen/(configured_feature|feature)/(forest_rock|ore_diamond)
-files ^data/minecraft/(worldgen/)?[a-z_]+/(the_end|end_highlands|floating_islands|overworld)\.json$
-cat data/minecraft/worldgen/feature/ore_iron.json
-cat data/minecraft/worldgen/placed_feature/ore_iron_upper.json
-cat data/minecraft/worldgen/feature/forest_rock.json
-cat data/minecraft/worldgen/biome/end_highlands.json
-cat data/minecraft/dimension_type/the_end.json
-cat data/minecraft/worldgen/structure/bastion_remnant.json
-cat data/minecraft/worldgen/structure_set/bastion_remnants.json
+class net.minecraft.world.level.levelgen.GenerationStep$Decoration public static final
+cat data/minecraft/world_clock/the_end.json
+cat data/minecraft/worldgen/world_preset/normal.json
+files ^data/minecraft/worldgen/structure_set/
+cat data/minecraft/worldgen/structure_set/end_cities.json
+cat data/minecraft/worldgen/template_pool/bastion/starts.json
+cat data/minecraft/loot_table/blocks/diamond_ore.json
+cat data/minecraft/loot_table/blocks/stone.json
+cat data/minecraft/loot_table/chests/end_city_treasure.json
+files ^data/minecraft/(predicate|predicates)/tool/
+cat data/minecraft/worldgen/material_rule/overworld.json
+files ^data/minecraft/worldgen/(material_rule|material_condition)/
 cat data/minecraft/worldgen/noise_settings/floating_islands.json
-files ^data/minecraft/recipe/(diamond_block|smithing_template|netherite_sword_smithing|furnace|iron_ingot_from_smelting)
-cat data/minecraft/recipe/netherite_sword_smithing.json
-cat data/minecraft/recipe/iron_ingot_from_smelting_raw_iron.json
-cat data/minecraft/recipe/flint_and_steel.json
-cat data/minecraft/recipe/stick.json
-files ^data/minecraft/(loot_table|loot_tables)/blocks/(stone|oak_leaves)
-cat data/minecraft/loot_table/blocks/oak_leaves.json
-files ^data/minecraft/tags/(block|item)/(mineable/pickaxe|logs|leaves|planks|needs_diamond_tool|dirt|animals_spawnable_on)
-files ^assets/minecraft/(items|models/item|blockstates)/(diamond_sword|oak_log|stone)\.json$
-cat assets/minecraft/items/diamond_sword.json
-files ^data/minecraft/(equipment|worldgen/template_pool)/
-class net.minecraft.client.gui.GuiGraphicsExtractor drawString|text|item|fill|pose|Item|Decorations|blit|sprite
-class net.minecraft.client.gui.screens.Screen extract|Background
-class net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry
-class net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement
-class net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry
-class net.fabricmc.fabric.api.client.renderer.v1.render.ChunkSectionLayerHelper
-find BlockRenderLayer|RenderLayerMap|ChunkSectionLayerMap
-class net.minecraft.client.renderer.blockentity.BlockEntityRenderers register
-class net.minecraft.client.KeyMapping$Category Category|register
-class net.minecraft.client.particle.SingleQuadParticle$Layer
-class net.minecraft.client.particle.ParticleProvider
-find client\.particle\.(Particle|TextureSheetParticle|SingleQuadParticle|ParticleProvider|SpriteSet)$
-class net.fabricmc.fabric.api.event.client.player.ClientPreAttackCallback
-class net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback
-class net.minecraft.client.renderer.item.ItemModelResolver
-find client\.renderer\.item\.(ItemStackRenderState|ItemModelResolver)$|client\.renderer\.(SubmitNodeCollector|MultiBufferSource)$
-class net.minecraft.client.Camera rotation|getRotation|setRotation|Yaw|Pitch
-find fabric\.api\.client\.rendering\.v1\.(WorldRender|LevelRender|CameraEvents|.*Camera)

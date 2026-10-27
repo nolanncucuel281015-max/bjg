@@ -87,7 +87,7 @@ public class InfusionAltarBlock extends BaseEntityBlock {
 			if (!level.isClientSide()) {
 				ItemStack taken = altar.takeItem();
 				if (!player.addItem(taken)) {
-					player.getInventory().placeItemBackInInventory(taken);
+					Compat.give(player, taken);
 				}
 			}
 			return InteractionResult.SUCCESS;

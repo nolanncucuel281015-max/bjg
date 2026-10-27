@@ -158,6 +158,13 @@ public final class Compat {
 		// #endif
 	}
 
+	/** Rend un objet au joueur (dans l'inventaire, sinon par terre à ses pieds). */
+	public static void give(Player p, ItemStack stack) {
+		if (!p.getInventory().add(stack) && !stack.isEmpty() && p.level() instanceof net.minecraft.server.level.ServerLevel level) {
+			p.spawnAtLocation(level, stack);
+		}
+	}
+
 	// ---------------------------------------------------------------- recettes
 	public static <T extends RecipeInput> ItemStack assemble(Recipe<T> recipe, T input, HolderLookup.Provider registries) {
 		// #if 1.21.11

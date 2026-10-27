@@ -40,7 +40,7 @@ for line in open("mc26/tools/probe.txt"):
         if rest not in files:
             print(f"== cat {rest} : INTROUVABLE"); continue
         with zipfile.ZipFile(files[rest]) as z:
-            print(f"== cat {rest}"); print(z.read(rest).decode("utf-8", "replace")[:6000])
+            print(f"== cat {rest}"); print(z.read(rest).decode("utf-8", "replace")[:int(os.environ.get("PROBE_LIMIT", "6000")) if "noise_settings" not in rest else 400000])
     elif kind == "class":
         cls, _, rx = rest.partition(" ")
         if cls not in index:
