@@ -43,7 +43,11 @@ public class GlowOrbParticle extends SingleQuadParticle {
 	}
 
 	@Override
+	// #if 1.21.11
 	public int getLightColor(float partialTick) {
+	// #else
+	//? protected int getLightCoords(float partialTick) {
+	// #endif
 		return 0xF000F0;
 	}
 

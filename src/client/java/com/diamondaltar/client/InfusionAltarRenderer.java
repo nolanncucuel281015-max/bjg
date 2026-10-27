@@ -3,7 +3,6 @@ package com.diamondaltar.client;
 import com.diamondaltar.block.InfusionAltarBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -66,9 +65,13 @@ public class InfusionAltarRenderer implements BlockEntityRenderer<InfusionAltarB
 
 		poseStack.pushPose();
 		poseStack.translate(0.5 + shake, InfusionAltarBlockEntity.itemHeight(progress, state.partialTick) + bob, 0.5 - shake);
+		// #if 1.21.11
 		poseStack.mulPose(Axis.YP.rotationDegrees(baseSpin + extraSpin));
+		// #else
+		//? poseStack.rotate(Axis.YP.rotationDegrees(baseSpin + extraSpin));
+		// #endif
 		poseStack.scale(scale, scale, scale);
-		state.item.submit(poseStack, collector, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 0);
+		state.item.submit(poseStack, collector, 0xF000F0, OverlayTexture.NO_OVERLAY, 0);
 		poseStack.popPose();
 	}
 }

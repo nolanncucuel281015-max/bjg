@@ -100,7 +100,11 @@ public class DiamondAltarClient implements ClientModInitializer {
 				}
 			}
 			boolean useDown = client.options.keyUse.isDown();
+			// #if 1.21.11
 			if (useDown && !useWasDown && client.player != null && client.screen == null
+			// #else
+			//? if (useDown && !useWasDown && client.player != null
+			// #endif
 					&& client.player.isShiftKeyDown()
 					&& ModComponents.isInfused(client.player.getItemBySlot(EquipmentSlot.CHEST))) {
 				ClientPlayNetworking.send(new ArmorActionPayload(true));

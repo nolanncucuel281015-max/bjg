@@ -39,6 +39,8 @@ class Mc26Preprocess extends FilterReader {
 		[/net\.fabricmc\.fabric\.api\.client\.particle\.v1\.ParticleFactoryRegistry/, "net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry"],
 		[/\bParticleFactoryRegistry\b/, "ParticleProviderRegistry"],
 		[/\.setScreen\(/, ".setScreenAndShow("],
+		[/net\.minecraft\.client\.renderer\.state\.CameraRenderState/, "net.minecraft.client.renderer.state.level.CameraRenderState"],
+		[/InputConstants\.Type\.KEYSYM/, "InputConstants.Type.KEYBOARD"],
 	]
 
 	static String transform(String src) {
