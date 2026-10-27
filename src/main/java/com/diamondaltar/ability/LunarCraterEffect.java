@@ -1,5 +1,6 @@
 package com.diamondaltar.ability;
 
+import com.diamondaltar.Compat;
 import com.diamondaltar.effect.TimedEffect;
 import com.diamondaltar.effect.Visuals;
 import net.minecraft.core.particles.ParticleTypes;
@@ -31,7 +32,7 @@ public class LunarCraterEffect extends TimedEffect {
 		super(level);
 		this.player = player;
 		player.setDeltaMovement(player.getDeltaMovement().x, 1.2, player.getDeltaMovement().z);
-		player.hurtMarked = true;
+		Compat.markHurt(player);
 		level.playSound(null, player.blockPosition(), SoundEvents.PHANTOM_FLAP, SoundSource.PLAYERS, 1.5f, 0.6f);
 	}
 
@@ -44,7 +45,7 @@ public class LunarCraterEffect extends TimedEffect {
 		if (landed < 0) {
 			if (age == 8) {
 				player.setDeltaMovement(0, -2.5, 0);
-				player.hurtMarked = true;
+				Compat.markHurt(player);
 			}
 			Cosmic.at(level, Cosmic.MOON, player.position());
 			if (age > 8 && player.onGround() || age > 60) {

@@ -1,5 +1,6 @@
 package com.diamondaltar.astral;
 
+import com.diamondaltar.Compat;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
@@ -30,14 +31,14 @@ public final class AstralMobs {
 	public static void register() {
 		ServerEntityEvents.ENTITY_LOAD.register((entity, level) -> {
 			if (entity instanceof Mob mob && level.dimension() == AstralContent.DIMENSION
-					&& !mob.getTags().contains(TAG) && !Guardian.isGuardian(mob)) {
+					&& !Compat.tags(mob).contains(TAG) && !Guardian.isGuardian(mob)) {
 				transform(mob);
 			}
 		});
 	}
 
 	public static boolean isAstral(LivingEntity e) {
-		return e.getTags().contains(TAG);
+		return Compat.tags(e).contains(TAG);
 	}
 
 	/** Transforme un mob en version astrale (ne fait rien pour les types non prévus). */
@@ -46,25 +47,25 @@ public final class AstralMobs {
 		String key;
 		ChatFormatting color;
 		boolean hostile = true;
-		if (type == EntityType.ENDERMAN) {
+		if (type == Compat.ENDERMAN) {
 			key = "void_walker"; color = ChatFormatting.DARK_PURPLE;
 			set(mob, Attributes.SCALE, 1.25); set(mob, Attributes.MAX_HEALTH, 60); set(mob, Attributes.ATTACK_DAMAGE, 10);
-		} else if (type == EntityType.PHANTOM) {
+		} else if (type == Compat.PHANTOM) {
 			key = "star_ray"; color = ChatFormatting.AQUA;
 			set(mob, Attributes.SCALE, 1.6); set(mob, Attributes.MAX_HEALTH, 34);
-		} else if (type == EntityType.SKELETON) {
+		} else if (type == Compat.SKELETON) {
 			key = "lunar_archer"; color = ChatFormatting.WHITE;
 			set(mob, Attributes.MAX_HEALTH, 30); set(mob, Attributes.MOVEMENT_SPEED, 0.3);
 			mob.setItemSlot(EquipmentSlot.HEAD, new ItemStack(Items.AMETHYST_CLUSTER));
 			mob.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.BOW));
 			mob.setDropChance(EquipmentSlot.HEAD, 0);
-		} else if (type == EntityType.MAGMA_CUBE) {
+		} else if (type == Compat.MAGMA_CUBE) {
 			key = "living_meteor"; color = ChatFormatting.GOLD;
 			set(mob, Attributes.MAX_HEALTH, 24);
-		} else if (type == EntityType.RABBIT) {
+		} else if (type == Compat.RABBIT) {
 			key = "moon_rabbit"; color = ChatFormatting.WHITE; hostile = false;
 			mob.addEffect(new MobEffectInstance(MobEffects.JUMP_BOOST, MobEffectInstance.INFINITE_DURATION, 3, false, false));
-		} else if (type == EntityType.GOAT) {
+		} else if (type == Compat.GOAT) {
 			key = "lunar_goat"; color = ChatFormatting.LIGHT_PURPLE; hostile = false;
 			set(mob, Attributes.SCALE, 1.15);
 			mob.addEffect(new MobEffectInstance(MobEffects.JUMP_BOOST, MobEffectInstance.INFINITE_DURATION, 2, false, false));
@@ -85,7 +86,7 @@ public final class AstralMobs {
 
 	/** Butin astral à la mort d'un mob hostile tué par un joueur. */
 	public static void onDeath(ServerLevel level, LivingEntity entity, net.minecraft.world.damagesource.DamageSource source) {
-		if (!entity.getTags().contains(TAG + "_hostile") || !(source.getEntity() instanceof Player)) {
+		if (!Compat.tags(entity).contains(TAG + "_hostile") || !(source.getEntity() instanceof Player)) {
 			return;
 		}
 		var random = entity.getRandom();

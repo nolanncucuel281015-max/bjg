@@ -42,16 +42,25 @@ public class OreSightEffect extends TimedEffect {
 		level.playSound(null, c, SoundEvents.BEACON_ACTIVATE, SoundSource.PLAYERS, 1.0f, 1.8f);
 	}
 
+	private static boolean isAny(BlockState s, net.minecraft.world.level.block.Block... blocks) {
+		for (var b : blocks) {
+			if (s.is(b)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	private static DustParticleOptions colorOf(BlockState s) {
-		if (s.is(BlockTags.DIAMOND_ORES)) return new DustParticleOptions(0x4FF6FF, 1.6f);
-		if (s.is(BlockTags.EMERALD_ORES)) return new DustParticleOptions(0x30FF60, 1.6f);
+		if (isAny(s, Blocks.DIAMOND_ORE, Blocks.DEEPSLATE_DIAMOND_ORE)) return new DustParticleOptions(0x4FF6FF, 1.6f);
+		if (isAny(s, Blocks.EMERALD_ORE, Blocks.DEEPSLATE_EMERALD_ORE)) return new DustParticleOptions(0x30FF60, 1.6f);
 		if (s.is(Blocks.ANCIENT_DEBRIS)) return new DustParticleOptions(0xB050FF, 1.8f);
 		if (s.is(BlockTags.GOLD_ORES)) return new DustParticleOptions(0xFFD030, 1.3f);
-		if (s.is(BlockTags.REDSTONE_ORES)) return new DustParticleOptions(0xFF2020, 1.2f);
-		if (s.is(BlockTags.LAPIS_ORES)) return new DustParticleOptions(0x2050FF, 1.2f);
+		if (isAny(s, Blocks.REDSTONE_ORE, Blocks.DEEPSLATE_REDSTONE_ORE)) return new DustParticleOptions(0xFF2020, 1.2f);
+		if (isAny(s, Blocks.LAPIS_ORE, Blocks.DEEPSLATE_LAPIS_ORE)) return new DustParticleOptions(0x2050FF, 1.2f);
 		if (s.is(BlockTags.IRON_ORES)) return new DustParticleOptions(0xE8C8A8, 1.1f);
 		if (s.is(BlockTags.COPPER_ORES)) return new DustParticleOptions(0xFF8040, 1.0f);
-		if (s.is(BlockTags.COAL_ORES)) return new DustParticleOptions(0x303030, 1.0f);
+		if (isAny(s, Blocks.COAL_ORE, Blocks.DEEPSLATE_COAL_ORE)) return new DustParticleOptions(0x303030, 1.0f);
 		return null;
 	}
 

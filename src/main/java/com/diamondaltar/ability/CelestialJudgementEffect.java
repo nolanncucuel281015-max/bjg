@@ -1,5 +1,6 @@
 package com.diamondaltar.ability;
 
+import com.diamondaltar.Compat;
 import com.diamondaltar.effect.TimedEffect;
 import com.diamondaltar.effect.Visuals;
 import net.minecraft.world.entity.Display;
@@ -83,7 +84,7 @@ public class CelestialJudgementEffect extends TimedEffect {
 		if (age == CHARGE) {
 			Visuals.transform(giant, new Vector3f(0, GIANT * 0.3f, 0), DOWN, GIANT, 1);
 			for (int i = 0; i < 3; i++) {
-				LightningBolt bolt = new LightningBolt(EntityType.LIGHTNING_BOLT, level);
+				LightningBolt bolt = new LightningBolt(Compat.LIGHTNING_BOLT, level);
 				bolt.setPos(center.x + (i - 1) * 1.5, center.y, center.z + (i % 2) * 1.5);
 				bolt.setVisualOnly(true);
 				level.addFreshEntity(bolt);

@@ -1,5 +1,6 @@
 package com.diamondaltar.ability;
 
+import com.diamondaltar.Compat;
 import com.diamondaltar.effect.TimedEffect;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -46,7 +47,7 @@ public class GravityShieldEffect extends TimedEffect {
 			}
 			p.setDeltaMovement(p.getDeltaMovement().scale(-1.3));
 			p.setOwner(player);
-			p.hurtMarked = true;
+			Compat.markHurt(p);
 			level.sendParticles(ParticleTypes.END_ROD, p.getX(), p.getY(), p.getZ(), 10, 0.1, 0.1, 0.1, 0.15);
 			level.playSound(null, p.blockPosition(), SoundEvents.AMETHYST_BLOCK_HIT, SoundSource.PLAYERS, 1.5f, 1.5f);
 		}

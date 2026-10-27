@@ -13,10 +13,13 @@ for root in (home + "/.gradle/caches", "mc26/.gradle"):
                 if ("minecraft" in p and ("26.3" in p or "merged" in p or "common" in p or "client" in p)) or "fabric-api" in p or "net.fabricmc" in p:
                     jars.append(p)
 index = {}
+files = {}
 for j in jars:
     try:
         with zipfile.ZipFile(j) as z:
             for n in z.namelist():
+                if not n.endswith(".class") and (n.startswith("data/") or n.startswith("assets/minecraft/")):
+                    files.setdefault(n, j)
                 if n.endswith(".class") and (n.startswith("net/minecraft/") or n.startswith("net/fabricmc/fabric/api/") or n.startswith("com/mojang/")):
                     index.setdefault(n[:-6].replace("/", "."), j)
     except Exception:
@@ -30,6 +33,14 @@ for line in open("mc26/tools/probe.txt"):
     if kind == "find":
         hits = sorted(c for c in index if re.search(rest, c))
         print(f"== find {rest} ({len(hits)})"); print("\n".join(hits[:60]))
+    elif kind == "files":
+        hits = sorted(f for f in files if re.search(rest, f))
+        print(f"== files {rest} ({len(hits)})"); print("\n".join(hits[:80]))
+    elif kind == "cat":
+        if rest not in files:
+            print(f"== cat {rest} : INTROUVABLE"); continue
+        with zipfile.ZipFile(files[rest]) as z:
+            print(f"== cat {rest}"); print(z.read(rest).decode("utf-8", "replace")[:6000])
     elif kind == "class":
         cls, _, rx = rest.partition(" ")
         if cls not in index:

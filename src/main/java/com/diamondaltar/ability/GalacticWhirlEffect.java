@@ -1,5 +1,6 @@
 package com.diamondaltar.ability;
 
+import com.diamondaltar.Compat;
 import com.diamondaltar.effect.TimedEffect;
 import com.diamondaltar.effect.Visuals;
 import net.minecraft.server.level.ServerLevel;
@@ -59,7 +60,7 @@ public class GalacticWhirlEffect extends TimedEffect {
 			Vec3 tangent = new Vec3(-to.z, 0, to.x).normalize();
 			Vec3 v = to.normalize().scale(0.25).add(tangent.scale(0.35));
 			target.setDeltaMovement(v.x, target.getDeltaMovement().y, v.z);
-			target.hurtMarked = true;
+			Compat.markHurt(target);
 			if (age % 6 == 0 && target.distanceToSqr(c) < 12) {
 				FX.hit(level, player, target, 9.0f);
 			}

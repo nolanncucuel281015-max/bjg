@@ -1,5 +1,6 @@
 package com.diamondaltar.ability;
 
+import com.diamondaltar.Compat;
 import com.diamondaltar.effect.TimedEffect;
 import com.diamondaltar.effect.Visuals;
 import net.minecraft.core.particles.DustParticleOptions;
@@ -59,9 +60,9 @@ public class CelestialEdgeEffect extends TimedEffect {
 		this.dir = right.scale(Math.cos(tilt)).add(up.scale(Math.sin(tilt))).normalize();
 		this.center = player.getEyePosition().add(look.scale(DISTANCE)).subtract(0, 0.4, 0);
 
-		this.halo = track(Visuals.ribbon(level, center, Blocks.WHITE_STAINED_GLASS.defaultBlockState(), -1));
-		this.glow = track(Visuals.ribbon(level, center, Blocks.LIGHT_BLUE_STAINED_GLASS.defaultBlockState(), 0xBFF6FF));
-		this.core = track(Visuals.ribbon(level, center, Blocks.WHITE_CONCRETE.defaultBlockState(), 0xFFFFFF));
+		this.halo = track(Visuals.ribbon(level, center, Compat.WHITE_STAINED_GLASS.defaultBlockState(), -1));
+		this.glow = track(Visuals.ribbon(level, center, Compat.LIGHT_BLUE_STAINED_GLASS.defaultBlockState(), 0xBFF6FF));
+		this.core = track(Visuals.ribbon(level, center, Compat.WHITE_CONCRETE.defaultBlockState(), 0xFFFFFF));
 		for (Display.BlockDisplay d : new Display.BlockDisplay[]{halo, glow, core}) {
 			Visuals.ribbonShape(d, dir, look, 0.5f, 0.05f, 0);
 		}
@@ -142,7 +143,7 @@ public class CelestialEdgeEffect extends TimedEffect {
 		for (int k = 0; k < 2; k++) {
 			Vec3 sdir = dir.add(0, (k == 0 ? 0.15 : -0.1), 0).normalize();
 			Vec3 at = mid.add(0, (k - 0.5) * 0.5, 0);
-			Display.BlockDisplay d = track(Visuals.ribbon(level, at, Blocks.WHITE_CONCRETE.defaultBlockState(), 0xFFFFFF));
+			Display.BlockDisplay d = track(Visuals.ribbon(level, at, Compat.WHITE_CONCRETE.defaultBlockState(), 0xFFFFFF));
 			Visuals.ribbonShape(d, sdir, look, 0.2f, 0.02f, 0);
 			streaks.add(new Streak(d, sdir, age, 3.5f + k));
 		}

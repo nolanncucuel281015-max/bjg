@@ -1,5 +1,6 @@
 package com.diamondaltar.ability;
 
+import com.diamondaltar.Compat;
 import com.diamondaltar.effect.TimedEffect;
 import com.diamondaltar.effect.Visuals;
 import net.minecraft.world.entity.Display;
@@ -61,7 +62,7 @@ public class HoeReapEffect extends TimedEffect {
 
 		if (age % 2 == 0) {
 			Vec3 tg = new Vec3(-Math.sin(sweep), 0, Math.cos(sweep));
-			Glow.ribbon(level, c.add(out.scale(RADIUS * 0.75)).add(0, 1, 0), tg, out, 3.5f, 0.6f, net.minecraft.world.level.block.Blocks.PURPLE_STAINED_GLASS, 0x80FFD0, 1, 1, 6);
+			Glow.ribbon(level, c.add(out.scale(RADIUS * 0.75)).add(0, 1, 0), tg, out, 3.5f, 0.6f, Compat.PURPLE_STAINED_GLASS, 0x80FFD0, 1, 1, 6);
 		}
 		// La lame de la faux : un rayon de flammes d'âmes qui balaie un tour complet.
 		double angle = startAngle + Math.PI * 2 * age / (DURATION - 1);

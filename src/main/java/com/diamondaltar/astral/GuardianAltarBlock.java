@@ -1,6 +1,6 @@
 package com.diamondaltar.astral;
 
-import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.MapCodec; // @1.21.11
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -13,16 +13,18 @@ import org.jetbrains.annotations.Nullable;
 
 /** Autel du Gardien : au cœur du Château Astral, il invoque le boss quand un joueur approche. */
 public class GuardianAltarBlock extends BaseEntityBlock {
-	public static final MapCodec<GuardianAltarBlock> CODEC = simpleCodec(GuardianAltarBlock::new);
+	public static final MapCodec<GuardianAltarBlock> CODEC = simpleCodec(GuardianAltarBlock::new); // @1.21.11
 
 	public GuardianAltarBlock(Properties properties) {
 		super(properties);
 	}
 
+	// #if 1.21.11
 	@Override
 	protected MapCodec<? extends BaseEntityBlock> codec() {
 		return CODEC;
 	}
+	// #endif
 
 	@Override
 	protected RenderShape getRenderShape(BlockState state) {

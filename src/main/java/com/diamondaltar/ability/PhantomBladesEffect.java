@@ -1,5 +1,6 @@
 package com.diamondaltar.ability;
 
+import com.diamondaltar.Compat;
 import com.diamondaltar.effect.TimedEffect;
 import com.diamondaltar.effect.Visuals;
 import net.minecraft.world.entity.Display;
@@ -77,7 +78,7 @@ public class PhantomBladesEffect extends TimedEffect {
 				level.sendParticles(CYAN, p.x, p.y + 0.1, p.z, 1, 0, 0, 0, 0);
 			}
 			level.sendParticles(ParticleTypes.SWEEP_ATTACK, to.x, to.y, to.z, 1, 0, 0, 0, 0);
-			Glow.ribbon(level, from.lerp(to, 0.5), dir[i], new Vec3(0, 1, 0).cross(dir[i]).lengthSqr() < 1.0E-4 ? new Vec3(1, 0, 0) : new Vec3(0, 1, 0).cross(dir[i]), (float) SPEED * 1.3f, 0.3f, net.minecraft.world.level.block.Blocks.PURPLE_STAINED_GLASS, 0xC080FF, 1, 1, 5);
+			Glow.ribbon(level, from.lerp(to, 0.5), dir[i], new Vec3(0, 1, 0).cross(dir[i]).lengthSqr() < 1.0E-4 ? new Vec3(1, 0, 0) : new Vec3(0, 1, 0).cross(dir[i]), (float) SPEED * 1.3f, 0.3f, Compat.PURPLE_STAINED_GLASS, 0xC080FF, 1, 1, 5);
 			level.sendParticles(ParticleTypes.END_ROD, to.x, to.y, to.z, 1, 0.05, 0.05, 0.05, 0.01);
 			for (LivingEntity target : FX.livingAround(level, player, to, 1.4)) {
 				if (hit.add(target.getUUID())) {

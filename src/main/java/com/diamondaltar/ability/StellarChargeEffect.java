@@ -1,5 +1,6 @@
 package com.diamondaltar.ability;
 
+import com.diamondaltar.Compat;
 import com.diamondaltar.effect.TimedEffect;
 import com.diamondaltar.effect.Visuals;
 import net.minecraft.core.particles.ParticleTypes;
@@ -46,7 +47,7 @@ public class StellarChargeEffect extends TimedEffect {
 			return true;
 		}
 		player.setDeltaMovement(dir.scale(2.1));
-		player.hurtMarked = true;
+		Compat.markHurt(player);
 		player.fallDistance = 0;
 		Vec3 p = player.position().add(0, 1.0, 0);
 		lance.setPos(p.add(dir.scale(1.5)));
@@ -71,7 +72,7 @@ public class StellarChargeEffect extends TimedEffect {
 		}
 		if (age >= DURATION) {
 			player.setDeltaMovement(player.getDeltaMovement().scale(0.2));
-			player.hurtMarked = true;
+			Compat.markHurt(player);
 			FX.ring(level, Cosmic.MOON, p, 3, 40);
 			FX.ring(level, Cosmic.NEBULA, p, 4.5, 50);
 			Glow.rays(level, p, 10, 8, Glow.Tint.ICE);

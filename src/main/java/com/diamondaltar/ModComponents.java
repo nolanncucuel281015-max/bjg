@@ -110,7 +110,7 @@ public final class ModComponents {
 
 	public static void infuse(ItemStack stack) {
 		stack.set(INFUSE_VERSION, CURRENT_VERSION);
-		Component baseName = stack.getItem().getName();
+		Component baseName = Compat.itemName(stack);
 		stack.set(INFUSED, true);
 		stack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
 		stack.set(DataComponents.RARITY, Rarity.EPIC);

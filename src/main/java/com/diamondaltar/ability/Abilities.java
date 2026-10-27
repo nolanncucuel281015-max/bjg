@@ -1,5 +1,6 @@
 package com.diamondaltar.ability;
 
+import com.diamondaltar.Compat;
 import com.diamondaltar.ModComponents;
 import com.diamondaltar.effect.EffectManager;
 import com.diamondaltar.effect.TimedEffect;
@@ -168,7 +169,7 @@ public final class Abilities {
 
 	private static boolean requireChest(ServerPlayer player, ItemStack chest) {
 		if (!ModComponents.isInfused(chest)) {
-			player.displayClientMessage(Component.translatable("diamondaltar.ability.need_chestplate").withStyle(ChatFormatting.RED), true);
+			Compat.overlay(player, Component.translatable("diamondaltar.ability.need_chestplate").withStyle(ChatFormatting.RED));
 			return false;
 		}
 		return true;
@@ -196,9 +197,9 @@ public final class Abilities {
 	}
 
 	private static void announce(ServerPlayer player, Ability ability, int index, int count) {
-		player.displayClientMessage(Component.translatable("diamondaltar.ability.switched",
+		Compat.overlay(player, Component.translatable("diamondaltar.ability.switched",
 				Component.translatable("diamondaltar.ability." + ability.key() + ".name").withStyle(ChatFormatting.GOLD),
-				index + 1, count).withStyle(ChatFormatting.AQUA), true);
+				index + 1, count).withStyle(ChatFormatting.AQUA));
 		player.level().playSound(null, player.blockPosition(), SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 1.0f, 1.2f + index * 0.15f);
 	}
 
@@ -206,7 +207,7 @@ public final class Abilities {
 		Ability ability = selected(stack);
 		if (ability != null && ModComponents.isInfused(stack)) {
 			activate(player, stack, ability, hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
-			player.swing(hand, true);
+			Compat.swing(player, hand);
 		}
 	}
 
@@ -218,8 +219,8 @@ public final class Abilities {
 		Map<String, Long> mine = COOLDOWNS.computeIfAbsent(player.getUUID(), u -> new HashMap<>());
 		long readyAt = mine.getOrDefault(ability.key(), 0L);
 		if (now < readyAt) {
-			player.displayClientMessage(Component.translatable("diamondaltar.ability.cooldown",
-					String.format("%.1f", (readyAt - now) / 20.0)).withStyle(ChatFormatting.RED), true);
+			Compat.overlay(player, Component.translatable("diamondaltar.ability.cooldown",
+					String.format("%.1f", (readyAt - now) / 20.0)).withStyle(ChatFormatting.RED));
 			return;
 		}
 		mine.put(ability.key(), now + ability.cooldown());

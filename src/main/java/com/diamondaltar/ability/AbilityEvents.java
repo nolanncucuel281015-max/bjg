@@ -1,5 +1,6 @@
 package com.diamondaltar.ability;
 
+import com.diamondaltar.Compat;
 import com.diamondaltar.ModComponents;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
@@ -15,11 +16,11 @@ public final class AbilityEvents {
 	}
 
 	public static void register() {
-		PayloadTypeRegistry.playC2S().register(SlashPayload.ID, SlashPayload.CODEC);
-		PayloadTypeRegistry.playC2S().register(SwitchAbilityPayload.ID, SwitchAbilityPayload.CODEC);
-		PayloadTypeRegistry.playC2S().register(ArmorActionPayload.ID, ArmorActionPayload.CODEC);
-		PayloadTypeRegistry.playS2C().register(ShakePayload.ID, ShakePayload.CODEC);
-		PayloadTypeRegistry.playS2C().register(FlashPayload.ID, FlashPayload.CODEC);
+		Compat.toServer().register(SlashPayload.ID, SlashPayload.CODEC);
+		Compat.toServer().register(SwitchAbilityPayload.ID, SwitchAbilityPayload.CODEC);
+		Compat.toServer().register(ArmorActionPayload.ID, ArmorActionPayload.CODEC);
+		Compat.toClient().register(ShakePayload.ID, ShakePayload.CODEC);
+		Compat.toClient().register(FlashPayload.ID, FlashPayload.CODEC);
 
 		// Touche J : changer la capacité d'armure. Shift + clic droit (envoyé par le client) : la lancer.
 		ServerPlayNetworking.registerGlobalReceiver(ArmorActionPayload.ID, (payload, context) -> {

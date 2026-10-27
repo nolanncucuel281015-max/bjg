@@ -1,5 +1,6 @@
 package com.diamondaltar.effect;
 
+import com.diamondaltar.Compat;
 import com.mojang.math.Transformation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Brightness;
@@ -22,7 +23,7 @@ public final class Visuals {
 	}
 
 	public static Display.ItemDisplay item(ServerLevel level, Vec3 pos, ItemStack stack) {
-		Display.ItemDisplay d = new Display.ItemDisplay(EntityType.ITEM_DISPLAY, level) {
+		Display.ItemDisplay d = new Display.ItemDisplay(Compat.ITEM_DISPLAY, level) {
 			@Override
 			public boolean shouldBeSaved() {
 				return false;
@@ -37,7 +38,7 @@ public final class Visuals {
 	}
 
 	public static Display.BlockDisplay block(ServerLevel level, Vec3 pos, BlockState state) {
-		Display.BlockDisplay d = new Display.BlockDisplay(EntityType.BLOCK_DISPLAY, level) {
+		Display.BlockDisplay d = new Display.BlockDisplay(Compat.BLOCK_DISPLAY, level) {
 			@Override
 			public boolean shouldBeSaved() {
 				return false;

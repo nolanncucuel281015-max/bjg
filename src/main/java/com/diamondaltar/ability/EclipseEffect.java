@@ -1,5 +1,6 @@
 package com.diamondaltar.ability;
 
+import com.diamondaltar.Compat;
 import com.diamondaltar.effect.TimedEffect;
 import com.diamondaltar.effect.Visuals;
 import net.minecraft.core.particles.ParticleTypes;
@@ -34,8 +35,8 @@ public class EclipseEffect extends TimedEffect {
 		super(level);
 		this.player = player;
 		Vec3 sky = player.position().add(0, 7, 0);
-		this.moon = track(Visuals.block(level, sky, Blocks.BLACK_CONCRETE.defaultBlockState()));
-		this.halo = track(Visuals.block(level, sky, Blocks.WHITE_STAINED_GLASS.defaultBlockState()));
+		this.moon = track(Visuals.block(level, sky, Compat.BLACK_CONCRETE.defaultBlockState()));
+		this.halo = track(Visuals.block(level, sky, Compat.WHITE_STAINED_GLASS.defaultBlockState()));
 		Visuals.transform(moon, new org.joml.Vector3f(), new Quaternionf(), 0.01f, 0);
 		Visuals.transform(halo, new org.joml.Vector3f(), new Quaternionf(), 0.01f, 0);
 		this.targets = FX.livingAround(level, player, player.position(), RADIUS);

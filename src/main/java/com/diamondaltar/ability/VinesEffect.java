@@ -1,5 +1,6 @@
 package com.diamondaltar.ability;
 
+import com.diamondaltar.Compat;
 import com.diamondaltar.effect.TimedEffect;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -39,7 +40,7 @@ public class VinesEffect extends TimedEffect {
 			target.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 10, 9));
 			target.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 10, 1));
 			target.setDeltaMovement(0, Math.min(0, target.getDeltaMovement().y), 0);
-			target.hurtMarked = true;
+			Compat.markHurt(target);
 			// Lianes en spirale qui s'enroulent autour de la cible.
 			double h = Math.min(target.getBbHeight(), age / 10.0 * target.getBbHeight());
 			for (int k = 0; k < 3; k++) {

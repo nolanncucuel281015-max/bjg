@@ -1,7 +1,7 @@
 package com.diamondaltar.block;
 
 import com.diamondaltar.DiamondAltar;
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import com.diamondaltar.Compat;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -43,6 +43,6 @@ public final class ModBlocks {
 	}
 
 	public static void register() {
-		ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.FUNCTIONAL_BLOCKS).register(entries -> entries.accept(INFUSION_ALTAR_ITEM));
+		Compat.addToTab(CreativeModeTabs.FUNCTIONAL_BLOCKS, INFUSION_ALTAR_ITEM);
 	}
 }

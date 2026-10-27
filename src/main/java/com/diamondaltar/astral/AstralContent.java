@@ -1,7 +1,7 @@
 package com.diamondaltar.astral;
 
+import com.diamondaltar.Compat;
 import com.diamondaltar.DiamondAltar;
-import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -41,7 +41,7 @@ public final class AstralContent {
 			.mapColor(MapColor.METAL).strength(4f, 6f).requiresCorrectToolForDrops().sound(SoundType.COPPER).noOcclusion()
 			.lightLevel(s -> 6));
 	public static final Block ASTRAL_PORTAL = blockNoItem("astral_portal", AstralPortalBlock::new, BlockBehaviour.Properties.of()
-			.noCollision().strength(-1f, 3600000f).sound(SoundType.GLASS).lightLevel(s -> 12).noLootTable().pushReaction(net.minecraft.world.level.material.PushReaction.BLOCK));
+			.noCollision().strength(-1f, 3600000f).sound(SoundType.GLASS).lightLevel(s -> 12).noLootTable().pushReaction(Compat.PUSH_BLOCKED));
 	public static final Block ASTRAL_FRAME = block("astral_frame", Block::new, BlockBehaviour.Properties.of()
 			.mapColor(MapColor.DIAMOND).strength(50f, 1200f).requiresCorrectToolForDrops().sound(SoundType.METAL).lightLevel(s -> 4));
 	public static final Block ASTRAL_STONE = block("astral_stone", Block::new, BlockBehaviour.Properties.of()
@@ -65,9 +65,8 @@ public final class AstralContent {
 			.mapColor(MapColor.QUARTZ).strength(2f).sound(SoundType.CHERRY_WOOD).lightLevel(s -> 2));
 	public static final Block ASTRAL_PLANKS = block("astral_planks", Block::new, BlockBehaviour.Properties.of()
 			.mapColor(MapColor.QUARTZ).strength(2f, 3f).sound(SoundType.CHERRY_WOOD));
-	public static final Block ASTRAL_LEAVES = block("astral_leaves", Block::new, BlockBehaviour.Properties.of()
-			.mapColor(MapColor.COLOR_PURPLE).strength(0.2f).sound(SoundType.AZALEA_LEAVES).noOcclusion().lightLevel(s -> 7)
-			.isSuffocating((st, l, pos) -> false).isViewBlocking((st, l, pos) -> false));
+	public static final Block ASTRAL_LEAVES = block("astral_leaves", Block::new, Compat.seeThrough(BlockBehaviour.Properties.of()
+			.mapColor(MapColor.COLOR_PURPLE).strength(0.2f).sound(SoundType.AZALEA_LEAVES).noOcclusion().lightLevel(s -> 7)));
 
 	public static final BlockEntityType<FuserBlockEntity> FUSER_ENTITY = Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE,
 			DiamondAltar.id("fuser"), FabricBlockEntityTypeBuilder.create(FuserBlockEntity::new, FUSER).build());
@@ -92,7 +91,7 @@ public final class AstralContent {
 
 	/** Onglet créatif « Diamond Altar » : l'autel, tout l'équipement déjà infusé, et tout le contenu astral. */
 	public static final CreativeModeTab TAB = Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, DiamondAltar.id("main"),
-			FabricItemGroup.builder()
+			Compat.tabBuilder()
 					.title(Component.translatable("itemGroup.diamondaltar.main"))
 					.icon(() -> new ItemStack(com.diamondaltar.block.ModBlocks.INFUSION_ALTAR_ITEM))
 					.displayItems((params, out) -> {

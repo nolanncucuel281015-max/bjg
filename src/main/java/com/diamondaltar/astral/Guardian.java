@@ -1,5 +1,6 @@
 package com.diamondaltar.astral;
 
+import com.diamondaltar.Compat;
 import com.diamondaltar.effect.EffectManager;
 import com.diamondaltar.effect.TimedEffect;
 import com.diamondaltar.effect.Visuals;
@@ -23,7 +24,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.monster.Vex;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -58,7 +58,7 @@ public final class Guardian {
 	}
 
 	public static void summon(ServerLevel level, BlockPos pos) {
-		Mob boss = EntityType.WITHER_SKELETON.create(level, EntitySpawnReason.TRIGGERED);
+		Mob boss = Compat.WITHER_SKELETON.create(level, EntitySpawnReason.TRIGGERED);
 		if (boss == null) {
 			return;
 		}
@@ -96,7 +96,7 @@ public final class Guardian {
 	}
 
 	public static boolean isGuardian(LivingEntity e) {
-		return e.getTags().contains(TAG);
+		return Compat.tags(e).contains(TAG);
 	}
 
 	/** Chaque tick : barre de boss, aura et attaques spéciales de chaque Gardien vivant. */
@@ -122,7 +122,7 @@ public final class Guardian {
 
 	private static void tickBoss(ServerLevel level, LivingEntity boss) {
 		ServerBossEvent bar = BARS.computeIfAbsent(boss.getUUID(), u -> {
-			ServerBossEvent b = new ServerBossEvent(boss.getDisplayName(), BossEvent.BossBarColor.PURPLE, BossEvent.BossBarOverlay.NOTCHED_10);
+			ServerBossEvent b = Compat.bossEvent(boss.getDisplayName(), BossEvent.BossBarColor.PURPLE, BossEvent.BossBarOverlay.NOTCHED_10);
 			b.setDarkenScreen(true);
 			b.setCreateWorldFog(true);
 			return b;
@@ -198,7 +198,7 @@ public final class Guardian {
 		boss.addEffect(new MobEffectInstance(MobEffects.GLOWING, STUN_TICKS, 0, false, false));
 		for (ServerPlayer p : level.players()) {
 			if (p.distanceToSqr(boss) < 40 * 40) {
-				p.displayClientMessage(Component.translatable("diamondaltar.guardian.stunned").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD), true);
+				Compat.overlay(p, Component.translatable("diamondaltar.guardian.stunned").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD));
 			}
 		}
 		level.playSound(null, boss.blockPosition(), SoundEvents.ANVIL_LAND, SoundSource.HOSTILE, 1.2f, 0.6f);
@@ -251,21 +251,6 @@ public final class Guardian {
 		target.hurtServer(level, level.damageSources().mobAttack(boss), 4f);
 	}
 
-	@SuppressWarnings("unused")
-	private static void summonVexes(ServerLevel level, LivingEntity boss, ServerPlayer target) {
-		for (int i = 0; i < 2; i++) {
-			Vex vex = EntityType.VEX.create(level, EntitySpawnReason.MOB_SUMMONED);
-			if (vex != null) {
-				vex.setPos(boss.getX() + (i - 1) * 1.5, boss.getY() + 2.5, boss.getZ());
-				vex.setLimitedLife(20 * 15);
-				vex.setTarget(target);
-				level.addFreshEntity(vex);
-				level.sendParticles(NEBULA, vex.getX(), vex.getY(), vex.getZ(), 20, 0.3, 0.3, 0.3, 0);
-			}
-		}
-		level.playSound(null, boss.blockPosition(), SoundEvents.EVOKER_PREPARE_SUMMON, SoundSource.HOSTILE, 2.0f, 0.7f);
-	}
-
 	/** À la mort : butin. */
 	public static void onDeath(ServerLevel level, LivingEntity boss) {
 		boss.spawnAtLocation(level, new ItemStack(AstralContent.GUARDIAN_HEART));
@@ -316,7 +301,7 @@ public final class Guardian {
 				}
 				boss.setDeltaMovement(0, boss.getDeltaMovement().y, 0);
 				if (age % 4 == 0) {
-					boss.swing(net.minecraft.world.InteractionHand.MAIN_HAND, true);
+					Compat.swing(boss, net.minecraft.world.InteractionHand.MAIN_HAND);
 				}
 				for (int k = 0; k < 12; k++) {
 					double a = Math.PI * 2 * k / 12;
@@ -331,8 +316,8 @@ public final class Guardian {
 				double dist = Math.min(flat.length(), 14);
 				Vec3 dir = flat.lengthSqr() > 0.01 ? flat.normalize() : Vec3.ZERO;
 				boss.setDeltaMovement(dir.x * dist * 0.11, 1.15, dir.z * dist * 0.11);
-				boss.hurtMarked = true;
-				boss.swing(net.minecraft.world.InteractionHand.MAIN_HAND, true);
+				Compat.markHurt(boss);
+				Compat.swing(boss, net.minecraft.world.InteractionHand.MAIN_HAND);
 				level.playSound(null, boss.blockPosition(), SoundEvents.WARDEN_SONIC_CHARGE, SoundSource.HOSTILE, 1.5f, 1.4f);
 				level.sendParticles(ParticleTypes.CLOUD, boss.getX(), boss.getY(), boss.getZ(), 30, 1, 0.1, 1, 0.1);
 				return false;
@@ -342,7 +327,7 @@ public final class Guardian {
 			if (!down) {
 				if (age > WINDUP + 10 && boss.getDeltaMovement().y < 0) {
 					boss.setDeltaMovement(boss.getDeltaMovement().add(0, -0.25, 0)); // retombe lourdement
-					boss.hurtMarked = true;
+					Compat.markHurt(boss);
 				}
 				return false;
 			}
@@ -374,7 +359,7 @@ public final class Guardian {
 				Vec3 out = e.position().subtract(c).multiply(1, 0, 1);
 				out = out.lengthSqr() > 0.01 ? out.normalize().scale(1.2) : new Vec3(0, 0, 0);
 				e.push(out.x, 0.7, out.z);
-				e.hurtMarked = true;
+				Compat.markHurt(e);
 			}
 		}
 	}
@@ -457,7 +442,7 @@ public final class Guardian {
 				e.hurtServer(level, level.damageSources().mobAttack(boss), 3f);
 				Vec3 out = e.position().subtract(center).multiply(1, 0, 1).normalize().scale(1.4);
 				e.push(out.x, 0.6, out.z);
-				e.hurtMarked = true;
+				Compat.markHurt(e);
 			}
 			return age >= 12;
 		}

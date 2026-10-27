@@ -1,5 +1,6 @@
 package com.diamondaltar.astral;
 
+import com.diamondaltar.Compat;
 import com.diamondaltar.effect.Visuals;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -87,10 +88,10 @@ public class FuserBlockEntity extends BlockEntity {
 	}
 
 	public void describe(Player player) {
-		player.displayClientMessage(Component.translatable("diamondaltar.fuser.status",
+		Compat.overlay(player, Component.translatable("diamondaltar.fuser.status",
 				Component.translatable(lava ? "diamondaltar.fuser.full" : "diamondaltar.fuser.empty").withStyle(lava ? ChatFormatting.GOLD : ChatFormatting.GRAY),
 				Component.translatable(water ? "diamondaltar.fuser.full" : "diamondaltar.fuser.empty").withStyle(water ? ChatFormatting.AQUA : ChatFormatting.GRAY),
-				Component.literal(essence + "/" + MAX_ESSENCE).withStyle(ChatFormatting.LIGHT_PURPLE)), true);
+				Component.literal(essence + "/" + MAX_ESSENCE).withStyle(ChatFormatting.LIGHT_PURPLE)));
 	}
 
 	private void changed(net.minecraft.sounds.SoundEvent sound) {

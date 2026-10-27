@@ -11,6 +11,33 @@ base {
 	archivesName = project.archives_base_name
 }
 
+/**
+ * Préprocesseur des sources communes pour la 26.3 :
+ *   // #if 1.21.11      <- code 1.21.11 (supprimé en 26.3)
+ *   // #else
+ *   //? code 26.3        <- décommenté en 26.3
+ *   // #endif
+ * et toute ligne finissant par « // @1.21.11 » est supprimée en 26.3.
+ */
+class Mc26Preprocess extends FilterReader {
+	Mc26Preprocess(Reader r) { super(new StringReader(transform(r.text))) }
+	static String transform(String src) {
+		def out = new StringBuilder()
+		String mode = "both"
+		src.eachLine { String line ->
+			def t = line.trim()
+			if (t == "// #if 1.21.11") { mode = "old"; return }
+			if (t == "// #else" && mode == "old") { mode = "new"; return }
+			if (t == "// #endif" && mode != "both") { mode = "both"; return }
+			if (mode == "old") return
+			if (mode == "new") { out.append(line.replaceFirst(/^(\s*)\/\/\? ?/, '$1')).append('\n'); return }
+			if (t.endsWith("// @1.21.11")) return
+			out.append(line).append('\n')
+		}
+		return out.toString()
+	}
+}
+
 def synced = layout.buildDirectory.dir("synced")
 def syncTask = { String name, String set, String kind ->
 	tasks.register(name, Sync) {
@@ -24,6 +51,7 @@ def syncTask = { String name, String set, String kind ->
 			}
 		}
 		duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+		filesMatching("**/*.java") { it.filter(Mc26Preprocess) }
 		into(synced.map { it.dir("${set}/${kind}") })
 	}
 }

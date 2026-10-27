@@ -1,5 +1,6 @@
 package com.diamondaltar.ability;
 
+import com.diamondaltar.Compat;
 import com.diamondaltar.effect.TimedEffect;
 import com.diamondaltar.effect.Visuals;
 import net.minecraft.core.particles.BlockParticleOption;
@@ -68,7 +69,7 @@ public class CelestialGeodeEffect extends TimedEffect {
 			}
 			if (age < CLOSE) {
 				t.setDeltaMovement(0, 0, 0);
-				t.hurtMarked = true;
+				Compat.markHurt(t);
 				Cosmic.at(level, Cosmic.NEBULA, c);
 			}
 		}

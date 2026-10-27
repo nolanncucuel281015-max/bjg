@@ -1,5 +1,6 @@
 package com.diamondaltar.ability;
 
+import com.diamondaltar.Compat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -103,7 +104,7 @@ final class FX {
 
 	static void push(Entity target, double x, double y, double z) {
 		target.push(x, y, z);
-		target.hurtMarked = true;
+		Compat.markHurt(target);
 	}
 
 	static void pull(Entity target, Vec3 to, double strength) {
@@ -111,7 +112,7 @@ final class FX {
 		if (d.lengthSqr() > 0.25) {
 			Vec3 v = d.normalize().scale(strength);
 			target.setDeltaMovement(target.getDeltaMovement().scale(0.5).add(v));
-			target.hurtMarked = true;
+			Compat.markHurt(target);
 		}
 	}
 

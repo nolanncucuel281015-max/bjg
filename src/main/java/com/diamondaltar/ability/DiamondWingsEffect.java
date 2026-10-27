@@ -1,5 +1,6 @@
 package com.diamondaltar.ability;
 
+import com.diamondaltar.Compat;
 import com.diamondaltar.effect.TimedEffect;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -27,7 +28,7 @@ public class DiamondWingsEffect extends TimedEffect {
 		this.player = player;
 		Vec3 look = player.getLookAngle();
 		player.setDeltaMovement(look.x * 1.2, 1.6, look.z * 1.2);
-		player.hurtMarked = true;
+		Compat.markHurt(player);
 		player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, DURATION, 0, false, false, true));
 		level.playSound(null, player.blockPosition(), SoundEvents.PHANTOM_FLAP, SoundSource.PLAYERS, 2.0f, 0.6f);
 		level.playSound(null, player.blockPosition(), SoundEvents.ELYTRA_FLYING, SoundSource.PLAYERS, 0.6f, 1.5f);

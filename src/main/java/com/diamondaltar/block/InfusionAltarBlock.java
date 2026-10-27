@@ -1,7 +1,7 @@
 package com.diamondaltar.block;
 
 import com.diamondaltar.ModComponents;
-import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.MapCodec; // @1.21.11
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -22,7 +22,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class InfusionAltarBlock extends BaseEntityBlock {
-	public static final MapCodec<InfusionAltarBlock> CODEC = simpleCodec(InfusionAltarBlock::new);
+	public static final MapCodec<InfusionAltarBlock> CODEC = simpleCodec(InfusionAltarBlock::new); // @1.21.11
 
 	private static final VoxelShape SHAPE = Shapes.or(
 			box(0, 0, 0, 16, 6, 16),
@@ -35,10 +35,12 @@ public class InfusionAltarBlock extends BaseEntityBlock {
 		super(properties);
 	}
 
+	// #if 1.21.11
 	@Override
 	protected MapCodec<? extends BaseEntityBlock> codec() {
 		return CODEC;
 	}
+	// #endif
 
 	@Override
 	protected RenderShape getRenderShape(BlockState state) {
@@ -85,7 +87,7 @@ public class InfusionAltarBlock extends BaseEntityBlock {
 			if (!level.isClientSide()) {
 				ItemStack taken = altar.takeItem();
 				if (!player.addItem(taken)) {
-					player.drop(taken, false);
+					player.getInventory().placeItemBackInInventory(taken);
 				}
 			}
 			return InteractionResult.SUCCESS;

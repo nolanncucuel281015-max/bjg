@@ -1,6 +1,6 @@
 package com.diamondaltar.astral;
 
-import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.MapCodec; // @1.21.11
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
  * deux sont pleins, il les mélange en Essence Galactique violette.
  */
 public class FuserBlock extends BaseEntityBlock {
-	public static final MapCodec<FuserBlock> CODEC = simpleCodec(FuserBlock::new);
+	public static final MapCodec<FuserBlock> CODEC = simpleCodec(FuserBlock::new); // @1.21.11
 	public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
 
 	public FuserBlock(Properties properties) {
@@ -37,10 +37,12 @@ public class FuserBlock extends BaseEntityBlock {
 		registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH));
 	}
 
+	// #if 1.21.11
 	@Override
 	protected MapCodec<? extends BaseEntityBlock> codec() {
 		return CODEC;
 	}
+	// #endif
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
@@ -113,7 +115,7 @@ public class FuserBlock extends BaseEntityBlock {
 		if (stack.isEmpty()) {
 			player.setItemInHand(hand, result);
 		} else if (!player.getInventory().add(result)) {
-			player.drop(result, false);
+			player.getInventory().placeItemBackInInventory(result);
 		}
 	}
 }

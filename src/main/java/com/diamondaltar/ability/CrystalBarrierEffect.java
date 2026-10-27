@@ -1,5 +1,6 @@
 package com.diamondaltar.ability;
 
+import com.diamondaltar.Compat;
 import com.diamondaltar.effect.TimedEffect;
 import com.diamondaltar.effect.Visuals;
 import net.minecraft.core.particles.ParticleTypes;
@@ -31,7 +32,7 @@ public class CrystalBarrierEffect extends TimedEffect {
 		super(level);
 		this.player = player;
 		for (int i = 0; i < COUNT; i++) {
-			crystals[i] = track(Visuals.block(level, player.position(), Blocks.LIGHT_BLUE_STAINED_GLASS.defaultBlockState()));
+			crystals[i] = track(Visuals.block(level, player.position(), Compat.LIGHT_BLUE_STAINED_GLASS.defaultBlockState()));
 			Visuals.transform(crystals[i], new Vector3f(), new Quaternionf(), 0.01f, 0);
 		}
 		player.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, DURATION, 4, false, false, true));

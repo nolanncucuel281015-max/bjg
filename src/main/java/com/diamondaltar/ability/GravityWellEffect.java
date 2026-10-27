@@ -1,5 +1,6 @@
 package com.diamondaltar.ability;
 
+import com.diamondaltar.Compat;
 import com.diamondaltar.effect.TimedEffect;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -56,7 +57,7 @@ public class GravityWellEffect extends TimedEffect {
 		for (LivingEntity t : targets) {
 			if (t.isAlive()) {
 				t.setDeltaMovement(0, -3.0, 0);
-				t.hurtMarked = true;
+				Compat.markHurt(t);
 				FX.hit(level, player, t, 26.0f);
 				level.sendParticles(ParticleTypes.EXPLOSION, t.getX(), t.getY(0.5), t.getZ(), 1, 0, 0, 0, 0);
 			}

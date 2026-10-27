@@ -1,5 +1,6 @@
 package com.diamondaltar.ability;
 
+import com.diamondaltar.Compat;
 import com.diamondaltar.effect.TimedEffect;
 import com.diamondaltar.effect.Visuals;
 import net.minecraft.world.entity.Display;
@@ -33,7 +34,7 @@ public class MaceMeteorEffect extends TimedEffect {
 		this.player = player;
 		Vec3 f = FX.forward(player);
 		player.setDeltaMovement(f.x * 0.6, 2.2, f.z * 0.6);
-		player.hurtMarked = true;
+		Compat.markHurt(player);
 		level.sendParticles(ParticleTypes.EXPLOSION, player.getX(), player.getY(), player.getZ(), 3, 0.5, 0.1, 0.5, 0);
 		level.playSound(null, player.blockPosition(), SoundEvents.FIREWORK_ROCKET_LAUNCH, SoundSource.PLAYERS, 1.5f, 0.8f);
 	}
@@ -62,7 +63,7 @@ public class MaceMeteorEffect extends TimedEffect {
 			falling = true;
 			Vec3 f = FX.forward(player);
 			player.setDeltaMovement(f.x * 0.4, -2.5, f.z * 0.4);
-			player.hurtMarked = true;
+			Compat.markHurt(player);
 			shell = track(Visuals.block(level, player.position(), Blocks.MAGMA_BLOCK.defaultBlockState()));
 			level.playSound(null, player.blockPosition(), SoundEvents.BLAZE_SHOOT, SoundSource.PLAYERS, 1.5f, 0.5f);
 		}

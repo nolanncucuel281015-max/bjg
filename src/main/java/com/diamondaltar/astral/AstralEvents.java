@@ -1,5 +1,6 @@
 package com.diamondaltar.astral;
 
+import com.diamondaltar.Compat;
 import com.diamondaltar.DiamondAltar;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -148,7 +149,7 @@ public final class AstralEvents {
 					}
 				}
 				// Les mobs de la dimension deviennent astraux.
-				var archer = net.minecraft.world.entity.EntityType.SKELETON.create(astral, net.minecraft.world.entity.EntitySpawnReason.NATURAL);
+				var archer = Compat.SKELETON.create(astral, net.minecraft.world.entity.EntitySpawnReason.NATURAL);
 				if (archer != null) {
 					archer.setPos(2000.5, 190, 2003.5);
 					astral.addFreshEntity(archer);
@@ -235,12 +236,12 @@ public final class AstralEvents {
 				if (!bosses.isEmpty()) {
 					// Étourdi après son smash : il prend deux fois plus de dégâts.
 					var b = bosses.get(0);
-					b.invulnerableTime = 0;
+					Compat.setInvulnerableTime(b, 0);
 					float h0 = b.getHealth();
 					b.hurtServer(astral, astral.damageSources().generic(), 10f);
 					float normal = h0 - b.getHealth();
 					Guardian.stun(astral, b);
-					b.invulnerableTime = 0;
+					Compat.setInvulnerableTime(b, 0);
 					h0 = b.getHealth();
 					b.hurtServer(astral, astral.damageSources().generic(), 10f);
 					float stunned = h0 - b.getHealth();
@@ -265,7 +266,7 @@ public final class AstralEvents {
 					new net.minecraft.world.item.ItemStack(AstralContent.GUARDIAN_HEART),
 					new net.minecraft.world.item.ItemStack(AstralContent.ASTRALITE_INGOT));
 			var smith = recipes.getRecipeFor(net.minecraft.world.item.crafting.RecipeType.SMITHING, input, server.overworld());
-			boolean heart = smith.isPresent() && smith.get().value().assemble(input, server.registryAccess()).is(AstralContent.CELESTIAL_HEART);
+			boolean heart = smith.isPresent() && Compat.assemble(smith.get().value(), input, server.registryAccess()).is(AstralContent.CELESTIAL_HEART);
 			report.append(heart ? "OK" : "FAIL").append(" forge : coeur du Gardien -> coeur celeste\n");
 			ok &= heart;
 			net.minecraft.world.item.ItemStack E = net.minecraft.world.item.ItemStack.EMPTY;
@@ -276,7 +277,7 @@ public final class AstralEvents {
 					new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.NETHERITE_INGOT),
 					new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.NETHERITE_INGOT)));
 			var altarRecipe = recipes.getRecipeFor(net.minecraft.world.item.crafting.RecipeType.CRAFTING, altarInput, server.overworld());
-			boolean altar = altarRecipe.isPresent() && altarRecipe.get().value().assemble(altarInput, server.registryAccess()).is(com.diamondaltar.block.ModBlocks.INFUSION_ALTAR_ITEM);
+			boolean altar = altarRecipe.isPresent() && Compat.assemble(altarRecipe.get().value(), altarInput, server.registryAccess()).is(com.diamondaltar.block.ModBlocks.INFUSION_ALTAR_ITEM);
 			report.append(altar ? "OK" : "FAIL").append(" craft de l'autel avec le coeur celeste en haut au milieu\n");
 			ok &= altar;
 			var ingotInput = net.minecraft.world.item.crafting.CraftingInput.of(3, 3, java.util.List.of(

@@ -1,5 +1,6 @@
 package com.diamondaltar.ability;
 
+import com.diamondaltar.Compat;
 import com.diamondaltar.effect.TimedEffect;
 import com.diamondaltar.effect.Visuals;
 import net.minecraft.core.BlockPos;
@@ -87,7 +88,7 @@ public class LunarGravityEffect extends TimedEffect {
 			if (t.isAlive()) {
 				t.removeEffect(MobEffects.LEVITATION);
 				t.setDeltaMovement(0, -3.5, 0);
-				t.hurtMarked = true;
+				Compat.markHurt(t);
 				FX.hit(level, player, t, 24.0f);
 				level.sendParticles(ParticleTypes.EXPLOSION, t.getX(), t.getY(), t.getZ(), 1, 0, 0, 0, 0);
 			}

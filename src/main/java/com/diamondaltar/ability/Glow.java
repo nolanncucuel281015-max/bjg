@@ -1,5 +1,6 @@
 package com.diamondaltar.ability;
 
+import com.diamondaltar.Compat;
 import com.diamondaltar.effect.EffectManager;
 import com.diamondaltar.effect.TimedEffect;
 import com.diamondaltar.effect.Visuals;
@@ -27,13 +28,13 @@ import java.util.UUID;
 final class Glow {
 	/** Couleurs : verre teinté pour le halo + couleur du contour lumineux. */
 	enum Tint {
-		WHITE(Blocks.WHITE_STAINED_GLASS, 0xFFFFFF, Halos.WHITE),
-		ICE(Blocks.LIGHT_BLUE_STAINED_GLASS, 0xBFF6FF, Halos.ICE),
-		NEBULA(Blocks.PURPLE_STAINED_GLASS, 0xC080FF, Halos.NEBULA),
-		PINK(Blocks.MAGENTA_STAINED_GLASS, 0xFF80E0, Halos.PINK),
-		GOLD(Blocks.YELLOW_STAINED_GLASS, 0xFFE070, Halos.GOLD),
-		FIRE(Blocks.ORANGE_STAINED_GLASS, 0xFFA040, Halos.FIRE),
-		VOID(Blocks.BLACK_STAINED_GLASS, 0x9050FF, Halos.NEBULA);
+		WHITE(Compat.WHITE_STAINED_GLASS, 0xFFFFFF, Halos.WHITE),
+		ICE(Compat.LIGHT_BLUE_STAINED_GLASS, 0xBFF6FF, Halos.ICE),
+		NEBULA(Compat.PURPLE_STAINED_GLASS, 0xC080FF, Halos.NEBULA),
+		PINK(Compat.MAGENTA_STAINED_GLASS, 0xFF80E0, Halos.PINK),
+		GOLD(Compat.YELLOW_STAINED_GLASS, 0xFFE070, Halos.GOLD),
+		FIRE(Compat.ORANGE_STAINED_GLASS, 0xFFA040, Halos.FIRE),
+		VOID(Compat.BLACK_STAINED_GLASS, 0x9050FF, Halos.NEBULA);
 
 		final Block glass;
 		final int color;
@@ -124,9 +125,9 @@ final class Glow {
 
 	/** Le trait complet : cœur blanc brillant + bande colorée + large halo translucide. */
 	static void slash(ServerLevel level, Vec3 center, Vec3 dir, Vec3 facing, float length, float width, Tint tint) {
-		ribbon(level, center, dir, facing, length * 1.05f, width * 3.2f, Blocks.WHITE_STAINED_GLASS, -1, 2, 2, 8);
+		ribbon(level, center, dir, facing, length * 1.05f, width * 3.2f, Compat.WHITE_STAINED_GLASS, -1, 2, 2, 8);
 		ribbon(level, center, dir, facing, length, width * 1.6f, tint.glass, tint.color, 2, 2, 8);
-		ribbon(level, center, dir, facing, length * 0.95f, width * 0.45f, Blocks.WHITE_CONCRETE, 0xFFFFFF, 2, 2, 8);
+		ribbon(level, center, dir, facing, length * 0.95f, width * 0.45f, Compat.WHITE_CONCRETE, 0xFFFFFF, 2, 2, 8);
 		Vec3 nd = dir.normalize().scale(length / 2.0);
 		haloLine(level, center.subtract(nd), center.add(nd), 0.45, tint);
 		double half = length / 2.0;
@@ -154,7 +155,7 @@ final class Glow {
 		haloLine(level, from, to, Math.max(0.5, len / 40.0), tint);
 		for (Vec3 f : new Vec3[]{f1, f2}) {
 			ribbon(level, mid, n, f, len, width * 2.2f, tint.glass, tint.color, 1, hold, 6);
-			ribbon(level, mid, n, f, len, width * 0.6f, Blocks.WHITE_CONCRETE, 0xFFFFFF, 1, hold, 6);
+			ribbon(level, mid, n, f, len, width * 0.6f, Compat.WHITE_CONCRETE, 0xFFFFFF, 1, hold, 6);
 		}
 	}
 
@@ -171,7 +172,7 @@ final class Glow {
 			Vec3 mid = center.add(dir.scale(length / 2.0));
 			ribbon(level, mid, dir, new Vec3(0, 1, 0), length, 0.5f, tint.glass, tint.color, 2, 1, 7);
 			haloLine(level, center, center.add(dir.scale(length)), 0.8, tint);
-			ribbon(level, mid, dir, new Vec3(0, 1, 0), length * 0.9f, 0.15f, Blocks.WHITE_CONCRETE, 0xFFFFFF, 2, 1, 7);
+			ribbon(level, mid, dir, new Vec3(0, 1, 0), length * 0.9f, 0.15f, Compat.WHITE_CONCRETE, 0xFFFFFF, 2, 1, 7);
 		}
 	}
 
@@ -190,7 +191,7 @@ final class Glow {
 			Vec3 f = facing != null ? facing : mid.subtract(center).normalize();
 			float len = (float) seg.length() * 1.15f;
 			ribbon(level, mid, seg, f, len, w * 1.8f, tint.glass, tint.color, 2, 2, 8);
-			ribbon(level, mid, seg, f, len, w * 0.5f, Blocks.WHITE_CONCRETE, 0xFFFFFF, 2, 2, 8);
+			ribbon(level, mid, seg, f, len, w * 0.5f, Compat.WHITE_CONCRETE, 0xFFFFFF, 2, 2, 8);
 			haloLine(level, p0, p1, 0.5, tint);
 		}
 	}
@@ -214,8 +215,8 @@ final class Glow {
 		}
 		Vec3 mid = target.position().add(0, target.getBbHeight() * 0.55, 0);
 		float size = Math.max(2.5f, target.getBbWidth() * 3f);
-		ribbon(level, mid.add(0, 0.2, 0), right.add(0, 0.25, 0), look, size, 0.16f, Blocks.WHITE_CONCRETE, 0xFFFFFF, 1, 2, 6);
-		ribbon(level, mid.add(0, -0.25, 0), right.add(0, -0.2, 0), look, size * 1.2f, 0.4f, Blocks.LIGHT_BLUE_STAINED_GLASS, 0xBFF6FF, 1, 2, 6);
+		ribbon(level, mid.add(0, 0.2, 0), right.add(0, 0.25, 0), look, size, 0.16f, Compat.WHITE_CONCRETE, 0xFFFFFF, 1, 2, 6);
+		ribbon(level, mid.add(0, -0.25, 0), right.add(0, -0.2, 0), look, size * 1.2f, 0.4f, Compat.LIGHT_BLUE_STAINED_GLASS, 0xBFF6FF, 1, 2, 6);
 		pillar(level, target.position(), target.getBbHeight() + 3.5f, 0.14f, Tint.ICE);
 		level.sendParticles(ParticleTypes.END_ROD, mid.x, mid.y, mid.z, 12, 0.25, 0.35, 0.25, 0.2);
 		level.sendParticles(SPARK, mid.x, mid.y, mid.z, 10, 0.35, 0.45, 0.35, 0);

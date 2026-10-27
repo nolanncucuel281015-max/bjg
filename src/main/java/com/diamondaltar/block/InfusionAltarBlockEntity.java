@@ -1,5 +1,6 @@
 package com.diamondaltar.block;
 
+import com.diamondaltar.Compat;
 import com.diamondaltar.ModComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -141,7 +142,7 @@ public class InfusionAltarBlockEntity extends BlockEntity {
 
 		// 4) Fin : éclair, explosion de lumière et l'objet est infusé.
 		if (p >= DURATION) {
-			LightningBolt bolt = new LightningBolt(EntityType.LIGHTNING_BOLT, level);
+			LightningBolt bolt = new LightningBolt(Compat.LIGHTNING_BOLT, level);
 			bolt.setPos(center.x, pos.getY() + 1.0, center.z);
 			bolt.setVisualOnly(true);
 			level.addFreshEntity(bolt);

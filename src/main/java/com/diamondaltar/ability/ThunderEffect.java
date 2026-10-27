@@ -1,5 +1,6 @@
 package com.diamondaltar.ability;
 
+import com.diamondaltar.Compat;
 import com.diamondaltar.effect.TimedEffect;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -40,7 +41,7 @@ public class ThunderEffect extends TimedEffect {
 		if (age % 3 == 0 && i < targets.size()) {
 			LivingEntity t = targets.get(i);
 			if (t.isAlive()) {
-				LightningBolt bolt = new LightningBolt(EntityType.LIGHTNING_BOLT, level);
+				LightningBolt bolt = new LightningBolt(Compat.LIGHTNING_BOLT, level);
 				bolt.setPos(t.getX(), t.getY(), t.getZ());
 				bolt.setVisualOnly(true);
 				level.addFreshEntity(bolt);

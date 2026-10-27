@@ -1,5 +1,6 @@
 package com.diamondaltar.ability;
 
+import com.diamondaltar.Compat;
 import com.diamondaltar.effect.TimedEffect;
 import com.diamondaltar.effect.Visuals;
 import net.minecraft.world.entity.Display;
@@ -35,7 +36,7 @@ public class VoidRiftEffect extends TimedEffect {
 		super(level);
 		this.player = player;
 		this.center = FX.target(player, 20).add(0, 1.0, 0);
-		this.core = track(Visuals.block(level, center, Blocks.BLACK_CONCRETE.defaultBlockState()));
+		this.core = track(Visuals.block(level, center, Compat.BLACK_CONCRETE.defaultBlockState()));
 		Visuals.transform(core, new Vector3f(), new Quaternionf(), 0.01f, 0);
 		for (int i = 0; i < shards.length; i++) {
 			shards[i] = track(Visuals.block(level, center, (i % 2 == 0 ? Blocks.CRYING_OBSIDIAN : Blocks.AMETHYST_BLOCK).defaultBlockState()));

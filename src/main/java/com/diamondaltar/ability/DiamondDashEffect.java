@@ -1,5 +1,6 @@
 package com.diamondaltar.ability;
 
+import com.diamondaltar.Compat;
 import com.diamondaltar.effect.TimedEffect;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -40,7 +41,7 @@ public class DiamondDashEffect extends TimedEffect {
 			return true;
 		}
 		player.setDeltaMovement(dir.scale(1.9));
-		player.hurtMarked = true;
+		Compat.markHurt(player);
 		player.fallDistance = 0;
 		Vec3 p = player.position().add(0, 1, 0);
 		level.sendParticles(CYAN, p.x, p.y, p.z, 10, 0.4, 0.6, 0.4, 0);
@@ -59,7 +60,7 @@ public class DiamondDashEffect extends TimedEffect {
 		}
 		if (age >= DURATION) {
 			player.setDeltaMovement(player.getDeltaMovement().scale(0.3));
-			player.hurtMarked = true;
+			Compat.markHurt(player);
 			return true;
 		}
 		return false;
