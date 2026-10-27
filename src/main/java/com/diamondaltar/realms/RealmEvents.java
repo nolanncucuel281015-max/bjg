@@ -520,19 +520,40 @@ public final class RealmEvents {
 		boolean sword = recipe.isPresent() && Compat.assemble(recipe.get().value(), input, server.registryAccess()).is(RealmContent.SEVEN_REALMS_SWORD);
 		report.append(sword ? "OK" : "FAIL").append(" craft de l'Epee des Sept Royaumes\n");
 		ok &= sword;
-		// Allumage d'un cadre avec la clé de Braise, dans l'Overworld.
+		// Cadre de portail de Braise : 3 blocs de fer en bas, un diamant au milieu, magma autour, bâton de blaze en haut.
+		ItemStack magma = new ItemStack(net.minecraft.world.item.Items.MAGMA_BLOCK);
+		var frameInput = net.minecraft.world.item.crafting.CraftingInput.of(3, 3, java.util.List.of(
+				magma, new ItemStack(net.minecraft.world.item.Items.BLAZE_ROD), magma,
+				magma, new ItemStack(net.minecraft.world.item.Items.DIAMOND), magma,
+				new ItemStack(net.minecraft.world.item.Items.IRON_BLOCK), new ItemStack(net.minecraft.world.item.Items.IRON_BLOCK),
+				new ItemStack(net.minecraft.world.item.Items.IRON_BLOCK)));
+		var frameRecipe = recipes.getRecipeFor(net.minecraft.world.item.crafting.RecipeType.CRAFTING, frameInput, server.overworld());
+		boolean frameCraft = frameRecipe.isPresent()
+				&& Compat.assemble(frameRecipe.get().value(), frameInput, server.registryAccess()).is(RealmContent.PORTAL_FRAME[0].asItem());
+		report.append(frameCraft ? "OK" : "FAIL").append(" craft du Cadre de Portail de Braise\n");
+		ok &= frameCraft;
+		// Allumage d'un cadre de Braise : la Clé de Givre ne marche pas, la Clé de Braise oui.
 		ServerLevel overworld = server.overworld();
 		BlockPos base = new BlockPos(40, 150, 40);
 		for (int dx = -1; dx <= 2; dx++) {
 			for (int dy = -1; dy <= 3; dy++) {
 				boolean edge = dx == -1 || dx == 2 || dy == -1 || dy == 3;
-				overworld.setBlockAndUpdate(base.offset(dx, dy, 0), edge ? RealmContent.REALM_FRAME.defaultBlockState()
+				overworld.setBlockAndUpdate(base.offset(dx, dy, 0), edge ? RealmContent.PORTAL_FRAME[0].defaultBlockState()
 						: net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
 			}
 		}
-		boolean lit = RealmPortals.tryIgnite(overworld, base, Realm.EMBER) && overworld.getBlockState(base).is(RealmContent.REALM_PORTAL);
-		report.append(lit ? "OK" : "FAIL").append(" allumage d'un Portail des Royaumes avec la Cle de Braise\n");
+		boolean wrong = RealmPortals.tryIgnite(overworld, base, Realm.FROST);
+		boolean lit = !wrong && RealmPortals.tryIgnite(overworld, base, Realm.EMBER) && overworld.getBlockState(base).is(RealmContent.REALM_PORTAL);
+		report.append(lit ? "OK" : "FAIL").append(" cadre de Braise : refuse la Cle de Givre, s'allume avec la Cle de Braise\n");
 		ok &= lit;
+		// Le portail de retour est construit avec le cadre du royaume.
+		ServerLevel frost = server.getLevel(Realm.FROST.dimension);
+		if (frost != null) {
+			BlockPos back = RealmPortals.buildPortal(frost, 3100, 3100, Realm.FROST);
+			boolean frame = frost.getBlockState(back.below()).is(RealmContent.PORTAL_FRAME[Realm.FROST.ordinal()]);
+			report.append(frame ? "OK" : "FAIL").append(" portail de retour en Cadres de Portail de Givre\n");
+			ok &= frame;
+		}
 		return ok;
 	}
 

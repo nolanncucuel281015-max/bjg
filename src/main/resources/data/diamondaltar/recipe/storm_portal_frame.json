@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "building",
+	"pattern": [
+		"XYX",
+		"XDX",
+		"III"
+	],
+	"key": {
+		"X": "minecraft:gold_ingot",
+		"Y": "minecraft:lightning_rod",
+		"D": "minecraft:diamond",
+		"I": "minecraft:iron_block"
+	},
+	"result": {
+		"id": "diamondaltar:storm_portal_frame",
+		"count": 10
+	}
+}

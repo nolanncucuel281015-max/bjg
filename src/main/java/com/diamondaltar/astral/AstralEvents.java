@@ -38,11 +38,14 @@ public final class AstralEvents {
 			}
 		});
 		AstralMobs.register();
-		// Chaque joueur reçoit le manuel la première fois qu'il rejoint le monde.
+		// Chaque joueur reçoit le manuel et le Guide des Portails la première fois qu'il rejoint le monde.
 		net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
 			var player = handler.getPlayer();
 			if (player.addTag("diamondaltar_got_manual")) {
 				player.getInventory().add(new net.minecraft.world.item.ItemStack(AstralContent.MANUAL));
+			}
+			if (player.addTag("diamondaltar_got_portal_guide")) {
+				player.getInventory().add(new net.minecraft.world.item.ItemStack(com.diamondaltar.realms.RealmContent.PORTAL_GUIDE));
 			}
 		});
 		ServerLivingEntityEvents.AFTER_DAMAGE.register((entity, source, baseDamage, damageTaken, blocked) ->

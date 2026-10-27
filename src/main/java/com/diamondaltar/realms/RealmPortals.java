@@ -24,8 +24,8 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * Portails des Royaumes : un cadre de Cadres des Royaumes (comme un portail du Nether), allumé avec la clé
- * d'un royaume. Le voile prend la couleur du royaume et y emmène ; dans le royaume, il ramène à l'Overworld.
+ * Portails des Royaumes : un cadre (comme un portail du Nether) fait avec le Cadre de Portail du royaume (ou le Cadre
+ * des Royaumes, universel), allumé avec la clé de ce royaume. Le voile prend la couleur du royaume et y emmène ; dans le royaume, il ramène à l'Overworld.
  */
 public final class RealmPortals {
 	private static final int MAX = 21;
@@ -36,13 +36,41 @@ public final class RealmPortals {
 	private RealmPortals() {
 	}
 
+	/** Un bloc qui peut servir de cadre au portail de ce royaume : son propre cadre, ou le Cadre des Royaumes (universel). */
+	public static boolean isFrame(BlockState state, Realm realm) {
+		return state.is(RealmContent.REALM_FRAME) || state.is(RealmContent.PORTAL_FRAME[realm.ordinal()]);
+	}
+
+	/** N'importe quel cadre de portail des Royaumes. */
+	public static boolean isAnyFrame(BlockState state) {
+		if (state.is(RealmContent.REALM_FRAME)) {
+			return true;
+		}
+		for (var frame : RealmContent.PORTAL_FRAME) {
+			if (state.is(frame)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/** Le royaume d'un cadre spécifique, ou null pour le Cadre des Royaumes (ou un autre bloc). */
+	public static Realm frameRealm(BlockState state) {
+		for (Realm r : Realm.values()) {
+			if (state.is(RealmContent.PORTAL_FRAME[r.ordinal()])) {
+				return r;
+			}
+		}
+		return null;
+	}
+
 	/** Remplit l'intérieur d'un cadre valide avec le voile du royaume. */
 	public static boolean tryIgnite(ServerLevel level, BlockPos start, Realm realm) {
 		if (!level.getBlockState(start).isAir()) {
 			return false;
 		}
 		for (Direction.Axis axis : new Direction.Axis[]{Direction.Axis.X, Direction.Axis.Z}) {
-			Set<BlockPos> inside = flood(level, start, axis);
+			Set<BlockPos> inside = flood(level, start, axis, realm);
 			if (inside != null && inside.size() >= 6) {
 				BlockState portal = RealmContent.REALM_PORTAL.defaultBlockState()
 						.setValue(RealmPortalBlock.AXIS, axis).setValue(RealmPortalBlock.REALM, realm.ordinal());
@@ -57,7 +85,7 @@ public final class RealmPortals {
 		return false;
 	}
 
-	private static Set<BlockPos> flood(Level level, BlockPos start, Direction.Axis axis) {
+	private static Set<BlockPos> flood(Level level, BlockPos start, Direction.Axis axis, Realm realm) {
 		Direction a = axis == Direction.Axis.X ? Direction.EAST : Direction.SOUTH;
 		Direction[] dirs = {Direction.UP, Direction.DOWN, a, a.getOpposite()};
 		Set<BlockPos> seen = new HashSet<>();
@@ -84,7 +112,7 @@ public final class RealmPortals {
 				if (s.isAir()) {
 					seen.add(n);
 					queue.add(n);
-				} else if (!s.is(RealmContent.REALM_FRAME)) {
+				} else if (!isFrame(s, realm)) {
 					return null;
 				}
 			}
@@ -172,7 +200,7 @@ public final class RealmPortals {
 		return best;
 	}
 
-	/** Construit un portail (cadre 4×5) sur le sol, ou sur une plateforme de pierre du royaume au-dessus du vide. */
+	/** Construit un portail (cadre 4×5 du royaume) sur le sol, ou sur une plateforme de pierre du royaume au-dessus du vide. */
 	public static BlockPos buildPortal(ServerLevel level, int x, int z, Realm realm) {
 		level.getChunk(x >> 4, z >> 4);
 		int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z);
@@ -184,7 +212,7 @@ public final class RealmPortals {
 				}
 			}
 		}
-		BlockState frame = RealmContent.REALM_FRAME.defaultBlockState();
+		BlockState frame = RealmContent.PORTAL_FRAME[realm.ordinal()].defaultBlockState();
 		for (int dx = -1; dx <= 2; dx++) {
 			for (int dy = -1; dy <= 3; dy++) {
 				BlockPos p = new BlockPos(x + dx, y + dy, z);

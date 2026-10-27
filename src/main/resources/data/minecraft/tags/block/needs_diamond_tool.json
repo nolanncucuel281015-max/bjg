@@ -7,6 +7,13 @@
 		"diamondaltar:abyssite_ore",
 		"diamondaltar:umbrite_ore",
 		"diamondaltar:solarite_ore",
-		"diamondaltar:realm_frame"
+		"diamondaltar:realm_frame",
+		"diamondaltar:ember_portal_frame",
+		"diamondaltar:frost_portal_frame",
+		"diamondaltar:storm_portal_frame",
+		"diamondaltar:sylvan_portal_frame",
+		"diamondaltar:abyss_portal_frame",
+		"diamondaltar:shadow_portal_frame",
+		"diamondaltar:solar_portal_frame"
 	]
 }

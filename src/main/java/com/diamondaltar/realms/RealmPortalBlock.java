@@ -49,7 +49,7 @@ public class RealmPortalBlock extends Block {
 			BlockPos neighborPos, BlockState neighbor, RandomSource random) {
 		Direction.Axis axis = state.getValue(AXIS);
 		boolean inPlane = dir.getAxis() == Direction.Axis.Y || dir.getAxis() == axis;
-		if (inPlane && !neighbor.is(this) && !neighbor.is(RealmContent.REALM_FRAME)) {
+		if (inPlane && !neighbor.is(this) && !RealmPortals.isAnyFrame(neighbor)) {
 			return net.minecraft.world.level.block.Blocks.AIR.defaultBlockState();
 		}
 		return state;

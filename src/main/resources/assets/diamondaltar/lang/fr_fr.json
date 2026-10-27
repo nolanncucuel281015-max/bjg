@@ -278,7 +278,7 @@
 	"diamondaltar.sigil.wrong_realm": "Ce sceau ne fonctionne que dans le %s.",
 	"diamondaltar.sigil.already": "Le boss de ce royaume est déjà là !",
 	"diamondaltar.sigil.desc": "Clic droit dans son royaume : invoque le boss.",
-	"diamondaltar.key.desc": "Clic droit dans un cadre de Cadres des Royaumes : ouvre le portail.",
+	"diamondaltar.key.desc": "Clic droit dans le cadre du portail de ce royaume : ouvre le portail.",
 	"diamondaltar.realm_armor.set": "Armure complète :",
 	"diamondaltar.seven_realms.cooldown": "Jugement des Sept Royaumes : encore %s s",
 	"diamondaltar.seven_realms.hit": "Chaque coup : feu, gel, poison, flétrissement, lumière, et parfois la foudre",
@@ -300,5 +300,15 @@
 	"diamondaltar.pearl.cooldown": "Perle des Royaumes : encore %s s",
 	"diamondaltar.pearl.already": "Tu es déjà dans : %s",
 	"diamondaltar.pearl.overworld": "Overworld",
-	"diamondaltar.pearl.astral": "Dimension Astrale"
+	"diamondaltar.pearl.astral": "Dimension Astrale",
+	"block.diamondaltar.ember_portal_frame": "Cadre de Portail de Braise",
+	"block.diamondaltar.frost_portal_frame": "Cadre de Portail de Givre",
+	"block.diamondaltar.storm_portal_frame": "Cadre de Portail des Tempêtes",
+	"block.diamondaltar.sylvan_portal_frame": "Cadre de Portail Sylvestre",
+	"block.diamondaltar.abyss_portal_frame": "Cadre de Portail des Abysses",
+	"block.diamondaltar.shadow_portal_frame": "Cadre de Portail des Ombres",
+	"block.diamondaltar.solar_portal_frame": "Cadre de Portail du Soleil",
+	"diamondaltar.key.wrong_frame": "Ce cadre s'ouvre avec la %s",
+	"item.diamondaltar.portal_guide": "Guide des Portails",
+	"diamondaltar.portal_guide.desc": "Clic droit : comment construire et allumer chaque portail"
 }

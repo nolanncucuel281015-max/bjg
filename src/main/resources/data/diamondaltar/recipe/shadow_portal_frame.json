@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "building",
+	"pattern": [
+		"XYX",
+		"XDX",
+		"III"
+	],
+	"key": {
+		"X": "minecraft:diamond_block",
+		"Y": "minecraft:echo_shard",
+		"D": "minecraft:diamond",
+		"I": "minecraft:iron_block"
+	},
+	"result": {
+		"id": "diamondaltar:shadow_portal_frame",
+		"count": 10
+	}
+}

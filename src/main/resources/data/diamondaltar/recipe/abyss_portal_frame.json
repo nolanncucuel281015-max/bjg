@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "building",
+	"pattern": [
+		"XYX",
+		"XDX",
+		"III"
+	],
+	"key": {
+		"X": "minecraft:diamond",
+		"Y": "minecraft:heart_of_the_sea",
+		"D": "minecraft:diamond",
+		"I": "minecraft:iron_block"
+	},
+	"result": {
+		"id": "diamondaltar:abyss_portal_frame",
+		"count": 10
+	}
+}

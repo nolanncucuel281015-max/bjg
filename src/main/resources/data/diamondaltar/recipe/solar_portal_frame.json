@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "building",
+	"pattern": [
+		"XYX",
+		"XDX",
+		"III"
+	],
+	"key": {
+		"X": "minecraft:netherite_ingot",
+		"Y": "minecraft:nether_star",
+		"D": "minecraft:diamond",
+		"I": "minecraft:iron_block"
+	},
+	"result": {
+		"id": "diamondaltar:solar_portal_frame",
+		"count": 10
+	}
+}

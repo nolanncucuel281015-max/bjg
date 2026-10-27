@@ -278,7 +278,7 @@
 	"diamondaltar.sigil.wrong_realm": "This sigil only works in the %s.",
 	"diamondaltar.sigil.already": "This realm's boss is already here!",
 	"diamondaltar.sigil.desc": "Right-click in its realm: summons the boss.",
-	"diamondaltar.key.desc": "Right-click inside a frame of Realm Frames: opens the portal.",
+	"diamondaltar.key.desc": "Right-click inside this realm's portal frame: opens the portal.",
 	"diamondaltar.realm_armor.set": "Full set:",
 	"diamondaltar.seven_realms.cooldown": "Judgement of the Seven Realms: %s s left",
 	"diamondaltar.seven_realms.hit": "Every hit: fire, frost, poison, wither, light, and sometimes lightning",
@@ -300,5 +300,15 @@
 	"diamondaltar.pearl.cooldown": "Realm Pearl: %s s left",
 	"diamondaltar.pearl.already": "You are already in: %s",
 	"diamondaltar.pearl.overworld": "Overworld",
-	"diamondaltar.pearl.astral": "Astral Dimension"
+	"diamondaltar.pearl.astral": "Astral Dimension",
+	"block.diamondaltar.ember_portal_frame": "Ember Portal Frame",
+	"block.diamondaltar.frost_portal_frame": "Frost Portal Frame",
+	"block.diamondaltar.storm_portal_frame": "Storm Portal Frame",
+	"block.diamondaltar.sylvan_portal_frame": "Sylvan Portal Frame",
+	"block.diamondaltar.abyss_portal_frame": "Abyssal Portal Frame",
+	"block.diamondaltar.shadow_portal_frame": "Shadow Portal Frame",
+	"block.diamondaltar.solar_portal_frame": "Solar Portal Frame",
+	"diamondaltar.key.wrong_frame": "This frame opens with the %s",
+	"item.diamondaltar.portal_guide": "Portal Guide",
+	"diamondaltar.portal_guide.desc": "Right-click: how to build and light every portal"
 }

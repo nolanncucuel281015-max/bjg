@@ -89,6 +89,17 @@ NAMES = {
     },
 }
 ARMOR = ["helmet", "chestplate", "leggings", "boots"]
+# Cadre de portail de chaque royaume : 3 blocs de fer en bas, un diamant au milieu, et autour des matériaux
+# de plus en plus rares (X sur les côtés et en haut, Y en haut au milieu).
+FRAME_MATERIALS = [
+    ("minecraft:magma_block", "minecraft:blaze_rod"),
+    ("minecraft:packed_ice", "minecraft:blue_ice"),
+    ("minecraft:gold_ingot", "minecraft:lightning_rod"),
+    ("minecraft:emerald", "minecraft:emerald_block"),
+    ("minecraft:diamond", "minecraft:heart_of_the_sea"),
+    ("minecraft:diamond_block", "minecraft:echo_shard"),
+    ("minecraft:netherite_ingot", "minecraft:nether_star"),
+]
 
 
 def dump(path, obj):
@@ -228,6 +239,10 @@ def textures():
             out.putpixel((x, y), c + (px[3],))
     save(out, "item/seven_realms_sword.png", src)
     extra_textures()
+    for r in REALMS:
+        save(recolor(TEX / "block/astral_frame.png", [(12, 8, 16), r["metal"][1], r["metal"][2]], contrast=1.2),
+             f"block/{r['id']}_portal_frame.png")
+    save(recolor(TEX / "item/diamond_manual.png", [(40, 15, 10), (200, 120, 50), (255, 230, 150)]), "item/portal_guide.png")
 
 
 AETHER = [(40, 50, 90), (150, 225, 255), (255, 250, 225)]
@@ -326,6 +341,9 @@ def assets():
         dump(ASSETS / f"equipment/{ore}.json", {"layers": {
             "humanoid": [{"texture": f"{NS}:{ore}"}], "humanoid_leggings": [{"texture": f"{NS}:{ore}"}]}})
     cube("realm_frame")
+    for r in REALMS:
+        cube(f"{r['id']}_portal_frame")
+    flat_item("portal_guide")
     cube("sylvan_leaves")
     dump(ASSETS / "models/block/sylvan_log.json", {"parent": "minecraft:block/cube_column", "textures": {
         "end": f"{NS}:block/sylvan_log_top", "side": f"{NS}:block/sylvan_log"}})
@@ -437,6 +455,13 @@ def recipes_and_loot():
                            ("leggings", ["III", "I I", "I I"]), ("boots", ["I I", "I I"])):
             shaped(f"{ore}_{piece}", pat, {"I": ingot}, f"{NS}:{ore}_{piece}", category="equipment")
     loot_self("realm_frame")
+    for r, (x, y) in zip(REALMS, FRAME_MATERIALS):
+        loot_self(f"{r['id']}_portal_frame")
+        shaped(f"{r['id']}_portal_frame", ["XYX", "XDX", "III"], {"X": x, "Y": y, "D": "minecraft:diamond", "I": "minecraft:iron_block"},
+               f"{NS}:{r['id']}_portal_frame", 10, "building")
+    dump(DATA / "recipe/portal_guide.json", {"type": "minecraft:crafting_shapeless", "category": "misc",
+                                             "ingredients": ["minecraft:book", "minecraft:iron_ingot"],
+                                             "result": {"id": f"{NS}:portal_guide", "count": 1}})
     loot_self("sylvan_log")
     dump(DATA / "loot_table/blocks/sylvan_leaves.json", {"type": "minecraft:block", "pools": [{"rolls": 1, "entries": [
         {"type": "minecraft:item", "name": f"{NS}:sylvan_leaves"}], "conditions": [{"condition": "minecraft:match_tool",
@@ -466,7 +491,8 @@ def tag_add(rel, values):
 def tags():
     stones = [f"{NS}:{r['id']}_stone" for r in REALMS]
     ores = [f"{NS}:{r['ore']}_ore" for r in REALMS]
-    tag_add("block/mineable/pickaxe.json", stones + ores + [f"{NS}:realm_frame"])
+    frames = [f"{NS}:{r['id']}_portal_frame" for r in REALMS]
+    tag_add("block/mineable/pickaxe.json", stones + ores + [f"{NS}:realm_frame"] + frames)
     tag_add("block/mineable/shovel.json", [f"{NS}:{r['id']}_soil" for r in REALMS])
     tag_add("block/mineable/axe.json", [f"{NS}:sylvan_log"])
     tag_add("block/mineable/hoe.json", [f"{NS}:sylvan_leaves"])
@@ -474,7 +500,7 @@ def tags():
     tag_add("block/logs.json", [f"{NS}:sylvan_log"])
     tag_add("item/logs.json", [f"{NS}:sylvan_log"])
     tag_add("block/needs_iron_tool.json", ores[:3])
-    tag_add("block/needs_diamond_tool.json", ores[3:] + [f"{NS}:realm_frame"])
+    tag_add("block/needs_diamond_tool.json", ores[3:] + [f"{NS}:realm_frame"] + frames)
 
 
 # ------------------------------------------------------------------ traductions
@@ -488,6 +514,7 @@ def lang():
             rid, ore = r["id"], r["ore"]
             o = n["ore"][i]
             d[f"realm.{NS}.{rid}"] = n["realm"][i]
+            d[f"block.{NS}.{rid}_portal_frame"] = f"Cadre de Portail {n['of'][i]}" if fr else f"{n['of'][i]} Portal Frame"
             d[f"block.{NS}.{rid}_stone"] = n["stone"][i]
             d[f"block.{NS}.{rid}_soil"] = n["soil"][i]
             d[f"block.{NS}.{ore}_ore"] = f"Minerai de {o}" if fr else f"{o} Ore"
@@ -515,7 +542,10 @@ def lang():
                 f"{NS}.sigil.wrong_realm": "Ce sceau ne fonctionne que dans le %s.",
                 f"{NS}.sigil.already": "Le boss de ce royaume est déjà là !",
                 f"{NS}.sigil.desc": "Clic droit dans son royaume : invoque le boss.",
-                f"{NS}.key.desc": "Clic droit dans un cadre de Cadres des Royaumes : ouvre le portail.",
+                f"{NS}.key.desc": "Clic droit dans le cadre du portail de ce royaume : ouvre le portail.",
+                f"{NS}.key.wrong_frame": "Ce cadre s'ouvre avec la %s",
+                f"item.{NS}.portal_guide": "Guide des Portails",
+                f"{NS}.portal_guide.desc": "Clic droit : comment construire et allumer chaque portail",
                 f"{NS}.realm_armor.set": "Armure complète :",
                 f"{NS}.seven_realms.cooldown": "Jugement des Sept Royaumes : encore %s s",
                 f"{NS}.seven_realms.hit": "Chaque coup : feu, gel, poison, flétrissement, lumière, et parfois la foudre",
@@ -553,7 +583,10 @@ def lang():
                 f"{NS}.sigil.wrong_realm": "This sigil only works in the %s.",
                 f"{NS}.sigil.already": "This realm's boss is already here!",
                 f"{NS}.sigil.desc": "Right-click in its realm: summons the boss.",
-                f"{NS}.key.desc": "Right-click inside a frame of Realm Frames: opens the portal.",
+                f"{NS}.key.desc": "Right-click inside this realm's portal frame: opens the portal.",
+                f"{NS}.key.wrong_frame": "This frame opens with the %s",
+                f"item.{NS}.portal_guide": "Portal Guide",
+                f"{NS}.portal_guide.desc": "Right-click: how to build and light every portal",
                 f"{NS}.realm_armor.set": "Full set:",
                 f"{NS}.seven_realms.cooldown": "Judgement of the Seven Realms: %s s left",
                 f"{NS}.seven_realms.hit": "Every hit: fire, frost, poison, wither, light, and sometimes lightning",

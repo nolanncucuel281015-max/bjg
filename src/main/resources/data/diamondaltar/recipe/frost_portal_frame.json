@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "building",
+	"pattern": [
+		"XYX",
+		"XDX",
+		"III"
+	],
+	"key": {
+		"X": "minecraft:packed_ice",
+		"Y": "minecraft:blue_ice",
+		"D": "minecraft:diamond",
+		"I": "minecraft:iron_block"
+	},
+	"result": {
+		"id": "diamondaltar:frost_portal_frame",
+		"count": 10
+	}
+}

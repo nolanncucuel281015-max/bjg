@@ -8,7 +8,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.UseOnContext;
 
-/** Clé d'un royaume : clic droit dans un cadre de Cadres des Royaumes pour ouvrir le portail (elle n'est pas consommée). */
+/** Clé d'un royaume : clic droit dans un cadre du portail de ce royaume pour l'ouvrir (elle n'est pas consommée). */
 public class RealmKeyItem extends Item {
 	private final Realm realm;
 
@@ -28,6 +28,13 @@ public class RealmKeyItem extends Item {
 		}
 		BlockPos inside = ctx.getClickedPos().relative(ctx.getClickedFace());
 		if (!RealmPortals.tryIgnite(level, inside, realm)) {
+			// Un cadre d'un autre royaume ? On dit quelle clé il faut.
+			Realm other = RealmPortals.frameRealm(level.getBlockState(ctx.getClickedPos()));
+			if (other != null && other != realm && ctx.getPlayer() != null) {
+				com.diamondaltar.Compat.overlay(ctx.getPlayer(), net.minecraft.network.chat.Component.translatable("diamondaltar.key.wrong_frame",
+						net.minecraft.network.chat.Component.translatable("item.diamondaltar." + other.id + "_key"))
+						.withStyle(net.minecraft.ChatFormatting.RED));
+			}
 			return InteractionResult.FAIL;
 		}
 		level.playSound(null, inside, SoundEvents.END_PORTAL_SPAWN, SoundSource.BLOCKS, 0.7f, 0.8f + realm.ordinal() * 0.1f);

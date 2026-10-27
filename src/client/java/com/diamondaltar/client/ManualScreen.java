@@ -54,8 +54,17 @@ public class ManualScreen extends Screen {
 	private int page;
 
 	public ManualScreen() {
-		super(Component.literal("Manuel Diamond Altar"));
-		buildContent();
+		this(false);
+	}
+
+	/** @param guide true : le Guide des Portails (comment construire et allumer chaque portail) */
+	public ManualScreen(boolean guide) {
+		super(Component.literal(guide ? "Guide des Portails" : "Manuel Diamond Altar"));
+		if (guide) {
+			buildGuide();
+		} else {
+			buildContent();
+		}
 	}
 
 	// ---------------------------------------------------------------- contenu
@@ -205,6 +214,119 @@ public class ManualScreen extends Screen {
 		paginate();
 	}
 
+	// ---------------------------------------------------------------- Guide des Portails
+
+	/** Matériaux du cadre de chaque royaume : autour (X) et en haut au milieu (Y). Même ordre que les recettes. */
+	private static final Item[][] FRAME_MATERIALS = {
+			{Items.MAGMA_BLOCK, Items.BLAZE_ROD}, {Items.PACKED_ICE, Items.BLUE_ICE}, {Items.GOLD_INGOT, Items.LIGHTNING_ROD},
+			{Items.EMERALD, Items.EMERALD_BLOCK}, {Items.DIAMOND, Items.HEART_OF_THE_SEA}, {Items.DIAMOND_BLOCK, Items.ECHO_SHARD},
+			{Items.NETHERITE_INGOT, Items.NETHER_STAR}};
+	private static final Item[] KEY_THEMATIC = {Items.BLAZE_POWDER, Items.BLUE_ICE, Items.LIGHTNING_ROD, Items.MOSS_BLOCK,
+			Items.PRISMARINE_CRYSTALS, Items.ECHO_SHARD, Items.GLOWSTONE_DUST};
+	private static final String[] REALM_NAMES = {"Royaume de Braise", "Royaume de Givre", "Royaume des Tempêtes", "Royaume Sylvestre",
+			"Royaume des Abysses", "Royaume des Ombres", "Royaume du Soleil"};
+	private static final String[] MATERIAL_NAMES = {"blocs de magma + bâton de blaze", "glace compactée + glace bleue",
+			"lingots d'or + paratonnerre", "émeraudes + bloc d'émeraude", "diamants + cœur de la mer",
+			"blocs de diamant + éclat d'écho", "lingots de netherite + étoile du Nether"};
+	private static final String[] BOSS_NAMES = {"Seigneur des Braises", "Reine du Givre", "Titan de la Tempête", "Béhémoth Sylvestre",
+			"Léviathan des Abysses", "Roi des Ombres", "Paladin Solaire"};
+
+	private void buildGuide() {
+		chapter("Bienvenue",
+				big(st(RealmContent.PORTAL_GUIDE), 3),
+				text("Ce guide montre comment fabriquer, construire et allumer chaque portail : la Dimension Astrale puis les 7 Royaumes."),
+				text("Plus un royaume est fort, plus son cadre coûte des matériaux rares… et plus son boss et ses récompenses sont forts.", GOLD),
+				text("Flèches en bas pour tourner les pages, Sommaire pour aller à un portail.", MUTED));
+
+		chapter("Construire un portail",
+				text("Tous les portails se construisent comme un portail du Nether :"),
+				portal(st(RealmContent.PORTAL_FRAME[0]), Realm.EMBER.color, "4 de large, 5 de haut"),
+				text("1. Pose les blocs de cadre en rectangle (4 × 5 minimum, jusqu'à 21 × 21). Les coins ne sont pas obligatoires : 10 blocs suffisent."),
+				text("2. Clic droit DANS le cadre avec l'objet qui l'allume (essence ou clé)."),
+				text("3. Reste dans le portail 2 à 3 secondes."),
+				text("4. De l'autre côté, un portail de retour est construit automatiquement.", MUTED),
+				text("Un cadre de royaume ne s'ouvre qu'avec la clé de CE royaume. La clé n'est jamais consommée.", GOLD));
+
+		chapter("Portail Astral",
+				sub("1. Le Fusionneur"),
+				craft(new ItemStack[]{null, null, null, null, st(Items.DIAMOND), null, st(Items.IRON_BLOCK), st(Items.IRON_BLOCK), st(Items.IRON_BLOCK)},
+						st(AstralContent.FUSER)),
+				text("Lave à gauche, eau à droite : il les mélange en Essence Galactique (récupère-la avec un seau vide)."),
+				sub("2. Le cadre"),
+				portal(st(Items.DIAMOND_BLOCK), 0xA060FF, "blocs de diamant"),
+				text("Allume-le avec le Seau d'Essence Galactique."),
+				row(st(AstralContent.GALAXY_ESSENCE_BUCKET)),
+				text("Dans la dimension, mine l'Astralite : il en faut pour ouvrir le premier royaume.", MUTED));
+
+		for (Realm r : Realm.values()) {
+			int i = r.ordinal();
+			ItemStack x = st(FRAME_MATERIALS[i][0]);
+			ItemStack y = st(FRAME_MATERIALS[i][1]);
+			ItemStack frame = st(RealmContent.PORTAL_FRAME[i], 10);
+			ItemStack prev = i == 0 ? st(AstralContent.ASTRALITE_INGOT) : st(RealmContent.INGOT[i - 1]);
+			ItemStack theme = st(KEY_THEMATIC[i]);
+			chapter((i + 1) + ". " + REALM_NAMES[i],
+					text("Danger : " + "★".repeat(i + 1) + "☆".repeat(6 - i), i >= 5 ? 0xFFFF7070 : i >= 3 ? GOLD : CYAN),
+					sub("Le cadre (×10 par craft)"),
+					craft(new ItemStack[]{x, y, x, x, st(Items.DIAMOND), x, st(Items.IRON_BLOCK), st(Items.IRON_BLOCK), st(Items.IRON_BLOCK)}, frame),
+					text("3 blocs de fer en bas, un diamant au milieu, " + MATERIAL_NAMES[i] + " autour.", MUTED),
+					sub("Le portail"),
+					portal(st(RealmContent.PORTAL_FRAME[i]), r.color, REALM_NAMES[i]),
+					sub("La clé"),
+					craft(new ItemStack[]{null, theme, null, prev, st(Items.ENDER_EYE), prev, null, theme, null}, st(RealmContent.KEY[i])),
+					text(i == 0 ? "Avec des lingots d'Astralite (Dimension Astrale)." : "Avec les lingots du royaume précédent : il faut l'avoir visité !", MUTED),
+					sub("Là-bas"),
+					row(st(RealmContent.STONE[i]), st(RealmContent.SOIL[i]), st(RealmContent.ORE[i]), st(RealmContent.INGOT[i]), st(RealmContent.SIGIL[i]),
+							st(RealmContent.SHARD[i])),
+					icon(st(RealmContent.SIGIL[i]), BOSS_NAMES[i], "Le boss : invoque-le avec le Sceau (4 lingots + un diamant). Il lâche l'Éclat du royaume."));
+		}
+
+		chapter("Le Cadre universel",
+				craft(new ItemStack[]{st(Items.OBSIDIAN), st(Items.OBSIDIAN), st(Items.OBSIDIAN), st(Items.OBSIDIAN), st(AstralContent.ASTRALITE_INGOT),
+						st(Items.OBSIDIAN), st(Items.OBSIDIAN), st(Items.OBSIDIAN), st(Items.OBSIDIAN)}, st(RealmContent.REALM_FRAME, 8)),
+				text("Le Cadre des Royaumes marche pour TOUS les royaumes : c'est la clé qui choisit la destination."),
+				portal(st(RealmContent.REALM_FRAME), 0xFFE070, "n'importe quelle clé"),
+				sub("Encore plus vite"),
+				icon(st(RealmContent.REALM_PEARL), "Perle des Royaumes", "Lâchée par le Roi des Ombres : téléporte dans n'importe quel monde, sans portail."),
+				icon(st(RealmContent.DAWN_WINGS), "Ailes de l'Aurore", "Lâchées par le Paladin Solaire : des élytres qui se propulsent toutes seules."));
+
+		chapter("Le Guide",
+				craft(new ItemStack[]{null, null, null, st(Items.BOOK), st(Items.IRON_INGOT), null, null, null, null}, st(RealmContent.PORTAL_GUIDE)),
+				text("Un livre et un lingot de fer, sans forme. Le Manuel Diamond Altar (livre + diamant) explique tout le reste du mod.", MUTED));
+
+		paginate();
+	}
+
+	/** Schéma d'un portail : cadre de 4 × 5 blocs autour d'un voile de la couleur du royaume. */
+	private static Element portal(ItemStack frame, int color, String label) {
+		return new Element() {
+			public int height(Font font, int width) {
+				return 5 * 16 + 6;
+			}
+
+			public void draw(GuiGraphics g, Font font, int x, int y, int width) {
+				int veil = 0xB0000000 | (color & 0xFFFFFF);
+				for (int row = 0; row < 5; row++) {
+					for (int col = 0; col < 4; col++) {
+						int cx = x + col * 16, cy = y + row * 16;
+						boolean edge = row == 0 || row == 4 || col == 0 || col == 3;
+						if (edge) {
+							g.renderItem(frame, cx, cy);
+						} else {
+							g.fill(cx, cy, cx + 16, cy + 16, veil);
+							g.fill(cx + 3 + (row * 5 + col * 3) % 9, cy + 4 + (row * 7) % 8, cx + 5 + (row * 5 + col * 3) % 9,
+									cy + 6 + (row * 7) % 8, 0x88FFFFFF);
+						}
+					}
+				}
+				int tx = x + 4 * 16 + 10;
+				g.drawString(font, "← cadre", tx, y + 4, MUTED, false);
+				g.drawString(font, "voile", tx, y + 36, TEXT, false);
+				g.drawString(font, label, tx, y + 62, GOLD, false);
+			}
+		};
+	}
+
 	/** Les 7 Royaumes : dimensions, portails, boss, armures légendaires et Épée des Sept Royaumes. */
 	private void buildRealms() {
 		String[] realms = {"Royaume de Braise", "Royaume de Givre", "Royaume des Tempêtes", "Royaume Sylvestre",
@@ -233,10 +355,11 @@ public class ManualScreen extends Screen {
 		List<Element> intro = new ArrayList<>();
 		intro.add(text("Sept nouvelles dimensions, à visiter dans l'ordre. Chacune a sa pierre, son sol, son minerai, son boss et son armure légendaire."));
 		intro.add(sub("Le portail"));
-		intro.add(craft(new ItemStack[]{st(Items.OBSIDIAN), st(Items.OBSIDIAN), st(Items.OBSIDIAN), st(Items.OBSIDIAN),
-				st(AstralContent.ASTRALITE_INGOT), st(Items.OBSIDIAN), st(Items.OBSIDIAN), st(Items.OBSIDIAN), st(Items.OBSIDIAN)},
-				st(RealmContent.REALM_FRAME, 8)));
-		intro.add(text("Construis un cadre de Cadres des Royaumes comme un portail du Nether (4 × 5), puis clic droit dedans avec la Clé du royaume. La clé n'est pas consommée."));
+		intro.add(craft(new ItemStack[]{st(Items.MAGMA_BLOCK), st(Items.BLAZE_ROD), st(Items.MAGMA_BLOCK), st(Items.MAGMA_BLOCK),
+				st(Items.DIAMOND), st(Items.MAGMA_BLOCK), st(Items.IRON_BLOCK), st(Items.IRON_BLOCK), st(Items.IRON_BLOCK)},
+				st(RealmContent.PORTAL_FRAME[0], 10)));
+		intro.add(text("Chaque royaume a son Cadre de Portail : 3 blocs de fer en bas, un diamant au milieu et, autour, des matériaux de plus en plus rares. Construis-le comme un portail du Nether (4 × 5), puis clic droit dedans avec la Clé du royaume (elle n'est pas consommée)."));
+		intro.add(text("Tous les crafts et les schémas sont dans le Guide des Portails (livre + lingot de fer).", GOLD));
 		intro.add(sub("Les clés"));
 		intro.add(craft(new ItemStack[]{null, st(Items.BLAZE_POWDER), null, st(AstralContent.ASTRALITE_INGOT), st(Items.ENDER_EYE),
 				st(AstralContent.ASTRALITE_INGOT), null, st(Items.BLAZE_POWDER), null}, st(RealmContent.KEY[0])));

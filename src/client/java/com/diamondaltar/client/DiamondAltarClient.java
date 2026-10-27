@@ -61,9 +61,9 @@ public class DiamondAltarClient implements ClientModInitializer {
 
 		// Manuel : clic droit pour l'ouvrir.
 		net.fabricmc.fabric.api.event.player.UseItemCallback.EVENT.register((player, level, hand) -> {
-			if (player.getItemInHand(hand).is(AstralContent.MANUAL)) {
+			if (player.getItemInHand(hand).is(AstralContent.MANUAL) || player.getItemInHand(hand).is(RealmContent.PORTAL_GUIDE)) {
 				if (level.isClientSide()) {
-					net.minecraft.client.Minecraft.getInstance().setScreen(new ManualScreen());
+					net.minecraft.client.Minecraft.getInstance().setScreen(new ManualScreen(player.getItemInHand(hand).is(RealmContent.PORTAL_GUIDE)));
 				}
 				return net.minecraft.world.InteractionResult.SUCCESS;
 			}
@@ -139,6 +139,9 @@ public class DiamondAltarClient implements ClientModInitializer {
 			}
 			if (stack.is(RealmContent.AETHERITE_INGOT) || stack.is(RealmContent.AETHERITE_SWORD) || stack.is(RealmContent.AETHERITE_PICKAXE)) {
 				lines.add(Component.translatable("diamondaltar.aetherite.rare").withStyle(ChatFormatting.AQUA));
+			}
+			if (stack.is(RealmContent.PORTAL_GUIDE)) {
+				lines.add(Component.translatable("diamondaltar.portal_guide.desc").withStyle(ChatFormatting.GRAY));
 			}
 			if (stack.is(RealmContent.DAWN_WINGS)) {
 				lines.add(Component.translatable("diamondaltar.wings.desc").withStyle(ChatFormatting.GOLD));

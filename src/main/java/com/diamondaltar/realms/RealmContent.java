@@ -70,6 +70,17 @@ public final class RealmContent {
 
 	public static final Block REALM_FRAME = AstralContent.block("realm_frame", Block::new, BlockBehaviour.Properties.of()
 			.mapColor(MapColor.COLOR_BLACK).strength(50f, 1200f).requiresCorrectToolForDrops().sound(SoundType.LODESTONE).lightLevel(s -> 6));
+	/** Cadre de portail propre à chaque royaume (3 blocs de fer + un diamant + des matériaux de plus en plus rares). */
+	public static final Block[] PORTAL_FRAME = new Block[N];
+
+	static {
+		for (Realm r : Realm.values()) {
+			PORTAL_FRAME[r.ordinal()] = AstralContent.block(r.id + "_portal_frame", Block::new, BlockBehaviour.Properties.of()
+					.mapColor(MAP_COLORS[r.ordinal()]).strength(50f, 1200f).requiresCorrectToolForDrops().sound(SoundType.LODESTONE)
+					.lightLevel(s -> 7));
+		}
+	}
+
 	public static final Block REALM_PORTAL = AstralContent.blockNoItem("realm_portal", RealmPortalBlock::new, BlockBehaviour.Properties.of()
 			.noCollision().strength(-1f, 3600000f).sound(SoundType.GLASS).lightLevel(s -> 13).noLootTable().pushReaction(Compat.PUSH_BLOCKED));
 	public static final Block SYLVAN_LOG = AstralContent.block("sylvan_log", RotatedPillarBlock::new, BlockBehaviour.Properties.of()
@@ -164,6 +175,8 @@ public final class RealmContent {
 					.setAsset(ResourceKey.create(EquipmentAssets.ROOT_ID, DiamondAltar.id("dawn_wings"))).build())
 			.component(DataComponents.GLIDER, Unit.INSTANCE)
 			.component(DataComponents.UNBREAKABLE, Unit.INSTANCE));
+	/** Guide des Portails : livre qui montre comment construire et allumer chaque portail. */
+	public static final Item PORTAL_GUIDE = AstralContent.item("portal_guide", Item::new, new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON));
 	/** Perle des Royaumes (Roi des Ombres) : téléporte dans le monde choisi (Overworld, Astral ou un des 7 Royaumes). */
 	public static final Item REALM_PEARL = AstralContent.item("realm_pearl", Item::new, new Item.Properties().stacksTo(1)
 			.rarity(Rarity.EPIC).fireResistant().component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true));
