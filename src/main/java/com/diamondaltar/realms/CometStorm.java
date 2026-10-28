@@ -88,7 +88,7 @@ public final class CometStorm extends TimedEffect {
 		this.radius = SkyFx.range(this.rangeLevel);
 		this.damage = SkyFx.damage(damageLevel) * 3;
 		Vec3 ahead = player.position().add(player.getLookAngle().multiply(1, 0, 1).normalize().scale(30));
-		this.target = SkyFx.aim(level, player, ahead);
+		this.target = SkyFx.aim(level, player, ahead, radius);
 		this.rift = target.add(0, SKY, 0);
 		player.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, RIFT + RAIN + MOTHER + BOOM + FALL, 4, false, false));
 		level.playSound(null, player.blockPosition(), SoundEvents.END_PORTAL_SPAWN, SoundSource.PLAYERS, 4f, 0.6f);

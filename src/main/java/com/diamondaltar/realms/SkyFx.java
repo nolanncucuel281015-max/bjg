@@ -46,8 +46,8 @@ public final class SkyFx {
 	private static final int QUIET = 2 | 16;
 	/** Au-delà, les anneaux et lasers ne grandissent plus à l'écran (personne ne voit si loin) ; les dégâts, eux, vont jusqu'au bout. */
 	public static final double VISUAL_MAX = 1500;
-	/** On ne vise jamais plus loin que ça (au-delà, les tronçons ne sont pas chargés de toute façon). */
-	private static final int MAX_AIM = 320;
+	/** Même avec une petite portée, on peut viser un bloc jusqu'à cette distance. */
+	private static final int MIN_AIM = 200;
 
 	private SkyFx() {
 	}
@@ -86,15 +86,18 @@ public final class SkyFx {
 	// ---------------------------------------------------------------- visée
 
 	/**
-	 * Le bloc visé, sinon le sol sous {@code fallback}. Le rayon s'arrête au premier tronçon non chargé :
-	 * on ne force jamais le chargement (ni la génération) de terrain lointain, qui ferait laguer.
+	 * Le bloc visé, jusqu'à la portée choisie (au moins {@link #MIN_AIM} blocs). Le rayon s'arrête au premier tronçon
+	 * non chargé : on ne force jamais le chargement (ni la génération) de terrain lointain, qui ferait laguer.
+	 * Si le rayon ne touche rien, l'attaque tombe au sol au point le plus loin visé (sauf si on regarde le ciel :
+	 * alors sous {@code fallback}).
 	 */
-	public static Vec3 aim(ServerLevel level, ServerPlayer player, Vec3 fallback) {
+	public static Vec3 aim(ServerLevel level, ServerPlayer player, Vec3 fallback, double reach) {
 		Vec3 eye = player.getEyePosition();
 		Vec3 look = player.getLookAngle();
+		double limit = Math.max(MIN_AIM, reach);
 		double dist = 0;
-		while (dist < MAX_AIM && level.isLoaded(BlockPos.containing(eye.add(look.scale(dist + 8))))) {
-			dist += 8;
+		while (dist < limit && level.isLoaded(BlockPos.containing(eye.add(look.scale(Math.min(limit, dist + 8)))))) {
+			dist = Math.min(limit, dist + 8);
 		}
 		if (dist <= 0) {
 			return groundBelow(level, fallback);
@@ -104,7 +107,10 @@ public final class SkyFx {
 		if (hit.getType() == HitResult.Type.BLOCK) {
 			return hit.getLocation();
 		}
-		return groundBelow(level, fallback);
+		if (look.y > 0.3) {
+			return groundBelow(level, fallback);
+		}
+		return groundBelow(level, end);
 	}
 
 	public static Vec3 groundBelow(ServerLevel level, Vec3 pos) {

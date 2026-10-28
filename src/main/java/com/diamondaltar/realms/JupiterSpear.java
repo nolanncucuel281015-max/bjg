@@ -64,7 +64,7 @@ public final class JupiterSpear extends TimedEffect {
 		this.radius = SkyFx.range(this.rangeLevel);
 		this.damage = SkyFx.damage(damageLevel);
 		Vec3 ahead = player.position().add(player.getLookAngle().multiply(1, 0, 1).normalize().scale(25));
-		this.target = SkyFx.aim(level, player, ahead);
+		this.target = SkyFx.aim(level, player, ahead, radius);
 		this.earth = target.add(0, EARTH_SIZE * 0.5 + 3, 0);
 		// Jupiter : haut dans le ciel, entre le joueur et la cible, pour qu'on la voie bien.
 		Vec3 mid = player.position().add(target).scale(0.5);

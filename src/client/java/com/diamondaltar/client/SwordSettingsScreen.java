@@ -18,7 +18,8 @@ import net.minecraft.world.item.ItemStack;
  * et la puissance (dégâts, 10 à 1 000 000) en cliquant directement sur la valeur voulue.
  */
 public class SwordSettingsScreen extends Screen {
-	private static final int W = 460;
+	/** Largeur de la fenêtre : 460 au plus, moins si l'écran est petit (tous les boutons restent visibles). */
+	private int W = 460;
 	private static final int H = 252;
 	private static final int PAD = 12;
 	private static final int TEXT = 0xFFE8E6F4;
@@ -51,6 +52,7 @@ public class SwordSettingsScreen extends Screen {
 
 	@Override
 	protected void init() {
+		W = Math.min(460, width - 8);
 		int l = left(), t = top();
 		// Attaque
 		int n = RealmEvents.SWORD_MODES.length;

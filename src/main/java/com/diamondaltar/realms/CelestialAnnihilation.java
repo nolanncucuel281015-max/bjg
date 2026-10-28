@@ -66,7 +66,7 @@ public final class CelestialAnnihilation extends TimedEffect {
 		this.width = SkyFx.width(this.rangeLevel);
 		this.height = 6 + this.rangeLevel * 2;
 		this.start = player.position();
-		this.impact = SkyFx.aim(level, player, start);
+		this.impact = SkyFx.aim(level, player, start, radius);
 		player.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, RISE + CHARGE + FIRE + 20, 4, false, false));
 		level.playSound(null, player.blockPosition(), SoundEvents.BEACON_ACTIVATE, SoundSource.PLAYERS, 3f, 0.5f);
 		level.playSound(null, player.blockPosition(), SoundEvents.ENDER_DRAGON_GROWL, SoundSource.PLAYERS, 1.5f, 1.5f - this.rangeLevel * 0.1f);
@@ -157,7 +157,7 @@ public final class CelestialAnnihilation extends TimedEffect {
 		}
 		// On ne recalcule la visée que tous les 4 ticks (moins de calculs).
 		if (t % 4 == 0) {
-			impact = SkyFx.aim(level, player, start);
+			impact = SkyFx.aim(level, player, start, radius);
 		}
 		Vec3 hand = hand();
 		if (orb == null) {
@@ -276,7 +276,7 @@ public final class CelestialAnnihilation extends TimedEffect {
 
 	/** Le moment du tir : la sphère part, le laser jaillit, flash et tremblement pour tout le monde autour. */
 	private void ignite(Vec3 hand) {
-		impact = SkyFx.aim(level, player, start);
+		impact = SkyFx.aim(level, player, start, radius);
 		if (orb != null) {
 			orb.discard();
 			orb = null;

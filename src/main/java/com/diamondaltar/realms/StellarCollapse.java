@@ -62,7 +62,7 @@ public final class StellarCollapse extends TimedEffect {
 		this.radius = SkyFx.range(this.rangeLevel);
 		this.damage = SkyFx.damage(damageLevel) * 2;
 		Vec3 ahead = player.position().add(player.getLookAngle().multiply(1, 0, 1).normalize().scale(30));
-		this.target = SkyFx.aim(level, player, ahead);
+		this.target = SkyFx.aim(level, player, ahead, radius);
 		this.core = target.add(0, 28, 0);
 		player.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, BIRTH + COLLAPSE + PULL + NOVA, 4, false, false));
 		level.playSound(null, player.blockPosition(), SoundEvents.BEACON_ACTIVATE, SoundSource.PLAYERS, 4f, 0.3f);

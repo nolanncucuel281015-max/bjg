@@ -635,6 +635,19 @@ public final class RealmEvents {
 		var recipe = recipes.getRecipeFor(net.minecraft.world.item.crafting.RecipeType.CRAFTING, input, server.overworld());
 		boolean sword = recipe.isPresent() && Compat.assemble(recipe.get().value(), input, server.registryAccess()).is(RealmContent.SEVEN_REALMS_SWORD);
 		report.append(sword ? "OK" : "FAIL").append(" craft de l'Epee des Sept Royaumes\n");
+		// Réglage de la portée (interface Y) : chaque niveau est bien enregistré sur l'épée, jusqu'à 100 000 blocs.
+		ItemStack blade = new ItemStack(RealmContent.SEVEN_REALMS_SWORD);
+		StringBuilder badRange = new StringBuilder();
+		for (int lvl = 1; lvl <= SkyFx.RANGES.length; lvl++) {
+			blade.set(com.diamondaltar.ModComponents.SWORD_POWER, SkyFx.clamp(lvl));
+			if (swordRange(blade) != lvl || SkyFx.range(swordRange(blade)) != SkyFx.RANGES[lvl - 1]) {
+				badRange.append(lvl).append(' ');
+			}
+		}
+		boolean rangeOk = badRange.isEmpty() && SkyFx.range(SkyFx.RANGES.length) == 100000;
+		report.append(rangeOk ? "OK" : "FAIL").append(" reglage de la portee : ").append(SkyFx.RANGES.length)
+				.append(" niveaux, max ").append(SkyFx.range(SkyFx.RANGES.length)).append(" blocs ").append(badRange).append('\n');
+		ok &= rangeOk;
 		ok &= sword;
 		// Cadre de portail de Braise : 3 blocs de fer en bas, un diamant au milieu, magma autour, bâton de blaze en haut.
 		ItemStack magma = new ItemStack(net.minecraft.world.item.Items.MAGMA_BLOCK);
