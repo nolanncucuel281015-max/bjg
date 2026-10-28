@@ -41,11 +41,12 @@ public final class SkyFx {
 	/** Dégâts (puissance) réglables avec la touche U ou l'interface Y. */
 	public static final int[] DAMAGES = {10, 25, 50, 100, 200, 500, 1000, 2500, 5000, 10000, 25000, 50000, 100000, 1000000};
 	/**
-	 * Rayon du cratère géant selon la puissance : rien jusqu'à 2500, puis 5000 → 20 blocs, 10 000 → 40,
-	 * 25 000 → 75, 50 000 → 120, 100 000 → 180 (hyper gros), 1 000 000 → 250.
+	 * Rayon du cratère géant selon la puissance : rien jusqu'à 5000, puis 10 000 → 15 blocs, 25 000 → 25,
+	 * 50 000 → 40, 100 000 → 60, 1 000 000 → 80.
 	 */
-	private static final int[] BLAST = {0, 0, 0, 0, 0, 0, 0, 0, 20, 40, 75, 120, 180, 250};
-	private static final int[] CRATER = {2, 4, 6, 8, 10, 13, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40};
+	private static final int[] BLAST = {0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 25, 40, 60, 80};
+	/** Rayon du cratère d'impact selon la portée. */
+	private static final int[] CRATER = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20};
 	private static final float[] WIDTH = {1.5f, 2.5f, 3.5f, 4.5f, 5.5f, 7f, 9f, 10f, 11f, 12f, 13f, 14f, 15f, 16f, 18f, 19f, 20f, 21f, 22f};
 	/** Blocs détruits sans prévenir les voisins (bien moins de calculs, donc moins de lag). */
 	private static final int QUIET = 2 | 16;

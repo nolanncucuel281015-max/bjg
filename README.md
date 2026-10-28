@@ -155,11 +155,18 @@ son **minerai**, son **boss unique** et son **armure légendaire**.
      orbes tournent autour ; des **dizaines de comètes** (sphères avec traînée laser) en tombent et **traquent chaque
      créature** de la portée, puis la **Comète Mère**, gigantesque, **fonce d'un coup** vers le sol : **flash rouge** au contact, puis **énorme explosion**, cratère, onde de choc ronde et
      **dégâts triplés** (recharge deux fois plus longue que l'Anéantissement).
+   - *Convergence des Sept Royaumes* : **sept portails** ronds, un par royaume, s'ouvrent en cercle dans le ciel autour
+     du bloc visé et tournent ; chacun tire un laser de sa couleur sur le bloc visé, puis les sept lasers deviennent
+     **énormes** et tournent de plus en plus vite pendant qu'une sphère de lumière grossit au point d'impact ;
+     enfin tout **éclate** : onde de choc aux sept couleurs et **dégâts x4**.
+   - *Big Bang* (la plus forte) : le **ciel devient noir**, toutes les créatures sont **figées**, la matière est aspirée
+     vers un point de lumière qui **bat comme un cœur** entouré de trois anneaux… silence… puis **l'univers explose** :
+     flash blanc total, deux sphères géantes, quatre ondes de choc et **dégâts x5**, au sol comme en l'air.
 
    **Y** ouvre l'**interface de réglages** de l'épée : on y clique sur l'attaque, la portée et la puissance voulues.
    Réglages des grandes attaques : portée (10 à **100 000 blocs** : 10, 25, 50, 75, 100, 150, 200, 300, 500, 750, 1000, 1500, 2000, 3000, 5000, 10 000, 25 000, 50 000, 100 000 ;
    au-delà de la distance de rendu, le terrain n'est pas chargé et l'attaque n'y fait rien),
-   dégâts / puissance (10 à **1 000 000** : 10, 25, 50, 100, 200, 500, 1000, 2500, 5000, 10 000, 25 000, 50 000, 100 000, 1 000 000 ; **U** passe aussi au cran suivant). À partir de 5000, l'impact creuse un **cratère géant** : 5000 → 20 blocs de rayon, 10 000 → 40, 25 000 → 75, 50 000 → 120, **100 000 → 180 (hyper gros)**, 1 000 000 → 250 ; il se creuse du centre vers les bords en quelques secondes, sans figer le jeu. Recharge de 12 s (10 blocs) à 84 s (100 000 blocs). Le sol est
+   dégâts / puissance (10 à **1 000 000** : 10, 25, 50, 100, 200, 500, 1000, 2500, 5000, 10 000, 25 000, 50 000, 100 000, 1 000 000 ; **U** passe aussi au cran suivant). À partir de 10 000, l'impact creuse un **cratère géant** : 10 000 → 15 blocs de rayon, 25 000 → 25, 50 000 → 40, 100 000 → 60, 1 000 000 → 80 ; il se creuse du centre vers les bords en quelques secondes, sans figer le jeu. Recharge de 12 s (10 blocs) à 84 s (100 000 blocs). Le sol est
    labouré par les lasers à partir de 75 blocs de portée. Les joueurs ne sont jamais touchés, la bedrock et les
    coffres (et autres blocs à contenu) ne sont jamais détruits.
 

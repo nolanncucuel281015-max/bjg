@@ -1,6 +1,5 @@
 package com.diamondaltar.client;
 
-import com.diamondaltar.realms.CelestialAnnihilation;
 import com.diamondaltar.realms.RealmContent;
 import com.diamondaltar.realms.RealmEvents;
 import com.diamondaltar.realms.SkyFx;
@@ -20,7 +19,7 @@ import net.minecraft.world.item.ItemStack;
 public class SwordSettingsScreen extends Screen {
 	/** Largeur de la fenêtre : 460 au plus, moins si l'écran est petit (tous les boutons restent visibles). */
 	private int W = 460;
-	private static final int H = 252;
+	private static final int H = 272;
 	private static final int PAD = 12;
 	private static final int TEXT = 0xFFE8E6F4;
 	private static final int MUTED = 0xFFA7A2C6;
@@ -56,12 +55,14 @@ public class SwordSettingsScreen extends Screen {
 		int l = left(), t = top();
 		// Attaque
 		int n = RealmEvents.SWORD_MODES.length;
-		int aw = (W - PAD * 2 - 4 * (n - 1)) / n;
+		// Les attaques, sur deux lignes.
+		int perLine = (n + 1) / 2;
+		int aw = (W - PAD * 2 - 4 * (perLine - 1)) / perLine;
 		for (int i = 0; i < n; i++) {
 			int index = i;
 			Component name = Component.translatable("diamondaltar.seven_realms." + RealmEvents.SWORD_MODES[i] + ".name");
 			addRenderableWidget(Button.builder(choice(name, i == mode), b -> set(index, range, damage))
-					.bounds(l + PAD + i * (aw + 4), t + 38, aw, 18).build());
+					.bounds(l + PAD + (i % perLine) * (aw + 4), t + 38 + (i / perLine) * 20, aw, 18).build());
 		}
 		// Portée, sur deux lignes
 		int nr = SkyFx.RANGES.length;
@@ -71,7 +72,7 @@ public class SwordSettingsScreen extends Screen {
 			int level = i + 1;
 			int col = i % perRow, row = i / perRow;
 			addRenderableWidget(Button.builder(choice(Component.literal(SkyFx.shortNumber(SkyFx.RANGES[i])), level == range),
-					b -> set(mode, level, damage)).bounds(l + PAD + col * (rw + 2), t + 86 + row * 20, rw, 18).build());
+					b -> set(mode, level, damage)).bounds(l + PAD + col * (rw + 2), t + 106 + row * 20, rw, 18).build());
 		}
 		// Puissance (dégâts)
 		int nd = SkyFx.DAMAGES.length;
@@ -79,7 +80,7 @@ public class SwordSettingsScreen extends Screen {
 		for (int i = 0; i < nd; i++) {
 			int level = i + 1;
 			addRenderableWidget(Button.builder(choice(Component.literal(SkyFx.shortNumber(SkyFx.DAMAGES[i])), level == damage),
-					b -> set(mode, range, level)).bounds(l + PAD + i * (dw + 2), t + 154, dw, 18).build());
+					b -> set(mode, range, level)).bounds(l + PAD + i * (dw + 2), t + 174, dw, 18).build());
 		}
 		addRenderableWidget(Button.builder(Component.translatable("diamondaltar.sword_settings.done"), b -> onClose())
 				.bounds(l + W / 2 - 40, t + H - 26, 80, 18).build());
@@ -113,24 +114,24 @@ public class SwordSettingsScreen extends Screen {
 		g.drawString(font, Component.translatable("diamondaltar.sword_settings.title").withStyle(ChatFormatting.BOLD), l + PAD, t + 7, GOLD, true);
 		g.drawString(font, Component.translatable("diamondaltar.sword_settings.attack"), l + PAD, t + 26, TEXT, false);
 		// La description de l'attaque, sur une ou deux lignes.
-		int ly = t + 58;
+		int ly = t + 78;
 		for (net.minecraft.util.FormattedCharSequence line : font.split(
 				Component.translatable("diamondaltar.seven_realms." + RealmEvents.SWORD_MODES[mode] + ".desc"), W - PAD * 2)) {
-			if (ly > t + 66) {
+			if (ly > t + 86) {
 				break;
 			}
 			g.drawString(font, line, l + PAD, ly, MUTED, false);
 			ly += 9;
 		}
 		g.drawString(font, Component.translatable("diamondaltar.sword_settings.range", SkyFx.range(range),
-				CelestialAnnihilation.cooldown(range) / 20), l + PAD, t + 76, TEXT, false);
+				RealmEvents.swordCooldown(mode, range) / 20), l + PAD, t + 96, TEXT, false);
 		Component power = Component.translatable("diamondaltar.sword_settings.damage", (int) SkyFx.damage(damage));
-		g.drawString(font, power, l + PAD, t + 142, TEXT, false);
+		g.drawString(font, power, l + PAD, t + 162, TEXT, false);
 		if (SkyFx.blast(damage) > 0) {
 			g.drawString(font, Component.translatable("diamondaltar.sword_settings.blast", SkyFx.blast(damage)),
-					l + PAD + font.width(power) + 6, t + 142, GOLD, false);
+					l + PAD + font.width(power) + 6, t + 162, GOLD, false);
 		}
-		int hy = t + 178;
+		int hy = t + 198;
 		for (net.minecraft.util.FormattedCharSequence line : font.split(Component.translatable("diamondaltar.sword_settings.hint"), W - PAD * 2)) {
 			g.drawString(font, line, l + PAD, hy, MUTED, false);
 			hy += 9;

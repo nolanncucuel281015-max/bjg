@@ -317,9 +317,10 @@ public final class RealmEvents {
 
 	/**
 	 * Les attaques de l'épée (touche K pour changer) : 0 = Jugement des Sept Royaumes, 1 = Anéantissement Céleste,
-	 * 2 = Lance de Jupiter, 3 = Effondrement Stellaire, 4 = Pluie de Comètes. Les quatre dernières se règlent avec Y (portée et puissance).
+	 * 2 = Lance de Jupiter, 3 = Effondrement Stellaire, 4 = Pluie de Comètes,
+	 * 5 = Convergence des Sept Royaumes, 6 = Big Bang. Les six dernières se règlent avec Y (portée et puissance).
 	 */
-	public static final String[] SWORD_MODES = {"judgement", "annihilation", "jupiter", "collapse", "comets"};
+	public static final String[] SWORD_MODES = {"judgement", "annihilation", "jupiter", "collapse", "comets", "convergence", "bigbang"};
 	/** Niveaux par défaut : portée 75 blocs, 100 dégâts. */
 	public static final int DEFAULT_LEVEL = 4;
 
@@ -360,6 +361,19 @@ public final class RealmEvents {
 		player.level().playSound(null, player.blockPosition(), SoundEvents.RESPAWN_ANCHOR_CHARGE, SoundSource.PLAYERS, 0.8f, 0.5f + next * 0.15f);
 	}
 
+	/** Recharge (en ticks) de l'attaque {@code mode} avec ce niveau de portée. */
+	public static int swordCooldown(int mode, int range) {
+		return switch (mode) {
+			case 1 -> CelestialAnnihilation.cooldown(range);
+			case 2 -> JupiterSpear.cooldown(range);
+			case 3 -> StellarCollapse.cooldown(range);
+			case 4 -> CometStorm.cooldown(range);
+			case 5 -> SevenConvergence.cooldown(range);
+			case 6 -> BigBang.cooldown(range);
+			default -> SWORD_COOLDOWN_TICKS;
+		};
+	}
+
 	private static void useSword(ServerLevel level, ServerPlayer player, ItemStack stack) {
 		int mode = swordMode(stack);
 		UUID key = new UUID(player.getUUID().getMostSignificantBits(), player.getUUID().getLeastSignificantBits() ^ mode);
@@ -388,6 +402,14 @@ public final class RealmEvents {
 			case 4 -> {
 				SWORD_COOLDOWN.put(key, level.getGameTime() + CometStorm.cooldown(range));
 				EffectManager.start(new CometStorm(level, player, range, damage));
+			}
+			case 5 -> {
+				SWORD_COOLDOWN.put(key, level.getGameTime() + SevenConvergence.cooldown(range));
+				EffectManager.start(new SevenConvergence(level, player, range, damage));
+			}
+			case 6 -> {
+				SWORD_COOLDOWN.put(key, level.getGameTime() + BigBang.cooldown(range));
+				EffectManager.start(new BigBang(level, player, range, damage));
 			}
 			default -> {
 				SWORD_COOLDOWN.put(key, level.getGameTime() + SWORD_COOLDOWN_TICKS);
@@ -815,6 +837,51 @@ public final class RealmEvents {
 				.append(", ").append(cometHit).append("/").append(targets.size()).append(" squelettes ecrases, ")
 				.append(comets.hitCount()).append(" touche(s)\n");
 		ok &= cometOk;
+		// Convergence des Sept Royaumes, puis Big Bang : même dalle, refaite à chaque fois.
+		for (int attack = 0; attack < 2; attack++) {
+			targets.forEach(e -> e.discard());
+			targets.clear();
+			for (int x = 0; x <= 60; x++) {
+				for (int dz = -2; dz <= 2; dz++) {
+					level.setBlockAndUpdate(new BlockPos(x, y - 1, -24 + dz), RealmContent.STONE[Realm.SOLAR.ordinal()].defaultBlockState());
+				}
+			}
+			for (int d : new int[]{15, 45}) {
+				var mob = Compat.SKELETON.create(level, net.minecraft.world.entity.EntitySpawnReason.TRIGGERED);
+				if (mob != null) {
+					mob.setPos(8.5 + d, y, -23.5);
+					level.addFreshEntity(mob);
+					targets.add(mob);
+				}
+			}
+			caster.setPos(8.5, y, -23.5);
+			caster.setXRot(90);
+			String name;
+			java.util.function.IntSupplier hits;
+			Vec3 impact;
+			if (attack == 0) {
+				SevenConvergence conv = new SevenConvergence(level, caster, DEFAULT_LEVEL, DEFAULT_LEVEL);
+				EffectManager.start(conv);
+				name = "Convergence des Sept Royaumes";
+				hits = conv::hitCount;
+				impact = conv.impactPoint();
+			} else {
+				BigBang bang = new BigBang(level, caster, DEFAULT_LEVEL, DEFAULT_LEVEL);
+				EffectManager.start(bang);
+				name = "Big Bang";
+				hits = bang::hitCount;
+				impact = bang.impactPoint();
+			}
+			for (int i = 0; i < 200; i++) {
+				EffectManager.tickAll();
+			}
+			long struck = targets.stream().filter(e -> !e.isAlive() || e.getHealth() < e.getMaxHealth()).count();
+			boolean attackOk = hits.getAsInt() >= targets.size() && struck == targets.size() && !targets.isEmpty();
+			report.append(attackOk ? "OK" : "FAIL").append(' ').append(name).append(" : impact en ").append(BlockPos.containing(impact))
+					.append(", ").append(struck).append("/").append(targets.size()).append(" squelettes touches, ")
+					.append(hits.getAsInt()).append(" touche(s)\n");
+			ok &= attackOk;
+		}
 		targets.forEach(e -> e.discard());
 		// Cratère géant (puissance 100 000) : un bloc de pierre de 41 x 41 x 20 doit disparaître entièrement,
 		// sans jamais prendre plus d'environ 20 ms par tick.
@@ -854,7 +921,7 @@ public final class RealmEvents {
 				}
 			}
 		}
-		boolean giantOk = SkyFx.blast(level100k) == 180 && left == 0 && worst < 200_000_000L;
+		boolean giantOk = SkyFx.blast(level100k) == 60 && left == 0 && worst < 200_000_000L;
 		report.append(giantOk ? "OK" : "FAIL").append(" cratere geant (puissance 100 000, rayon ").append(SkyFx.blast(level100k))
 				.append(") : ").append(giant.removed()).append(" blocs detruits en ").append(giantTicks).append(" ticks, pire tick ")
 				.append(worst / 1_000_000).append(" ms, pierre restante ").append(left).append('\n');

@@ -332,7 +332,7 @@
 	"diamondaltar.sword_settings.attack": "Attack:",
 	"diamondaltar.sword_settings.range": "Range: %s blocks (%s s cooldown)",
 	"diamondaltar.sword_settings.damage": "Power: %s damage",
-	"diamondaltar.sword_settings.hint": "Click a value. Range and power apply to the four big attacks. Beyond your render distance the terrain isn't loaded: the attack does nothing there.",
+	"diamondaltar.sword_settings.hint": "Click a value. Range and power apply to the big attacks. Beyond your render distance the terrain isn't loaded: the attack does nothing there.",
 	"diamondaltar.sword_settings.done": "Done",
 	"item.diamondaltar.sun": "Star",
 	"item.diamondaltar.black_hole": "Black Hole",
@@ -340,5 +340,9 @@
 	"diamondaltar.seven_realms.collapse.desc": "A giant star collapses into a black hole that sucks in every creature, then explodes into a supernova: double damage",
 	"diamondaltar.seven_realms.comets.name": "Comet Storm",
 	"diamondaltar.seven_realms.comets.desc": "A rift of the 7 realms opens in the sky: comets hunt down every creature, then the Mother Comet slams down: red flash and huge explosion, triple damage",
-	"diamondaltar.sword_settings.blast": "→ giant crater, %s block radius"
+	"diamondaltar.sword_settings.blast": "→ giant crater, %s block radius",
+	"diamondaltar.seven_realms.convergence.name": "Convergence of the Seven Realms",
+	"diamondaltar.seven_realms.convergence.desc": "Seven portals, one per realm, open in the sky and join their lasers on the aimed block, then everything bursts: 4x damage",
+	"diamondaltar.seven_realms.bigbang.name": "Big Bang",
+	"diamondaltar.seven_realms.bigbang.desc": "The sky goes black, everything freezes, a point of light beats like a heart... then the universe explodes: 5x damage, on the ground and in the air"
 }
