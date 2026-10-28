@@ -317,8 +317,8 @@
 	"diamondaltar.seven_realms.judgement.desc": "7 pillars rise around you and explode (8 s cooldown)",
 	"diamondaltar.seven_realms.annihilation.name": "Celestial Annihilation",
 	"diamondaltar.seven_realms.annihilation.desc": "You rise, charge up, then a gigantic round laser fires at the targeted block; a shockwave and 7 lasers destroy everything in their path",
-	"diamondaltar.seven_realms.power_hint": "%s: change range · %s: change damage",
-	"key.diamondaltar.sword_power": "Sword range",
+	"diamondaltar.seven_realms.power_hint": "%s: settings (attack, range, power) · %s: next damage",
+	"key.diamondaltar.sword_power": "Sword settings",
 	"block.diamondaltar.celestial_laser": "Celestial Laser",
 	"diamondaltar.seven_realms.range": "Range: %s %s blocks",
 	"diamondaltar.seven_realms.damage": "Damage: %s %s",
@@ -327,5 +327,11 @@
 	"key.diamondaltar.sword_damage": "Sword damage",
 	"item.diamondaltar.jupiter": "Jupiter",
 	"item.diamondaltar.earth": "Earth",
-	"item.diamondaltar.jupiter_spear": "Spear of Jupiter"
+	"item.diamondaltar.jupiter_spear": "Spear of Jupiter",
+	"diamondaltar.sword_settings.title": "Sword of the Seven Realms — Settings",
+	"diamondaltar.sword_settings.attack": "Attack:",
+	"diamondaltar.sword_settings.range": "Range: %s blocks (%s s cooldown)",
+	"diamondaltar.sword_settings.damage": "Power: %s damage",
+	"diamondaltar.sword_settings.hint": "Click a value. Range and power apply to Annihilation and the Spear of Jupiter.",
+	"diamondaltar.sword_settings.done": "Done"
 }

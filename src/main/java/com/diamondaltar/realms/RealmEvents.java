@@ -74,6 +74,16 @@ public final class RealmEvents {
 				switchSwordSetting(context.player(), held, payload.damage());
 			}
 		});
+		// Interface de réglages (touche Y) : attaque, portée et dégâts d'un coup.
+		Compat.toServer().register(SwordSettingsPayload.ID, SwordSettingsPayload.CODEC);
+		net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.registerGlobalReceiver(SwordSettingsPayload.ID, (payload, context) -> {
+			ItemStack held = context.player().getMainHandItem();
+			if (held.is(RealmContent.SEVEN_REALMS_SWORD)) {
+				com.diamondaltar.ModComponents.setSelected(held, Math.floorMod(payload.mode(), SWORD_MODES.length));
+				held.set(com.diamondaltar.ModComponents.SWORD_POWER, SkyFx.clamp(payload.range()));
+				held.set(com.diamondaltar.ModComponents.SWORD_DAMAGE, SkyFx.clampDamage(payload.damage()));
+			}
+		});
 		// Toutes les recettes du mod sont débloquées dans le livre de recettes dès la connexion.
 		net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.JOIN.register((handler, sender, server) ->
 				handler.getPlayer().awardRecipesByKey(modRecipes(server)));

@@ -42,7 +42,7 @@ public class DiamondAltarClient implements ClientModInitializer {
 	private static final KeyMapping SWITCH_KEY = KeyBindingHelper.registerKeyBinding(new KeyMapping(
 			"key.diamondaltar.switch_ability", InputConstants.Type.KEYSYM, InputConstants.KEY_K, CATEGORY));
 
-	/** Touche Y : portée des grandes attaques de l'Épée des Sept Royaumes (10 à 200 blocs). */
+	/** Touche Y : ouvre l'interface de réglages de l'Épée des Sept Royaumes (attaque, portée, puissance). */
 	private static final KeyMapping POWER_KEY = KeyBindingHelper.registerKeyBinding(new KeyMapping(
 			"key.diamondaltar.sword_power", InputConstants.Type.KEYSYM, InputConstants.KEY_Y, CATEGORY));
 
@@ -110,9 +110,10 @@ public class DiamondAltarClient implements ClientModInitializer {
 					ClientPlayNetworking.send(new SwitchAbilityPayload());
 				}
 			}
+			// Touche Y : l'interface de réglages de l'épée (attaque, portée, puissance).
 			while (POWER_KEY.consumeClick()) {
 				if (client.player != null && client.player.getMainHandItem().is(RealmContent.SEVEN_REALMS_SWORD)) {
-					ClientPlayNetworking.send(new com.diamondaltar.realms.SwordPowerPayload(false));
+					client.setScreen(new SwordSettingsScreen(client.player.getMainHandItem()));
 				}
 			}
 			while (DAMAGE_KEY.consumeClick()) {
