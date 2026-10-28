@@ -90,6 +90,11 @@ public final class CelestialAnnihilation extends TimedEffect {
 		return 200 + power * 100;
 	}
 
+	/** Pour l'auto-test : le point d'impact du rayon. */
+	public Vec3 impactPoint() {
+		return ground;
+	}
+
 	/** Pour l'auto-test : combien de créatures ont été touchées. */
 	public int hitCount() {
 		return hit.size();

@@ -669,8 +669,18 @@ public final class RealmEvents {
 			EffectManager.tickAll();
 		}
 		long dead = targets.stream().filter(e -> !e.isAlive() || e.getHealth() < e.getMaxHealth()).count();
-		boolean crater = level.getBlockState(new BlockPos(8, y - 1, 8)).isAir();
-		report.append(crater ? "OK" : "FAIL").append(" Aneantissement Celeste (puissance 5) : cratere creuse sous l'impact\n");
+		BlockPos impact = BlockPos.containing(effect.impactPoint());
+		int carvedBlocks = 0;
+		for (int dx = -3; dx <= 3; dx++) {
+			for (int dz = -3; dz <= 3; dz++) {
+				if (level.getBlockState(impact.offset(dx, -2, dz)).isAir()) {
+					carvedBlocks++;
+				}
+			}
+		}
+		boolean crater = carvedBlocks >= 40;
+		report.append(crater ? "OK" : "FAIL").append(" Aneantissement Celeste (puissance 5) : cratere sous l'impact ").append(impact)
+				.append(" (dalle en y=").append(y - 1).append(") : ").append(carvedBlocks).append("/49 blocs creuses 2 blocs sous l'impact\n");
 		boolean ok = crater && effect.hitCount() >= targets.size() && dead == targets.size() && !targets.isEmpty();
 		report.append(ok ? "OK" : "FAIL").append(" Aneantissement Celeste : ").append(effect.hitCount()).append(" touche(s), ")
 				.append(dead).append("/").append(targets.size()).append(" squelettes a 10, 30 et 45 blocs blesses ou morts\n");
