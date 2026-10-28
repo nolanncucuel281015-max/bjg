@@ -816,6 +816,49 @@ public final class RealmEvents {
 				.append(comets.hitCount()).append(" touche(s)\n");
 		ok &= cometOk;
 		targets.forEach(e -> e.discard());
+		// Cratère géant (puissance 100 000) : un bloc de pierre de 41 x 41 x 20 doit disparaître entièrement,
+		// sans jamais prendre plus d'environ 20 ms par tick.
+		int gy = y - 60;
+		var stone = RealmContent.STONE[Realm.SOLAR.ordinal()].defaultBlockState();
+		for (int x = -12; x <= 28; x++) {
+			for (int z = -12; z <= 28; z++) {
+				for (int dy = 0; dy < 20; dy++) {
+					level.setBlock(new BlockPos(x, gy - dy, z), stone, 2);
+				}
+			}
+		}
+		int level100k = 1;
+		while (SkyFx.damage(level100k) < 100000) {
+			level100k++;
+		}
+		GiantCrater giant = new GiantCrater(level, new Vec3(8.5, gy + 1, 8.5), SkyFx.blast(level100k));
+		EffectManager.start(giant);
+		int giantTicks = 0;
+		long worst = 0;
+		while (giantTicks < 2000) {
+			giantTicks++;
+			long t0 = System.nanoTime();
+			EffectManager.tickAll();
+			worst = Math.max(worst, System.nanoTime() - t0);
+			if (giant.done()) {
+				break;
+			}
+		}
+		int left = 0;
+		for (int x = -12; x <= 28; x++) {
+			for (int z = -12; z <= 28; z++) {
+				for (int dy = 0; dy < 20; dy++) {
+					if (level.getBlockState(new BlockPos(x, gy - dy, z)).is(stone.getBlock())) {
+						left++;
+					}
+				}
+			}
+		}
+		boolean giantOk = SkyFx.blast(level100k) == 120 && left == 0 && worst < 200_000_000L;
+		report.append(giantOk ? "OK" : "FAIL").append(" cratere geant (puissance 100 000, rayon ").append(SkyFx.blast(level100k))
+				.append(") : ").append(giant.removed()).append(" blocs detruits en ").append(giantTicks).append(" ticks, pire tick ")
+				.append(worst / 1_000_000).append(" ms, pierre restante ").append(left).append('\n');
+		ok &= giantOk;
 		return ok;
 	}
 

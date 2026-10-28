@@ -43,6 +43,8 @@ public final class JupiterSpear extends TimedEffect {
 	private final int rangeLevel;
 	private final double radius;
 	private final float damage;
+	/** Niveau de puissance : à partir de 10 000 dégâts, l'impact creuse un cratère géant. */
+	private final int damageLevel;
 	private final Vec3 target;
 	private final Vec3 earth;
 	private final Vec3 jupiter;
@@ -63,6 +65,7 @@ public final class JupiterSpear extends TimedEffect {
 		this.rangeLevel = SkyFx.clamp(rangeLevel);
 		this.radius = SkyFx.range(this.rangeLevel);
 		this.damage = SkyFx.damage(damageLevel);
+		this.damageLevel = damageLevel;
 		Vec3 ahead = player.position().add(player.getLookAngle().multiply(1, 0, 1).normalize().scale(25));
 		this.target = SkyFx.aim(level, player, ahead, radius);
 		this.earth = target.add(0, EARTH_SIZE * 0.5 + 3, 0);
@@ -181,6 +184,7 @@ public final class JupiterSpear extends TimedEffect {
 
 	private void boom(int t) {
 		if (t == 0) {
+			GiantCrater.start(level, target, damageLevel);
 			if (spear != null) {
 				spear.discard();
 				spear = null;

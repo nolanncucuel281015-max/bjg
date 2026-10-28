@@ -124,7 +124,12 @@ public class SwordSettingsScreen extends Screen {
 		}
 		g.drawString(font, Component.translatable("diamondaltar.sword_settings.range", SkyFx.range(range),
 				CelestialAnnihilation.cooldown(range) / 20), l + PAD, t + 76, TEXT, false);
-		g.drawString(font, Component.translatable("diamondaltar.sword_settings.damage", (int) SkyFx.damage(damage)), l + PAD, t + 142, TEXT, false);
+		Component power = Component.translatable("diamondaltar.sword_settings.damage", (int) SkyFx.damage(damage));
+		g.drawString(font, power, l + PAD, t + 142, TEXT, false);
+		if (SkyFx.blast(damage) > 0) {
+			g.drawString(font, Component.translatable("diamondaltar.sword_settings.blast", SkyFx.blast(damage)),
+					l + PAD + font.width(power) + 6, t + 142, GOLD, false);
+		}
 		int hy = t + 178;
 		for (net.minecraft.util.FormattedCharSequence line : font.split(Component.translatable("diamondaltar.sword_settings.hint"), W - PAD * 2)) {
 			g.drawString(font, line, l + PAD, hy, MUTED, false);

@@ -49,6 +49,8 @@ public final class CometStorm extends TimedEffect {
 	private final int rangeLevel;
 	private final double radius;
 	private final float damage;
+	/** Niveau de puissance : à partir de 10 000 dégâts, l'impact creuse un cratère géant. */
+	private final int damageLevel;
 	private final Vec3 target;
 	private final Vec3 rift;
 	private final Set<UUID> hit = new HashSet<>();
@@ -87,6 +89,7 @@ public final class CometStorm extends TimedEffect {
 		this.rangeLevel = SkyFx.clamp(rangeLevel);
 		this.radius = SkyFx.range(this.rangeLevel);
 		this.damage = SkyFx.damage(damageLevel) * 3;
+		this.damageLevel = damageLevel;
 		Vec3 ahead = player.position().add(player.getLookAngle().multiply(1, 0, 1).normalize().scale(30));
 		this.target = SkyFx.aim(level, player, ahead, radius);
 		this.rift = target.add(0, SKY, 0);
@@ -253,6 +256,7 @@ public final class CometStorm extends TimedEffect {
 
 	private void boom(int t) {
 		if (t == 0) {
+			GiantCrater.start(level, target, damageLevel);
 			for (int i = 0; i < RING; i++) {
 				riftRing[i].discard();
 			}

@@ -42,6 +42,8 @@ public final class CelestialAnnihilation extends TimedEffect {
 	private final int rangeLevel;
 	private final double radius;
 	private final float damage;
+	/** Niveau de puissance : à partir de 10 000 dégâts, l'impact creuse un cratère géant. */
+	private final int damageLevel;
 	private final float width;
 	private final double height;
 	private final Vec3 start;
@@ -63,6 +65,7 @@ public final class CelestialAnnihilation extends TimedEffect {
 		this.rangeLevel = SkyFx.clamp(rangeLevel);
 		this.radius = SkyFx.range(this.rangeLevel);
 		this.damage = SkyFx.damage(damageLevel);
+		this.damageLevel = damageLevel;
 		this.width = SkyFx.width(this.rangeLevel);
 		this.height = 6 + this.rangeLevel * 2;
 		this.start = player.position();
@@ -277,6 +280,7 @@ public final class CelestialAnnihilation extends TimedEffect {
 	/** Le moment du tir : la sphère part, le laser jaillit, flash et tremblement pour tout le monde autour. */
 	private void ignite(Vec3 hand) {
 		impact = SkyFx.aim(level, player, start, radius);
+		GiantCrater.start(level, impact, damageLevel);
 		if (orb != null) {
 			orb.discard();
 			orb = null;
