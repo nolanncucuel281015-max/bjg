@@ -11,3 +11,4 @@ accessible    method    net/minecraft/world/entity/Display$ItemDisplay    setIte
 accessible    method    net/minecraft/world/entity/Display$ItemDisplay    setItemTransform    (Lnet/minecraft/world/item/ItemDisplayContext;)V
 accessible    method    net/minecraft/world/entity/Display$BlockDisplay    setBlockState    (Lnet/minecraft/world/level/block/state/BlockState;)V
 accessible    method    net/minecraft/world/entity/Display    setGlowColorOverride    (I)V
+accessible    method    net/minecraft/world/entity/Display    setBillboardConstraints    (Lnet/minecraft/world/entity/Display$BillboardConstraints;)V

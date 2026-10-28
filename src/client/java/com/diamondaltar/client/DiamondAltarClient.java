@@ -42,9 +42,13 @@ public class DiamondAltarClient implements ClientModInitializer {
 	private static final KeyMapping SWITCH_KEY = KeyBindingHelper.registerKeyBinding(new KeyMapping(
 			"key.diamondaltar.switch_ability", InputConstants.Type.KEYSYM, InputConstants.KEY_K, CATEGORY));
 
-	/** Touche Y : puissance de l'Anéantissement Céleste (Épée des Sept Royaumes). */
+	/** Touche Y : portée des grandes attaques de l'Épée des Sept Royaumes (10 à 200 blocs). */
 	private static final KeyMapping POWER_KEY = KeyBindingHelper.registerKeyBinding(new KeyMapping(
 			"key.diamondaltar.sword_power", InputConstants.Type.KEYSYM, InputConstants.KEY_Y, CATEGORY));
+
+	/** Touche U : dégâts des grandes attaques de l'Épée des Sept Royaumes (10 à 1000). */
+	private static final KeyMapping DAMAGE_KEY = KeyBindingHelper.registerKeyBinding(new KeyMapping(
+			"key.diamondaltar.sword_damage", InputConstants.Type.KEYSYM, InputConstants.KEY_U, CATEGORY));
 
 	private static final KeyMapping ARMOR_SWITCH_KEY = KeyBindingHelper.registerKeyBinding(new KeyMapping(
 			"key.diamondaltar.switch_armor", InputConstants.Type.KEYSYM, InputConstants.KEY_J, CATEGORY));
@@ -108,7 +112,12 @@ public class DiamondAltarClient implements ClientModInitializer {
 			}
 			while (POWER_KEY.consumeClick()) {
 				if (client.player != null && client.player.getMainHandItem().is(RealmContent.SEVEN_REALMS_SWORD)) {
-					ClientPlayNetworking.send(new com.diamondaltar.realms.SwordPowerPayload());
+					ClientPlayNetworking.send(new com.diamondaltar.realms.SwordPowerPayload(false));
+				}
+			}
+			while (DAMAGE_KEY.consumeClick()) {
+				if (client.player != null && client.player.getMainHandItem().is(RealmContent.SEVEN_REALMS_SWORD)) {
+					ClientPlayNetworking.send(new com.diamondaltar.realms.SwordPowerPayload(true));
 				}
 			}
 			// Touche J : changer la capacité de l'armure. Shift + clic droit : la lancer.
@@ -177,12 +186,16 @@ public class DiamondAltarClient implements ClientModInitializer {
 						lines.add(Component.literal("    ").append(Component.translatable(k + ".desc")).withStyle(ChatFormatting.GRAY));
 					}
 				}
-				int power = com.diamondaltar.realms.RealmEvents.swordPower(stack);
-				lines.add(Component.translatable("diamondaltar.seven_realms.power",
-						Component.literal("★".repeat(power) + "☆".repeat(com.diamondaltar.realms.RealmEvents.MAX_POWER - power)),
-						Component.translatable("diamondaltar.seven_realms.power." + power)).withStyle(ChatFormatting.RED));
+				int range = com.diamondaltar.realms.RealmEvents.swordRange(stack);
+				int dmg = com.diamondaltar.realms.RealmEvents.swordDamage(stack);
+				int max = com.diamondaltar.realms.SkyFx.RANGES.length;
+				lines.add(Component.translatable("diamondaltar.seven_realms.range", Component.literal("■".repeat(range) + "□".repeat(max - range)),
+						com.diamondaltar.realms.SkyFx.range(range)).withStyle(ChatFormatting.RED));
+				lines.add(Component.translatable("diamondaltar.seven_realms.damage", Component.literal("■".repeat(dmg) + "□".repeat(max - dmg)),
+						com.diamondaltar.realms.SkyFx.damage(dmg)).withStyle(ChatFormatting.RED));
 				lines.add(Component.translatable("diamondaltar.seven_realms.use", SWORD_KEY_HINT.get()).withStyle(ChatFormatting.DARK_AQUA));
-				lines.add(Component.translatable("diamondaltar.seven_realms.power_hint", POWER_KEY.getTranslatedKeyMessage()).withStyle(ChatFormatting.DARK_AQUA));
+				lines.add(Component.translatable("diamondaltar.seven_realms.power_hint", POWER_KEY.getTranslatedKeyMessage(),
+						DAMAGE_KEY.getTranslatedKeyMessage()).withStyle(ChatFormatting.DARK_AQUA));
 			}
 			for (Realm r : Realm.values()) {
 				if (stack.is(RealmContent.KEY[r.ordinal()]) || stack.is(RealmContent.SIGIL[r.ordinal()])) {

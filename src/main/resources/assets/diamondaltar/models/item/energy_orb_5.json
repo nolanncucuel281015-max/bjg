@@ -1,0 +1,6 @@
+{
+	"parent": "minecraft:item/generated",
+	"textures": {
+		"layer0": "diamondaltar:item/energy_orb_5"
+	}
+}

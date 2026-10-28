@@ -71,7 +71,7 @@ public final class RealmEvents {
 		net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.registerGlobalReceiver(SwordPowerPayload.ID, (payload, context) -> {
 			ItemStack held = context.player().getMainHandItem();
 			if (held.is(RealmContent.SEVEN_REALMS_SWORD)) {
-				switchSwordPower(context.player(), held);
+				switchSwordSetting(context.player(), held, payload.damage());
 			}
 		});
 		// Toutes les recettes du mod sont débloquées dans le livre de recettes dès la connexion.
@@ -305,9 +305,13 @@ public final class RealmEvents {
 		}
 	}
 
-	/** Les attaques de l'épée (touche K pour changer) : 0 = Jugement des Sept Royaumes, 1 = Anéantissement Céleste. */
-	public static final String[] SWORD_MODES = {"judgement", "annihilation"};
-	private static final int[] SWORD_COOLDOWNS = {SWORD_COOLDOWN_TICKS, 600};
+	/**
+	 * Les attaques de l'épée (touche K pour changer) : 0 = Jugement des Sept Royaumes, 1 = Anéantissement Céleste,
+	 * 2 = Lance de Jupiter. Les deux dernières se règlent avec Y (portée) et U (dégâts).
+	 */
+	public static final String[] SWORD_MODES = {"judgement", "annihilation", "jupiter"};
+	/** Niveaux par défaut : portée 75 blocs, 100 dégâts. */
+	public static final int DEFAULT_LEVEL = 4;
 
 	public static int swordMode(ItemStack stack) {
 		return Math.floorMod(com.diamondaltar.ModComponents.getSelected(stack), SWORD_MODES.length);
@@ -323,22 +327,27 @@ public final class RealmEvents {
 		player.level().playSound(null, player.blockPosition(), SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 1f, 1.2f + next * 0.3f);
 	}
 
-	public static final int MAX_POWER = 5;
-
-	/** Puissance de l'Anéantissement Céleste (1 à 5), 5 par défaut. */
-	public static int swordPower(ItemStack stack) {
+	/** Niveau de portée (1 à 7 : 10 à 200 blocs). */
+	public static int swordRange(ItemStack stack) {
 		Integer p = stack.get(com.diamondaltar.ModComponents.SWORD_POWER);
-		return p == null ? MAX_POWER : Math.max(1, Math.min(MAX_POWER, p));
+		return SkyFx.clamp(p == null ? DEFAULT_LEVEL : p);
 	}
 
-	/** Touche Y avec l'épée en main : puissance suivante (1 → 2 → … → 5 → 1). */
-	public static void switchSwordPower(ServerPlayer player, ItemStack stack) {
-		int next = swordPower(stack) % MAX_POWER + 1;
-		stack.set(com.diamondaltar.ModComponents.SWORD_POWER, next);
-		Compat.overlay(player, Component.translatable("diamondaltar.seven_realms.power",
-				Component.literal("★".repeat(next) + "☆".repeat(MAX_POWER - next)).withStyle(next == MAX_POWER ? ChatFormatting.RED : ChatFormatting.GOLD),
-				Component.translatable("diamondaltar.seven_realms.power." + next)).withStyle(ChatFormatting.AQUA));
-		player.level().playSound(null, player.blockPosition(), SoundEvents.RESPAWN_ANCHOR_CHARGE, SoundSource.PLAYERS, 0.8f, 0.6f + next * 0.2f);
+	/** Niveau de dégâts (1 à 7 : 10 à 1000). */
+	public static int swordDamage(ItemStack stack) {
+		Integer p = stack.get(com.diamondaltar.ModComponents.SWORD_DAMAGE);
+		return SkyFx.clamp(p == null ? DEFAULT_LEVEL : p);
+	}
+
+	/** Touche Y : portée suivante ; touche U : dégâts suivants (on revient au début après le maximum). */
+	public static void switchSwordSetting(ServerPlayer player, ItemStack stack, boolean damage) {
+		int max = SkyFx.RANGES.length;
+		int next = (damage ? swordDamage(stack) : swordRange(stack)) % max + 1;
+		stack.set(damage ? com.diamondaltar.ModComponents.SWORD_DAMAGE : com.diamondaltar.ModComponents.SWORD_POWER, next);
+		Component bar = Component.literal("■".repeat(next) + "□".repeat(max - next)).withStyle(next == max ? ChatFormatting.RED : ChatFormatting.GOLD);
+		Compat.overlay(player, Component.translatable(damage ? "diamondaltar.seven_realms.damage" : "diamondaltar.seven_realms.range",
+				bar, damage ? SkyFx.damage(next) : SkyFx.range(next)).withStyle(ChatFormatting.AQUA));
+		player.level().playSound(null, player.blockPosition(), SoundEvents.RESPAWN_ANCHOR_CHARGE, SoundSource.PLAYERS, 0.8f, 0.5f + next * 0.15f);
 	}
 
 	private static void useSword(ServerLevel level, ServerPlayer player, ItemStack stack) {
@@ -351,9 +360,22 @@ public final class RealmEvents {
 					String.format("%.1f", (until - level.getGameTime()) / 20.0)).withStyle(ChatFormatting.GRAY));
 			return;
 		}
-		int power = swordPower(stack);
-		SWORD_COOLDOWN.put(key, level.getGameTime() + (mode == 1 ? CelestialAnnihilation.cooldown(power) : SWORD_COOLDOWNS[mode]));
-		EffectManager.start(mode == 1 ? new CelestialAnnihilation(level, player, power) : new SevenRealmsJudgement(level, player));
+		int range = swordRange(stack);
+		int damage = swordDamage(stack);
+		switch (mode) {
+			case 1 -> {
+				SWORD_COOLDOWN.put(key, level.getGameTime() + CelestialAnnihilation.cooldown(range));
+				EffectManager.start(new CelestialAnnihilation(level, player, range, damage));
+			}
+			case 2 -> {
+				SWORD_COOLDOWN.put(key, level.getGameTime() + JupiterSpear.cooldown(range));
+				EffectManager.start(new JupiterSpear(level, player, range, damage));
+			}
+			default -> {
+				SWORD_COOLDOWN.put(key, level.getGameTime() + SWORD_COOLDOWN_TICKS);
+				EffectManager.start(new SevenRealmsJudgement(level, player));
+			}
+		}
 	}
 
 	/**
@@ -663,13 +685,16 @@ public final class RealmEvents {
 				targets.add(mob);
 			}
 		}
-		CelestialAnnihilation effect = new CelestialAnnihilation(level, caster, MAX_POWER);
+		// Le joueur regarde ses pieds : le laser doit tirer sur le bloc visé (la dalle juste en dessous).
+		caster.setXRot(90);
+		CelestialAnnihilation effect = new CelestialAnnihilation(level, caster, DEFAULT_LEVEL, DEFAULT_LEVEL);
 		EffectManager.start(effect);
-		for (int i = 0; i < 110; i++) {
+		for (int i = 0; i < 120; i++) {
 			EffectManager.tickAll();
 		}
 		long dead = targets.stream().filter(e -> !e.isAlive() || e.getHealth() < e.getMaxHealth()).count();
 		BlockPos impact = BlockPos.containing(effect.impactPoint());
+		boolean aimed = Math.abs(impact.getX() - 8) <= 1 && Math.abs(impact.getZ() - 8) <= 1 && Math.abs(impact.getY() - y) <= 1;
 		int carvedBlocks = 0;
 		for (int dx = -3; dx <= 3; dx++) {
 			for (int dz = -3; dz <= 3; dz++) {
@@ -679,11 +704,33 @@ public final class RealmEvents {
 			}
 		}
 		boolean crater = carvedBlocks >= 40;
-		report.append(crater ? "OK" : "FAIL").append(" Aneantissement Celeste (puissance 5) : cratere sous l'impact ").append(impact)
-				.append(" (dalle en y=").append(y - 1).append(") : ").append(carvedBlocks).append("/49 blocs creuses 2 blocs sous l'impact\n");
-		boolean ok = crater && effect.hitCount() >= targets.size() && dead == targets.size() && !targets.isEmpty();
-		report.append(ok ? "OK" : "FAIL").append(" Aneantissement Celeste : ").append(effect.hitCount()).append(" touche(s), ")
+		report.append(aimed && crater ? "OK" : "FAIL").append(" Aneantissement Celeste : tir sur le bloc vise ").append(impact)
+				.append(" (dalle en y=").append(y - 1).append("), cratere ").append(carvedBlocks).append("/49\n");
+		boolean ok = aimed && crater && effect.hitCount() >= targets.size() && dead == targets.size() && !targets.isEmpty();
+		report.append(ok ? "OK" : "FAIL").append(" Aneantissement Celeste (portee 75, 100 degats) : ").append(effect.hitCount()).append(" touche(s), ")
 				.append(dead).append("/").append(targets.size()).append(" squelettes a 10, 30 et 45 blocs blesses ou morts\n");
+		// Lance de Jupiter : de nouveaux squelettes, la lance tombe sur le bloc visé.
+		targets.forEach(e -> e.discard());
+		targets.clear();
+		for (int d : new int[]{12, 40}) {
+			var mob = Compat.SKELETON.create(level, net.minecraft.world.entity.EntitySpawnReason.TRIGGERED);
+			if (mob != null) {
+				mob.setPos(8.5 + d, y, 8.5);
+				level.addFreshEntity(mob);
+				targets.add(mob);
+			}
+		}
+		caster.setPos(8.5, y, 8.5);
+		JupiterSpear spear = new JupiterSpear(level, caster, DEFAULT_LEVEL, DEFAULT_LEVEL);
+		EffectManager.start(spear);
+		for (int i = 0; i < 170; i++) {
+			EffectManager.tickAll();
+		}
+		long spearHit = targets.stream().filter(e -> !e.isAlive() || e.getHealth() < e.getMaxHealth()).count();
+		boolean spearOk = spear.hitCount() >= targets.size() && spearHit == targets.size() && !targets.isEmpty();
+		report.append(spearOk ? "OK" : "FAIL").append(" Lance de Jupiter : impact en ").append(BlockPos.containing(spear.impactPoint()))
+				.append(", ").append(spearHit).append("/").append(targets.size()).append(" squelettes touches\n");
+		ok &= spearOk;
 		targets.forEach(e -> e.discard());
 		return ok;
 	}

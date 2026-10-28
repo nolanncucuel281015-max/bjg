@@ -139,21 +139,18 @@ son **minerai**, son **boss unique** et son **armure légendaire**.
    au milieu. 30 dégâts, incassable ; chaque coup brûle, gèle, empoisonne, flétrit et parfois foudroie.
    **Clic droit** pour lancer l'attaque choisie, **K** pour changer d'attaque :
    - *Jugement des Sept Royaumes* : sept colonnes de lumière qui explosent autour de toi (recharge 8 s) ;
-   - *Anéantissement Céleste* : une colonne de lumière t'élève, un noyau d'énergie grossit dans ta main pendant que
-     7 éclats (un par royaume) s'y fondent et que la lumière de toute la zone converge vers toi ; puis un **rayon
-     gigantesque** (du ciel jusqu'au sol) s'abat, creuse un **cratère**, et une **onde de choc** et **7 lasers
-     tournants** détruisent tout sur leur passage. Les rayons sont faits d'une matière d'énergie animée créée pour le mod.
-     **Y** change la puissance :
+   - *Anéantissement Céleste* : une colonne de lumière t'élève, une sphère d'énergie grossit dans ta main pendant que
+     7 petites sphères (une par royaume) s'y fondent ; puis un **laser rond gigantesque** tire sur **le bloc que tu
+     vises**, une colonne de lumière monte au ciel à l'impact, un **cratère** se creuse, et une **onde de choc ronde**
+     et **7 lasers ronds** tournants détruisent tout sur leur passage ;
+   - *Lance de Jupiter* : **Jupiter** (une sphère géante dont les bandes tournent) apparaît dans le ciel et **la Terre**
+     au-dessus du bloc visé ; une **lance surpuissante** tourne autour de Jupiter de plus en plus vite, puis **fonce sur
+     la Terre** : énorme explosion, éclairs, cratère et onde de choc.
 
-     | Puissance | Portée | Dégâts | Destruction | Recharge |
-     |---|---|---|---|---|
-     | ★ | 12 blocs | 25 | aucune | 15 s |
-     | ★★ | 22 blocs | 45 | petit cratère | 20 s |
-     | ★★★ | 32 blocs | 70 | cratère | 25 s |
-     | ★★★★ | 42 blocs | 100 | grand cratère + les lasers labourent le sol | 30 s |
-     | ★★★★★ | 50 blocs | 150 | énorme cratère + tout le sol pulvérisé sur le passage des lasers | 35 s |
-
-     Les joueurs ne sont jamais touchés, la bedrock et les coffres (et autres blocs à contenu) ne sont jamais détruits.
+   Réglages des deux grandes attaques : **Y** = portée (10, 25, 50, 75, 100, 150 ou **200 blocs**),
+   **U** = dégâts (10, 25, 50, 100, 200, 500 ou 1000). Recharge de 12 s (10 blocs) à 36 s (200 blocs). Le sol est
+   labouré par les lasers à partir de 75 blocs de portée. Les joueurs ne sont jamais touchés, la bedrock et les
+   coffres (et autres blocs à contenu) ne sont jamais détruits.
 
 ### Récompenses : plus le boss est fort, plus le butin l'est
 

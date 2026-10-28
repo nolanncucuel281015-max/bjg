@@ -246,10 +246,120 @@ def textures():
             save(recolor(TEX / f"block/guardian_altar_{face}.png", [(10, 6, 14), r["metal"][1], r["metal"][2]]),
                  f"block/realm_altar_{r['id']}_{face}.png")
     laser_textures()
+    planet_textures()
     save(recolor(TEX / "item/diamond_manual.png", [(40, 15, 10), (200, 120, 50), (255, 230, 150)]), "item/portal_guide.png")
 
 
 AETHER = [(40, 50, 90), (150, 225, 255), (255, 250, 225)]
+
+
+def sphere_mask(n):
+    """Pour chaque pixel d'une image n×n : (dans le disque ?, coordonnées sur la sphère u, v, profondeur z)."""
+    import math
+    out = {}
+    r = n / 2 - 0.5
+    for y in range(n):
+        for x in range(n):
+            dx, dy = (x - (n - 1) / 2) / r, (y - (n - 1) / 2) / r
+            d2 = dx * dx + dy * dy
+            if d2 <= 1:
+                z = math.sqrt(1 - d2)
+                lon = math.atan2(dx, z)
+                lat = math.asin(max(-1, min(1, dy)))
+                out[(x, y)] = (lon, lat, z)
+    return out
+
+
+def planet_textures():
+    """Jupiter et la Terre : sphères rondes (le fond est transparent), animées pour qu'elles tournent."""
+    import math
+    n, frames = 64, 32
+    mask = sphere_mask(n)
+    rnd = random.Random(42)
+    # -- Jupiter : bandes crème / orange / brun, Grande Tache rouge.
+    bands = [(236, 222, 196), (205, 160, 110), (236, 214, 180), (180, 120, 75), (226, 200, 160), (160, 100, 60),
+             (240, 228, 205), (196, 140, 90), (230, 205, 165), (170, 115, 70), (238, 222, 195)]
+    jup = Image.new("RGBA", (n, n * frames), (0, 0, 0, 0))
+    for f in range(frames):
+        rot = f / frames * math.tau
+        for (x, y), (lon, lat, z) in mask.items():
+            t = (lat / math.pi + 0.5) * len(bands) + 0.35 * math.sin(lon * 3 + rot * 3 + lat * 9)
+            i = int(t) % len(bands)
+            c0, c1 = bands[i], bands[(i + 1) % len(bands)]
+            u = t - int(t)
+            col = [c0[k] * (1 - u) + c1[k] * u for k in range(3)]
+            # Grande Tache rouge
+            sl = (lon + rot) % math.tau - math.pi
+            if (sl - 0.6) ** 2 / 0.09 + (lat - 0.32) ** 2 / 0.012 < 1:
+                col = [200, 85, 55]
+            shade = 0.35 + 0.65 * z ** 0.6
+            jup.putpixel((x, f * n + y), tuple(int(min(255, v * shade)) for v in col) + (255,))
+    save(jup, "item/jupiter.png")
+    (TEX / "item/jupiter.png.mcmeta").write_text('{"animation": {"frametime": 3}}')
+    # -- La Terre : océans, continents, glace aux pôles, nuages.
+    seeds = [(rnd.uniform(0, math.tau), rnd.uniform(-1.2, 1.2), rnd.uniform(0.35, 0.8)) for _ in range(14)]
+
+    def land(lon, lat):
+        v = 0.0
+        for (l0, b0, rr) in seeds:
+            d = math.acos(max(-1, min(1, math.sin(lat) * math.sin(b0) + math.cos(lat) * math.cos(b0) * math.cos(lon - l0))))
+            v = max(v, 1 - d / rr)
+        return v + 0.15 * math.sin(lon * 7) * math.sin(lat * 5)
+
+    earth = Image.new("RGBA", (n, n * frames), (0, 0, 0, 0))
+    for f in range(frames):
+        rot = f / frames * math.tau
+        for (x, y), (lon, lat, z) in mask.items():
+            lo = lon + rot
+            h = land(lo, lat)
+            if abs(lat) > 1.25:
+                col = [235, 245, 250]
+            elif h > 0.25:
+                col = [70 + 60 * (h > 0.6), 140 - 20 * (h > 0.6), 60] if abs(lat) < 0.9 else [120, 130, 90]
+            else:
+                col = [25, 80 + 40 * h, 170 + 40 * h]
+            cloud = 0.5 + 0.5 * math.sin(lo * 4 + rot * 2 + math.sin(lat * 6) * 2) * math.sin(lat * 7 + lo)
+            if cloud > 0.82:
+                col = [245, 248, 255]
+            shade = 0.3 + 0.7 * z ** 0.6
+            rim = max(0.0, 1 - z) ** 3
+            c = [min(255, v * shade + 120 * rim * (k == 2) + 60 * rim) for k, v in enumerate(col)]
+            earth.putpixel((x, f * n + y), tuple(int(v) for v in c) + (255,))
+    save(earth, "item/earth.png")
+    (TEX / "item/earth.png.mcmeta").write_text('{"animation": {"frametime": 2}}')
+    # -- Sphères d'énergie : halo rond (7 couleurs des royaumes + blanc).
+    colors = [r["metal"][1] for r in REALMS] + [(235, 245, 255)]
+    m = 32
+    for ci, col in enumerate(colors):
+        img = Image.new("RGBA", (m, m), (0, 0, 0, 0))
+        for y in range(m):
+            for x in range(m):
+                d = math.hypot(x - 15.5, y - 15.5) / 15.5
+                if d <= 1:
+                    core = max(0.0, 1 - d * 1.6)
+                    a = int(255 * min(1.0, (1 - d) * 2.2))
+                    c = tuple(int(min(255, col[k] * (0.6 + 0.4 * (1 - d)) + 255 * core)) for k in range(3))
+                    img.putpixel((x, y), c + (a,))
+        save(img, f"item/energy_orb_{ci}.png")
+    # -- La Lance de Jupiter : hampe dorée, pointe d'énergie blanche et cyan (en diagonale, comme un outil).
+    sp = Image.new("RGBA", (32, 32), (0, 0, 0, 0))
+    for i in range(32):
+        x, y = i, 31 - i
+        for w in (-1, 0, 1):
+            xx, yy = x + w, y
+            if not (0 <= xx < 32):
+                continue
+            if i < 22:
+                c = (255, 200 - 4 * abs(w) * 10, 60) if w == 0 else (170, 110, 30)
+            else:
+                t = (i - 22) / 9
+                c = (int(200 + 55 * t), 255, 255) if w == 0 else (120, 230, 255)
+            sp.putpixel((xx, yy), c + (255,))
+    for k in range(-3, 4):
+        for (xx, yy) in ((21 + k, 10 + k), (21 - k, 10 - k)):
+            if 0 <= xx < 32 and 0 <= yy < 32 and abs(k) <= 3:
+                sp.putpixel((min(31, xx + 1), yy), (255, 230, 120, 255))
+    save(sp, "item/jupiter_spear.png")
 
 
 def laser_textures():
@@ -375,6 +485,9 @@ def assets():
     for r in REALMS:
         cube(f"{r['id']}_portal_frame")
     flat_item("portal_guide")
+    for item in ["jupiter", "earth"] + [f"energy_orb_{i}" for i in range(8)]:
+        flat_item(item)
+    flat_item("jupiter_spear", handheld=True)
     variants = {}
     for i, r in enumerate(REALMS):
         name = f"realm_altar_{r['id']}"
@@ -383,8 +496,16 @@ def assets():
         variants[f"realm={i}"] = {"model": f"{NS}:block/{name}"}
     dump(ASSETS / "blockstates/realm_altar.json", {"variants": variants})
     lasers = {}
+    # Laser rond : un cylindre vertical (16 tranches) dans le cube 0..16.
+    import math
+    slices = []
+    for k in range(16):
+        a = math.sqrt(max(0.0, 64 - (k + 0.5 - 8) ** 2))
+        slices.append({"from": [round(8 - a, 3), 0, k], "to": [round(8 + a, 3), 16, k + 1],
+                       "faces": {f: {"texture": "#all"} for f in ("north", "south", "east", "west", "up", "down")}})
     for ci in range(8):
-        dump(ASSETS / f"models/block/laser_{ci}.json", {"parent": "minecraft:block/cube_all", "textures": {"all": f"{NS}:block/laser_{ci}"}})
+        dump(ASSETS / f"models/block/laser_{ci}.json", {"textures": {"all": f"{NS}:block/laser_{ci}", "particle": f"{NS}:block/laser_{ci}"},
+                                                        "elements": slices})
         lasers[f"color={ci}"] = {"model": f"{NS}:block/laser_{ci}"}
     dump(ASSETS / "blockstates/celestial_laser.json", {"variants": lasers})
     cube("sylvan_leaves")
@@ -598,19 +719,21 @@ def lang():
                 f"{NS}.realm_armor.set": "Armure complète :",
                 f"{NS}.seven_realms.cooldown": "%s : encore %s s",
                 f"{NS}.seven_realms.selected": "Attaque : %s (%s/%s)",
-                f"{NS}.seven_realms.power": "Puissance : %s %s",
-                f"{NS}.seven_realms.power.1": "(étincelle, 12 blocs)",
-                f"{NS}.seven_realms.power.2": "(rayon, 22 blocs, petit cratère)",
-                f"{NS}.seven_realms.power.3": "(tempête, 32 blocs, cratère)",
-                f"{NS}.seven_realms.power.4": "(cataclysme, 42 blocs, laboure le sol)",
-                f"{NS}.seven_realms.power.5": "(ANÉANTISSEMENT, 50 blocs, détruit tout)",
-                f"{NS}.seven_realms.power_hint": "%s : changer la puissance de l'Anéantissement",
-                f"key.{NS}.sword_power": "Puissance de l'épée",
+                f"{NS}.seven_realms.range": "Portée : %s %s blocs",
+                f"{NS}.seven_realms.damage": "Dégâts : %s %s",
+                f"{NS}.seven_realms.power_hint": "%s : changer la portée · %s : changer les dégâts",
+                f"{NS}.seven_realms.jupiter.name": "Lance de Jupiter",
+                f"{NS}.seven_realms.jupiter.desc": "Jupiter apparaît dans le ciel, une lance surpuissante tourne autour d'elle puis fonce sur la Terre : énorme explosion sur le bloc visé",
+                f"key.{NS}.sword_damage": "Dégâts de l'épée",
+                f"item.{NS}.jupiter": "Jupiter",
+                f"item.{NS}.earth": "Terre",
+                f"item.{NS}.jupiter_spear": "Lance de Jupiter",
+                f"key.{NS}.sword_power": "Portée de l'épée",
                 f"block.{NS}.celestial_laser": "Laser Céleste",
                 f"{NS}.seven_realms.judgement.name": "Jugement des Sept Royaumes",
                 f"{NS}.seven_realms.judgement.desc": "7 colonnes jaillissent autour de toi puis explosent (recharge 8 s)",
                 f"{NS}.seven_realms.annihilation.name": "Anéantissement Céleste",
-                f"{NS}.seven_realms.annihilation.desc": "Tu t'élèves, tu charges, puis un rayon gigantesque, une onde de choc et 7 lasers détruisent tout sur leur passage (jusqu'à 50 blocs)",
+                f"{NS}.seven_realms.annihilation.desc": "Tu t'élèves, tu charges, puis un laser rond gigantesque tire sur le bloc visé ; une onde de choc et 7 lasers détruisent tout sur leur passage",
                 f"{NS}.seven_realms.hit": "Chaque coup : feu, gel, poison, flétrissement, lumière, et parfois la foudre",
                 f"{NS}.seven_realms.use": "Clic droit : lancer l'attaque · %s : changer d'attaque",
                 f"item.{NS}.aetherite_ingot": "Lingot d'Aetherite",
@@ -654,19 +777,21 @@ def lang():
                 f"{NS}.realm_armor.set": "Full set:",
                 f"{NS}.seven_realms.cooldown": "%s: %s s left",
                 f"{NS}.seven_realms.selected": "Attack: %s (%s/%s)",
-                f"{NS}.seven_realms.power": "Power: %s %s",
-                f"{NS}.seven_realms.power.1": "(spark, 12 blocks)",
-                f"{NS}.seven_realms.power.2": "(beam, 22 blocks, small crater)",
-                f"{NS}.seven_realms.power.3": "(storm, 32 blocks, crater)",
-                f"{NS}.seven_realms.power.4": "(cataclysm, 42 blocks, ploughs the ground)",
-                f"{NS}.seven_realms.power.5": "(ANNIHILATION, 50 blocks, destroys everything)",
-                f"{NS}.seven_realms.power_hint": "%s: change the Annihilation's power",
-                f"key.{NS}.sword_power": "Sword power",
+                f"{NS}.seven_realms.range": "Range: %s %s blocks",
+                f"{NS}.seven_realms.damage": "Damage: %s %s",
+                f"{NS}.seven_realms.power_hint": "%s: change range · %s: change damage",
+                f"{NS}.seven_realms.jupiter.name": "Spear of Jupiter",
+                f"{NS}.seven_realms.jupiter.desc": "Jupiter appears in the sky, a mighty spear orbits it then hurtles down to Earth: huge explosion on the targeted block",
+                f"key.{NS}.sword_damage": "Sword damage",
+                f"item.{NS}.jupiter": "Jupiter",
+                f"item.{NS}.earth": "Earth",
+                f"item.{NS}.jupiter_spear": "Spear of Jupiter",
+                f"key.{NS}.sword_power": "Sword range",
                 f"block.{NS}.celestial_laser": "Celestial Laser",
                 f"{NS}.seven_realms.judgement.name": "Judgement of the Seven Realms",
                 f"{NS}.seven_realms.judgement.desc": "7 pillars rise around you and explode (8 s cooldown)",
                 f"{NS}.seven_realms.annihilation.name": "Celestial Annihilation",
-                f"{NS}.seven_realms.annihilation.desc": "You rise, charge up, then a gigantic beam, a shockwave and 7 lasers destroy everything in their path (up to 50 blocks)",
+                f"{NS}.seven_realms.annihilation.desc": "You rise, charge up, then a gigantic round laser fires at the targeted block; a shockwave and 7 lasers destroy everything in their path",
                 f"{NS}.seven_realms.hit": "Every hit: fire, frost, poison, wither, light, and sometimes lightning",
                 f"{NS}.seven_realms.use": "Right-click: use the attack · %s: switch attack",
                 f"item.{NS}.aetherite_ingot": "Aetherite Ingot",

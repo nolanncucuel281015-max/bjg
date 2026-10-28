@@ -193,7 +193,26 @@ public final class RealmContent {
 	public static final Item REALM_PEARL = AstralContent.item("realm_pearl", Item::new, new Item.Properties().stacksTo(1)
 			.rarity(Rarity.EPIC).fireResistant().component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true));
 
+	// ---------- Objets d'affichage (jamais dans l'inventaire) : planètes, lance de Jupiter, sphères d'énergie ----------
+	public static final Item JUPITER = hidden("jupiter");
+	public static final Item EARTH = hidden("earth");
+	public static final Item JUPITER_SPEAR = hidden("jupiter_spear");
+	/** Sphères d'énergie : 0..6 = couleurs des royaumes, 7 = blanche. */
+	public static final Item[] ORB = new Item[8];
+
+	static {
+		for (int i = 0; i < ORB.length; i++) {
+			ORB[i] = hidden("energy_orb_" + i);
+		}
+	}
+
 	private RealmContent() {
+	}
+
+	private static Item hidden(String name) {
+		ResourceKey<Item> key = ResourceKey.create(net.minecraft.core.registries.Registries.ITEM, DiamondAltar.id(name));
+		return net.minecraft.core.Registry.register(net.minecraft.core.registries.BuiltInRegistries.ITEM, key,
+				new Item(new Item.Properties().setId(key).stacksTo(1)));
 	}
 
 	private static ItemAttributeModifiers armorModifiers(String name, EquipmentSlot slot, double headFeet, double chest, double legs,
