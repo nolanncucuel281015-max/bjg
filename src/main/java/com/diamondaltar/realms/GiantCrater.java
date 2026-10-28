@@ -12,8 +12,8 @@ import net.minecraft.world.phys.Vec3;
 import java.util.Arrays;
 
 /**
- * Le cratère géant des grandes puissances (10 000 dégâts et plus) : une demi-sphère aplatie de rayon r
- * (jusqu'à 150 blocs) qui se creuse du centre vers les bords. Pour ne pas figer le jeu, on ne travaille
+ * Le cratère géant des grandes puissances (5000 dégâts et plus) : une demi-sphère aplatie de rayon r
+ * (jusqu'à 250 blocs) qui se creuse du centre vers les bords. Pour ne pas figer le jeu, on ne travaille
  * qu'environ {@link #MAX_NANOS} par tick : un énorme cratère se creuse en quelques secondes, le serveur reste fluide.
  */
 public final class GiantCrater extends TimedEffect {
@@ -91,7 +91,7 @@ public final class GiantCrater extends TimedEffect {
 				}
 			}
 			work += top - bottom + 1;
-			if (work > 4096) {
+			if (work > 1024) {
 				work = 0;
 				if (System.nanoTime() - start > MAX_NANOS) {
 					break;
@@ -111,7 +111,7 @@ public final class GiantCrater extends TimedEffect {
 		return next >= columns.length;
 	}
 
-	/** Lance le cratère géant correspondant à la puissance choisie (rien en dessous de 10 000 dégâts). */
+	/** Lance le cratère géant correspondant à la puissance choisie (rien en dessous de 5000 dégâts). */
 	public static void start(ServerLevel level, Vec3 center, int damageLevel) {
 		int r = SkyFx.blast(damageLevel);
 		if (r > 0) {

@@ -46,7 +46,7 @@ public final class StellarCollapse extends TimedEffect {
 	private final int rangeLevel;
 	private final double radius;
 	private final float damage;
-	/** Niveau de puissance : à partir de 10 000 dégâts, l'impact creuse un cratère géant. */
+	/** Niveau de puissance : à partir de 5000 dégâts, l'impact creuse un cratère géant. */
 	private final int damageLevel;
 	private final Vec3 target;
 	private final Vec3 core;

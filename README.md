@@ -159,7 +159,7 @@ son **minerai**, son **boss unique** et son **armure légendaire**.
    **Y** ouvre l'**interface de réglages** de l'épée : on y clique sur l'attaque, la portée et la puissance voulues.
    Réglages des grandes attaques : portée (10 à **100 000 blocs** : 10, 25, 50, 75, 100, 150, 200, 300, 500, 750, 1000, 1500, 2000, 3000, 5000, 10 000, 25 000, 50 000, 100 000 ;
    au-delà de la distance de rendu, le terrain n'est pas chargé et l'attaque n'y fait rien),
-   dégâts / puissance (10 à **1 000 000** : 10, 25, 50, 100, 200, 500, 1000, 2500, 5000, 10 000, 25 000, 50 000, 100 000, 1 000 000 ; **U** passe aussi au cran suivant). À partir de 10 000, l'impact creuse un **cratère géant** : 10 000 → 20 blocs de rayon, 25 000 → 45, 50 000 → 80, **100 000 → 120 (hyper gros)**, 1 000 000 → 150 ; il se creuse du centre vers les bords en quelques secondes, sans figer le jeu. Recharge de 12 s (10 blocs) à 84 s (100 000 blocs). Le sol est
+   dégâts / puissance (10 à **1 000 000** : 10, 25, 50, 100, 200, 500, 1000, 2500, 5000, 10 000, 25 000, 50 000, 100 000, 1 000 000 ; **U** passe aussi au cran suivant). À partir de 5000, l'impact creuse un **cratère géant** : 5000 → 20 blocs de rayon, 10 000 → 40, 25 000 → 75, 50 000 → 120, **100 000 → 180 (hyper gros)**, 1 000 000 → 250 ; il se creuse du centre vers les bords en quelques secondes, sans figer le jeu. Recharge de 12 s (10 blocs) à 84 s (100 000 blocs). Le sol est
    labouré par les lasers à partir de 75 blocs de portée. Les joueurs ne sont jamais touchés, la bedrock et les
    coffres (et autres blocs à contenu) ne sont jamais détruits.
 

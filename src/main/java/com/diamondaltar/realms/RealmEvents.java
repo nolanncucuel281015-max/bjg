@@ -835,7 +835,7 @@ public final class RealmEvents {
 		EffectManager.start(giant);
 		int giantTicks = 0;
 		long worst = 0;
-		while (giantTicks < 2000) {
+		while (giantTicks < 4000) {
 			giantTicks++;
 			long t0 = System.nanoTime();
 			EffectManager.tickAll();
@@ -854,7 +854,7 @@ public final class RealmEvents {
 				}
 			}
 		}
-		boolean giantOk = SkyFx.blast(level100k) == 120 && left == 0 && worst < 200_000_000L;
+		boolean giantOk = SkyFx.blast(level100k) == 180 && left == 0 && worst < 200_000_000L;
 		report.append(giantOk ? "OK" : "FAIL").append(" cratere geant (puissance 100 000, rayon ").append(SkyFx.blast(level100k))
 				.append(") : ").append(giant.removed()).append(" blocs detruits en ").append(giantTicks).append(" ticks, pire tick ")
 				.append(worst / 1_000_000).append(" ms, pierre restante ").append(left).append('\n');
