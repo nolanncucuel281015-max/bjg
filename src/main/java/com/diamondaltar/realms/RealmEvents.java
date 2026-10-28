@@ -317,9 +317,9 @@ public final class RealmEvents {
 
 	/**
 	 * Les attaques de l'épée (touche K pour changer) : 0 = Jugement des Sept Royaumes, 1 = Anéantissement Céleste,
-	 * 2 = Lance de Jupiter. Les deux dernières se règlent avec Y (portée) et U (dégâts).
+	 * 2 = Lance de Jupiter, 3 = Effondrement Stellaire. Les trois dernières se règlent avec Y (portée et puissance).
 	 */
-	public static final String[] SWORD_MODES = {"judgement", "annihilation", "jupiter"};
+	public static final String[] SWORD_MODES = {"judgement", "annihilation", "jupiter", "collapse"};
 	/** Niveaux par défaut : portée 75 blocs, 100 dégâts. */
 	public static final int DEFAULT_LEVEL = 4;
 
@@ -380,6 +380,10 @@ public final class RealmEvents {
 			case 2 -> {
 				SWORD_COOLDOWN.put(key, level.getGameTime() + JupiterSpear.cooldown(range));
 				EffectManager.start(new JupiterSpear(level, player, range, damage));
+			}
+			case 3 -> {
+				SWORD_COOLDOWN.put(key, level.getGameTime() + StellarCollapse.cooldown(range));
+				EffectManager.start(new StellarCollapse(level, player, range, damage));
 			}
 			default -> {
 				SWORD_COOLDOWN.put(key, level.getGameTime() + SWORD_COOLDOWN_TICKS);
@@ -673,7 +677,7 @@ public final class RealmEvents {
 		}
 		// Deux dalles en plein ciel (au-dessus des îles), bien dégagées : une pour le laser, une pour la lance.
 		int y = Math.min(215, level.getMaxY() - 40);
-		for (int row : new int[]{8, 40}) {
+		for (int row : new int[]{8, 40, 72}) {
 			for (int x = 0; x <= 60; x++) {
 				for (int dz = -2; dz <= 2; dz++) {
 					level.setBlockAndUpdate(new BlockPos(x, y - 1, row + dz), RealmContent.STONE[Realm.SOLAR.ordinal()].defaultBlockState());
@@ -741,6 +745,29 @@ public final class RealmEvents {
 		report.append(spearOk ? "OK" : "FAIL").append(" Lance de Jupiter : impact en ").append(BlockPos.containing(spear.impactPoint()))
 				.append(", ").append(spearHit).append("/").append(targets.size()).append(" squelettes touches\n");
 		ok &= spearOk;
+		// Effondrement Stellaire : le trou noir aspire puis la supernova pulvérise.
+		targets.forEach(e -> e.discard());
+		targets.clear();
+		for (int d : new int[]{15, 45}) {
+			var mob = Compat.SKELETON.create(level, net.minecraft.world.entity.EntitySpawnReason.TRIGGERED);
+			if (mob != null) {
+				mob.setPos(8.5 + d, y, 72.5);
+				level.addFreshEntity(mob);
+				targets.add(mob);
+			}
+		}
+		caster.setPos(8.5, y, 72.5);
+		caster.setXRot(90);
+		StellarCollapse collapse = new StellarCollapse(level, caster, DEFAULT_LEVEL, DEFAULT_LEVEL);
+		EffectManager.start(collapse);
+		for (int i = 0; i < 190; i++) {
+			EffectManager.tickAll();
+		}
+		long collapseHit = targets.stream().filter(e -> !e.isAlive() || e.getHealth() < e.getMaxHealth()).count();
+		boolean collapseOk = collapse.hitCount() >= targets.size() && collapseHit == targets.size() && !targets.isEmpty();
+		report.append(collapseOk ? "OK" : "FAIL").append(" Effondrement Stellaire : impact en ").append(BlockPos.containing(collapse.impactPoint()))
+				.append(", ").append(collapseHit).append("/").append(targets.size()).append(" squelettes aspires et pulverises\n");
+		ok &= collapseOk;
 		targets.forEach(e -> e.discard());
 		return ok;
 	}

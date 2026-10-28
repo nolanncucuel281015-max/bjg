@@ -18,8 +18,8 @@ import net.minecraft.world.item.ItemStack;
  * et la puissance (dégâts, 10 à 1000) en cliquant directement sur la valeur voulue.
  */
 public class SwordSettingsScreen extends Screen {
-	private static final int W = 344;
-	private static final int H = 196;
+	private static final int W = 440;
+	private static final int H = 220;
 	private static final int PAD = 12;
 	private static final int TEXT = 0xFFE8E6F4;
 	private static final int MUTED = 0xFFA7A2C6;
@@ -66,7 +66,7 @@ public class SwordSettingsScreen extends Screen {
 		int rw = (W - PAD * 2 - 2 * (nr - 1)) / nr;
 		for (int i = 0; i < nr; i++) {
 			int level = i + 1;
-			addRenderableWidget(Button.builder(choice(Component.literal(String.valueOf(SkyFx.RANGES[i])), level == range),
+			addRenderableWidget(Button.builder(choice(Component.literal(SkyFx.shortNumber(SkyFx.RANGES[i])), level == range),
 					b -> set(mode, level, damage)).bounds(l + PAD + i * (rw + 2), t + 86, rw, 18).build());
 		}
 		// Puissance (dégâts)
@@ -74,7 +74,7 @@ public class SwordSettingsScreen extends Screen {
 		int dw = (W - PAD * 2 - 2 * (nd - 1)) / nd;
 		for (int i = 0; i < nd; i++) {
 			int level = i + 1;
-			addRenderableWidget(Button.builder(choice(Component.literal(String.valueOf(SkyFx.DAMAGES[i])), level == damage),
+			addRenderableWidget(Button.builder(choice(Component.literal(SkyFx.shortNumber(SkyFx.DAMAGES[i])), level == damage),
 					b -> set(mode, range, level)).bounds(l + PAD + i * (dw + 2), t + 134, dw, 18).build());
 		}
 		addRenderableWidget(Button.builder(Component.translatable("diamondaltar.sword_settings.done"), b -> onClose())

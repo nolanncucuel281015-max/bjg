@@ -360,6 +360,43 @@ def planet_textures():
             if 0 <= xx < 32 and 0 <= yy < 32 and abs(k) <= 3:
                 sp.putpixel((min(31, xx + 1), yy), (255, 230, 120, 255))
     save(sp, "item/jupiter_spear.png")
+    # -- Le Soleil : boule de feu ronde aux granulations qui bougent.
+    sun = Image.new("RGBA", (n, n * frames), (0, 0, 0, 0))
+    for f in range(frames):
+        ph = f / frames * math.tau
+        for (x, y), (lon, lat, z) in mask.items():
+            g = 0.5 + 0.25 * math.sin(lon * 9 + ph * 2) * math.sin(lat * 11 - ph) + 0.25 * math.sin((lon + lat) * 17 + ph * 3)
+            hot = 0.55 + 0.45 * z
+            col = (255, int(150 + 90 * g * hot), int(30 + 120 * (g * hot) ** 3))
+            shade = 0.65 + 0.35 * z
+            sun.putpixel((x, f * n + y), tuple(int(min(255, v * shade + 40 * (1 - z) ** 2)) for v in col) + (255,))
+    save(sun, "item/sun.png")
+    (TEX / "item/sun.png.mcmeta").write_text('{"animation": {"frametime": 2}}')
+    # -- Le trou noir : disque noir, anneau de lumière (orange et violet) qui tourne.
+    bh = Image.new("RGBA", (n, n * frames), (0, 0, 0, 0))
+    c = (n - 1) / 2
+    for f in range(frames):
+        ph = f / frames * math.tau
+        for y in range(n):
+            for x in range(n):
+                dx, dy = (x - c) / c, (y - c) / c
+                d = math.hypot(dx, dy)
+                if d > 1:
+                    continue
+                if d < 0.42:
+                    bh.putpixel((x, f * n + y), (0, 0, 0, 255))
+                    continue
+                a = math.atan2(dy, dx)
+                swirl = 0.5 + 0.5 * math.sin(a * 3 - ph * 2 + d * 14)
+                ring = max(0.0, 1 - abs(d - 0.55) / 0.18)
+                glow = max(0.0, 1 - (d - 0.42) / 0.58)
+                r = int(min(255, 255 * ring + 140 * swirl * glow))
+                gg = int(min(255, 170 * ring * ring + 60 * swirl * glow))
+                b = int(min(255, 90 * ring + 220 * (1 - swirl) * glow))
+                alpha = int(255 * min(1.0, glow * 1.6 + ring))
+                bh.putpixel((x, f * n + y), (r, gg, b, alpha))
+    save(bh, "item/black_hole.png")
+    (TEX / "item/black_hole.png.mcmeta").write_text('{"animation": {"frametime": 1}}')
 
 
 def laser_textures():
@@ -485,7 +522,7 @@ def assets():
     for r in REALMS:
         cube(f"{r['id']}_portal_frame")
     flat_item("portal_guide")
-    for item in ["jupiter", "earth"] + [f"energy_orb_{i}" for i in range(8)]:
+    for item in ["jupiter", "earth", "sun", "black_hole"] + [f"energy_orb_{i}" for i in range(8)]:
         flat_item(item)
     flat_item("jupiter_spear", handheld=True)
     variants = {}
@@ -726,7 +763,7 @@ def lang():
                 f"{NS}.sword_settings.attack": "Attaque :",
                 f"{NS}.sword_settings.range": "Portée : %s blocs (recharge %s s)",
                 f"{NS}.sword_settings.damage": "Puissance : %s dégâts",
-                f"{NS}.sword_settings.hint": "Clique sur une valeur. La portée et la puissance servent à l'Anéantissement et à la Lance de Jupiter.",
+                f"{NS}.sword_settings.hint": "Clique sur une valeur. La portée et la puissance servent aux trois grandes attaques. Au-delà de ta distance de rendu, le terrain n'est pas chargé : l'attaque n'y fait rien.",
                 f"{NS}.sword_settings.done": "Terminé",
                 f"{NS}.seven_realms.jupiter.name": "Lance de Jupiter",
                 f"{NS}.seven_realms.jupiter.desc": "Jupiter apparaît dans le ciel, une lance surpuissante tourne autour d'elle puis fonce sur la Terre : énorme explosion sur le bloc visé",
@@ -734,6 +771,10 @@ def lang():
                 f"item.{NS}.jupiter": "Jupiter",
                 f"item.{NS}.earth": "Terre",
                 f"item.{NS}.jupiter_spear": "Lance de Jupiter",
+                f"item.{NS}.sun": "Étoile",
+                f"item.{NS}.black_hole": "Trou noir",
+                f"{NS}.seven_realms.collapse.name": "Effondrement Stellaire",
+                f"{NS}.seven_realms.collapse.desc": "Une étoile géante s'effondre en trou noir qui aspire toutes les créatures, puis explose en supernova : dégâts doublés",
                 f"key.{NS}.sword_power": "Réglages de l'épée",
                 f"block.{NS}.celestial_laser": "Laser Céleste",
                 f"{NS}.seven_realms.judgement.name": "Jugement des Sept Royaumes",
@@ -790,7 +831,7 @@ def lang():
                 f"{NS}.sword_settings.attack": "Attack:",
                 f"{NS}.sword_settings.range": "Range: %s blocks (%s s cooldown)",
                 f"{NS}.sword_settings.damage": "Power: %s damage",
-                f"{NS}.sword_settings.hint": "Click a value. Range and power apply to Annihilation and the Spear of Jupiter.",
+                f"{NS}.sword_settings.hint": "Click a value. Range and power apply to the three big attacks. Beyond your render distance the terrain isn't loaded: the attack does nothing there.",
                 f"{NS}.sword_settings.done": "Done",
                 f"{NS}.seven_realms.jupiter.name": "Spear of Jupiter",
                 f"{NS}.seven_realms.jupiter.desc": "Jupiter appears in the sky, a mighty spear orbits it then hurtles down to Earth: huge explosion on the targeted block",
@@ -798,6 +839,10 @@ def lang():
                 f"item.{NS}.jupiter": "Jupiter",
                 f"item.{NS}.earth": "Earth",
                 f"item.{NS}.jupiter_spear": "Spear of Jupiter",
+                f"item.{NS}.sun": "Star",
+                f"item.{NS}.black_hole": "Black Hole",
+                f"{NS}.seven_realms.collapse.name": "Stellar Collapse",
+                f"{NS}.seven_realms.collapse.desc": "A giant star collapses into a black hole that sucks in every creature, then explodes into a supernova: double damage",
                 f"key.{NS}.sword_power": "Sword settings",
                 f"block.{NS}.celestial_laser": "Celestial Laser",
                 f"{NS}.seven_realms.judgement.name": "Judgement of the Seven Realms",

@@ -36,11 +36,11 @@ import java.util.UUID;
  */
 public final class SkyFx {
 	/** Portées réglables avec la touche Y (en blocs). */
-	public static final int[] RANGES = {10, 25, 50, 75, 100, 150, 200, 300, 500, 750, 1000};
+	public static final int[] RANGES = {10, 25, 50, 75, 100, 150, 200, 300, 500, 750, 1000, 1500, 2000, 3000, 5000};
 	/** Dégâts réglables avec la touche U. */
-	public static final int[] DAMAGES = {10, 25, 50, 100, 200, 500, 1000};
-	private static final int[] CRATER = {2, 4, 6, 8, 10, 13, 16, 18, 20, 22, 24};
-	private static final float[] WIDTH = {1.5f, 2.5f, 3.5f, 4.5f, 5.5f, 7f, 9f, 10f, 11f, 12f, 13f};
+	public static final int[] DAMAGES = {10, 25, 50, 100, 200, 500, 1000, 2500, 5000, 10000, 50000, 100000, 1000000};
+	private static final int[] CRATER = {2, 4, 6, 8, 10, 13, 16, 18, 20, 22, 24, 26, 28, 30, 32};
+	private static final float[] WIDTH = {1.5f, 2.5f, 3.5f, 4.5f, 5.5f, 7f, 9f, 10f, 11f, 12f, 13f, 14f, 15f, 16f, 18f};
 	/** Blocs détruits sans prévenir les voisins (bien moins de calculs, donc moins de lag). */
 	private static final int QUIET = 2 | 16;
 	/** On ne vise jamais plus loin que ça (au-delà, les tronçons ne sont pas chargés de toute façon). */
@@ -258,6 +258,35 @@ public final class SkyFx {
 				}
 			}
 		}
+	}
+
+	/** Écriture courte d'un nombre pour les boutons : 1500 → « 1,5k », 1000000 → « 1M ». */
+	public static String shortNumber(int n) {
+		if (n >= 1_000_000) {
+			return (n / 1_000_000) + "M";
+		}
+		if (n >= 1000) {
+			return n % 1000 == 0 ? (n / 1000) + "k" : String.format("%.1fk", n / 1000.0).replace('.', ',');
+		}
+		return String.valueOf(n);
+	}
+
+	/** Les créatures vivantes (pas les joueurs) dans la zone, sans parcourir des milliers de tronçons. */
+	public static java.util.List<LivingEntity> creatures(ServerLevel level, Vec3 center, double reach) {
+		double h = Math.min(reach, 64) + 10;
+		java.util.List<LivingEntity> out = new java.util.ArrayList<>();
+		if (reach <= 64) {
+			out.addAll(level.getEntitiesOfClass(LivingEntity.class, AABB.ofSize(center, reach * 2 + 2, h * 2, reach * 2 + 2),
+					e -> e.isAlive() && !(e instanceof Player)));
+		} else {
+			for (var entity : level.getAllEntities()) {
+				if (entity instanceof LivingEntity living && living.isAlive() && !(living instanceof Player)
+						&& Math.abs(living.getY() - center.y) <= h && living.distanceToSqr(center.x, living.getY(), center.z) <= reach * reach) {
+					out.add(living);
+				}
+			}
+		}
+		return out;
 	}
 
 	/**

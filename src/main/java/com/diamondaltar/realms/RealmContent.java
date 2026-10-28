@@ -197,6 +197,8 @@ public final class RealmContent {
 	public static final Item JUPITER = hidden("jupiter");
 	public static final Item EARTH = hidden("earth");
 	public static final Item JUPITER_SPEAR = hidden("jupiter_spear");
+	public static final Item SUN = hidden("sun");
+	public static final Item BLACK_HOLE = hidden("black_hole");
 	/** Sphères d'énergie : 0..6 = couleurs des royaumes, 7 = blanche. */
 	public static final Item[] ORB = new Item[8];
 
