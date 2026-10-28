@@ -159,9 +159,18 @@ son **minerai**, son **boss unique** et son **armure légendaire**.
      du bloc visé et tournent ; chacun tire un laser de sa couleur sur le bloc visé, puis les sept lasers deviennent
      **énormes** et tournent de plus en plus vite pendant qu'une sphère de lumière grossit au point d'impact ;
      enfin tout **éclate** : onde de choc aux sept couleurs et **dégâts x4**.
-   - *Big Bang* (la plus forte) : le **ciel devient noir**, toutes les créatures sont **figées**, la matière est aspirée
+   - *Big Bang* : le **ciel devient noir**, toutes les créatures sont **figées**, la matière est aspirée
      vers un point de lumière qui **bat comme un cœur** entouré de trois anneaux… silence… puis **l'univers explose** :
      flash blanc total, deux sphères géantes, quatre ondes de choc et **dégâts x5**, au sol comme en l'air.
+   - *Tornade Céleste* : une **tornade** faite de sept anneaux laser (un par royaume) se forme sur le bloc visé et
+     monte jusqu'au ciel sous la foudre ; toutes les créatures de la portée sont **aspirées, soulevées et tournent**
+     dedans (frappées à chaque tour), puis la tornade **explose** et les projette : onde de choc et **dégâts x4**.
+   - *Mille Épées* : un cercle d'**épées géantes** (l'Épée des Sept Royaumes) apparaît dans le ciel ; elles **plongent
+     une à une sur chaque créature**, puis une **Épée Colossale de 50 blocs** descend et se plante dans le bloc visé :
+     flash doré, onde de choc et **dégâts x5**.
+   - *Éclipse Totale* (la plus forte) : un **soleil géant** apparaît, une **lune noire** glisse devant ; le ciel
+     s'assombrit, la couronne tourne puis tire un **rayon colossal** blanc à cœur rouge ; enfin **douze lasers**
+     balaient le sol en tournant et des **piliers de lumière** jaillissent partout : **dégâts x6**.
 
    **Y** ouvre l'**interface de réglages** de l'épée : on y clique sur l'attaque, la portée et la puissance voulues.
    Réglages des grandes attaques : portée (10 à **100 000 blocs** : 10, 25, 50, 75, 100, 150, 200, 300, 500, 750, 1000, 1500, 2000, 3000, 5000, 10 000, 25 000, 50 000, 100 000 ;

@@ -318,9 +318,10 @@ public final class RealmEvents {
 	/**
 	 * Les attaques de l'épée (touche K pour changer) : 0 = Jugement des Sept Royaumes, 1 = Anéantissement Céleste,
 	 * 2 = Lance de Jupiter, 3 = Effondrement Stellaire, 4 = Pluie de Comètes,
-	 * 5 = Convergence des Sept Royaumes, 6 = Big Bang. Les six dernières se règlent avec Y (portée et puissance).
+	 * 5 = Convergence des Sept Royaumes, 6 = Big Bang, 7 = Tornade Céleste, 8 = Mille Épées, 9 = Éclipse Totale.
+	 * Toutes sauf la première se règlent avec Y (portée et puissance).
 	 */
-	public static final String[] SWORD_MODES = {"judgement", "annihilation", "jupiter", "collapse", "comets", "convergence", "bigbang"};
+	public static final String[] SWORD_MODES = {"judgement", "annihilation", "jupiter", "collapse", "comets", "convergence", "bigbang", "tornado", "swords", "eclipse"};
 	/** Niveaux par défaut : portée 75 blocs, 100 dégâts. */
 	public static final int DEFAULT_LEVEL = 4;
 
@@ -370,6 +371,9 @@ public final class RealmEvents {
 			case 4 -> CometStorm.cooldown(range);
 			case 5 -> SevenConvergence.cooldown(range);
 			case 6 -> BigBang.cooldown(range);
+			case 7 -> CelestialTornado.cooldown(range);
+			case 8 -> ThousandSwords.cooldown(range);
+			case 9 -> TotalEclipse.cooldown(range);
 			default -> SWORD_COOLDOWN_TICKS;
 		};
 	}
@@ -410,6 +414,18 @@ public final class RealmEvents {
 			case 6 -> {
 				SWORD_COOLDOWN.put(key, level.getGameTime() + BigBang.cooldown(range));
 				EffectManager.start(new BigBang(level, player, range, damage));
+			}
+			case 7 -> {
+				SWORD_COOLDOWN.put(key, level.getGameTime() + CelestialTornado.cooldown(range));
+				EffectManager.start(new CelestialTornado(level, player, range, damage));
+			}
+			case 8 -> {
+				SWORD_COOLDOWN.put(key, level.getGameTime() + ThousandSwords.cooldown(range));
+				EffectManager.start(new ThousandSwords(level, player, range, damage));
+			}
+			case 9 -> {
+				SWORD_COOLDOWN.put(key, level.getGameTime() + TotalEclipse.cooldown(range));
+				EffectManager.start(new TotalEclipse(level, player, range, damage));
 			}
 			default -> {
 				SWORD_COOLDOWN.put(key, level.getGameTime() + SWORD_COOLDOWN_TICKS);
@@ -837,8 +853,8 @@ public final class RealmEvents {
 				.append(", ").append(cometHit).append("/").append(targets.size()).append(" squelettes ecrases, ")
 				.append(comets.hitCount()).append(" touche(s)\n");
 		ok &= cometOk;
-		// Convergence des Sept Royaumes, puis Big Bang : même dalle, refaite à chaque fois.
-		for (int attack = 0; attack < 2; attack++) {
+		// Convergence, Big Bang, Tornade, Mille Épées, Éclipse : même dalle, refaite à chaque fois.
+		for (int attack = 0; attack < 5; attack++) {
 			targets.forEach(e -> e.discard());
 			targets.clear();
 			for (int x = 0; x <= 60; x++) {
@@ -865,14 +881,32 @@ public final class RealmEvents {
 				name = "Convergence des Sept Royaumes";
 				hits = conv::hitCount;
 				impact = conv.impactPoint();
-			} else {
+			} else if (attack == 1) {
 				BigBang bang = new BigBang(level, caster, DEFAULT_LEVEL, DEFAULT_LEVEL);
 				EffectManager.start(bang);
 				name = "Big Bang";
 				hits = bang::hitCount;
 				impact = bang.impactPoint();
+			} else if (attack == 2) {
+				CelestialTornado tornado = new CelestialTornado(level, caster, DEFAULT_LEVEL, DEFAULT_LEVEL);
+				EffectManager.start(tornado);
+				name = "Tornade Celeste";
+				hits = tornado::hitCount;
+				impact = tornado.impactPoint();
+			} else if (attack == 3) {
+				ThousandSwords swords = new ThousandSwords(level, caster, DEFAULT_LEVEL, DEFAULT_LEVEL);
+				EffectManager.start(swords);
+				name = "Mille Epees";
+				hits = swords::hitCount;
+				impact = swords.impactPoint();
+			} else {
+				TotalEclipse eclipse = new TotalEclipse(level, caster, DEFAULT_LEVEL, DEFAULT_LEVEL);
+				EffectManager.start(eclipse);
+				name = "Eclipse Totale";
+				hits = eclipse::hitCount;
+				impact = eclipse.impactPoint();
 			}
-			for (int i = 0; i < 200; i++) {
+			for (int i = 0; i < 220; i++) {
 				EffectManager.tickAll();
 			}
 			long struck = targets.stream().filter(e -> !e.isAlive() || e.getHealth() < e.getMaxHealth()).count();

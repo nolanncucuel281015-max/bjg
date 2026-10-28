@@ -344,5 +344,11 @@
 	"diamondaltar.seven_realms.convergence.name": "Convergence des Sept Royaumes",
 	"diamondaltar.seven_realms.convergence.desc": "Sept portails, un par royaume, s'ouvrent dans le ciel et unissent leurs lasers sur le bloc visé, puis tout éclate : dégâts x4",
 	"diamondaltar.seven_realms.bigbang.name": "Big Bang",
-	"diamondaltar.seven_realms.bigbang.desc": "Le ciel devient noir, tout se fige, un point de lumière bat comme un cœur… puis l'univers explose : dégâts x5, au sol comme en l'air"
+	"diamondaltar.seven_realms.bigbang.desc": "Le ciel devient noir, tout se fige, un point de lumière bat comme un cœur… puis l'univers explose : dégâts x5, au sol comme en l'air",
+	"diamondaltar.seven_realms.tornado.name": "Tornade Céleste",
+	"diamondaltar.seven_realms.tornado.desc": "Une tornade de sept anneaux laser aspire et fait tourner toutes les créatures sous la foudre, puis explose et les projette : dégâts x4",
+	"diamondaltar.seven_realms.swords.name": "Mille Épées",
+	"diamondaltar.seven_realms.swords.desc": "Un cercle d'épées géantes plonge sur chaque créature, puis une Épée Colossale de 50 blocs se plante dans le sol : dégâts x5",
+	"diamondaltar.seven_realms.eclipse.name": "Éclipse Totale",
+	"diamondaltar.seven_realms.eclipse.desc": "Une lune noire cache un soleil géant, la couronne tire un rayon colossal, puis douze lasers et des piliers de lumière ravagent tout : dégâts x6"
 }

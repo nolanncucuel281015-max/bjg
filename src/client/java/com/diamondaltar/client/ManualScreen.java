@@ -418,7 +418,10 @@ public class ManualScreen extends Screen {
 		gear.add(text("• Effondrement Stellaire : une étoile géante s'effondre en trou noir qui aspire toutes les créatures, puis explose en supernova : dégâts doublés."));
 		gear.add(text("• Pluie de Comètes : une faille des 7 royaumes s'ouvre dans le ciel, des comètes traquent chaque créature, puis la Comète Mère fonce au sol : flash rouge, puis énorme explosion. Dégâts triplés."));
 		gear.add(text("• Convergence des Sept Royaumes : sept portails, un par royaume, unissent leurs lasers sur le bloc visé, puis tout éclate. Dégâts x4."));
-		gear.add(text("• Big Bang (la plus forte) : le ciel devient noir, tout se fige, puis l'univers explose. Dégâts x5, au sol comme en l'air."));
+		gear.add(text("• Big Bang : le ciel devient noir, tout se fige, puis l'univers explose. Dégâts x5, au sol comme en l'air."));
+		gear.add(text("• Tornade Céleste : une tornade de sept anneaux laser aspire et fait tourner les créatures sous la foudre, puis explose. Dégâts x4."));
+		gear.add(text("• Mille Épées : des épées géantes plongent sur chaque créature, puis une Épée Colossale de 50 blocs se plante dans le sol. Dégâts x5."));
+		gear.add(text("• Éclipse Totale (la plus forte) : une lune noire cache un soleil géant, un rayon colossal tombe, puis douze lasers et des piliers de lumière ravagent tout. Dégâts x6."));
 		gear.add(text("Y ouvre l'interface de réglages : clique sur l'attaque, la portée (10 à 100 000 blocs) et la puissance (10 à 1 000 000 dégâts). Dès 10 000 de puissance, un cratère géant : 10 000 → 15 blocs, 25 000 → 25, 50 000 → 40, 100 000 → 60, 1 000 000 → 80 de rayon. U : dégâts suivants. Les joueurs, la bedrock et les coffres sont épargnés.", MUTED));
 		chapters.add(new Chapter("Armures et épée ultime", gear));
 
