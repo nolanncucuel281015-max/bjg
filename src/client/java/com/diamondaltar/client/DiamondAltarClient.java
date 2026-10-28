@@ -189,9 +189,10 @@ public class DiamondAltarClient implements ClientModInitializer {
 				int range = com.diamondaltar.realms.RealmEvents.swordRange(stack);
 				int dmg = com.diamondaltar.realms.RealmEvents.swordDamage(stack);
 				int max = com.diamondaltar.realms.SkyFx.RANGES.length;
+				int maxDmg = com.diamondaltar.realms.SkyFx.DAMAGES.length;
 				lines.add(Component.translatable("diamondaltar.seven_realms.range", Component.literal("■".repeat(range) + "□".repeat(max - range)),
 						com.diamondaltar.realms.SkyFx.range(range)).withStyle(ChatFormatting.RED));
-				lines.add(Component.translatable("diamondaltar.seven_realms.damage", Component.literal("■".repeat(dmg) + "□".repeat(max - dmg)),
+				lines.add(Component.translatable("diamondaltar.seven_realms.damage", Component.literal("■".repeat(dmg) + "□".repeat(maxDmg - dmg)),
 						com.diamondaltar.realms.SkyFx.damage(dmg)).withStyle(ChatFormatting.RED));
 				lines.add(Component.translatable("diamondaltar.seven_realms.use", SWORD_KEY_HINT.get()).withStyle(ChatFormatting.DARK_AQUA));
 				lines.add(Component.translatable("diamondaltar.seven_realms.power_hint", POWER_KEY.getTranslatedKeyMessage(),

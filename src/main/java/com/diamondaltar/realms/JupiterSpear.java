@@ -37,7 +37,7 @@ public final class JupiterSpear extends TimedEffect {
 	private static final int BOOM = 45;
 	private static final float JUPITER_SIZE = 34f;
 	private static final float EARTH_SIZE = 9f;
-	private static final int RING = 40;
+	private static final int RING = 28;
 
 	private final ServerPlayer player;
 	private final int rangeLevel;
@@ -225,9 +225,12 @@ public final class JupiterSpear extends TimedEffect {
 			SkyFx.carve(level, target, r, carved);
 			carved = r;
 		}
-		double reach = Math.min(radius, (t + 1) * radius / 28.0);
-		SkyFx.ring(ring, target.add(0, 0.8, 0), reach, t * 0.04, (1.2f + rangeLevel * 0.35f) * fade);
-		int n = Math.max(8, (int) (reach * 0.35));
+		double reach = Math.min(radius, (t + 2) * radius / 28.0);
+		if (t % 2 == 1 && t != BOOM - 1) {
+			return; // l'onde et les dégâts : un tick sur deux (moins de lag), l'anneau glisse en douceur entre les deux
+		}
+		SkyFx.ring(ring, target.add(0, 0.8, 0), reach, t * 0.04, (1.2f + rangeLevel * 0.35f) * fade, 2);
+		int n = Math.max(8, Math.min(36, (int) (reach * 0.35)));
 		for (int i = 0; i < n; i++) {
 			double a = Math.PI * 2 * i / n + t;
 			level.sendParticles(i % 3 == 0 ? ParticleTypes.EXPLOSION : ModParticles.GLOW_FIRE,

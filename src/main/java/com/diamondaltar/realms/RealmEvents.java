@@ -327,7 +327,7 @@ public final class RealmEvents {
 		player.level().playSound(null, player.blockPosition(), SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 1f, 1.2f + next * 0.3f);
 	}
 
-	/** Niveau de portée (1 à 7 : 10 à 200 blocs). */
+	/** Niveau de portée (1 à 11 : 10 à 1000 blocs). */
 	public static int swordRange(ItemStack stack) {
 		Integer p = stack.get(com.diamondaltar.ModComponents.SWORD_POWER);
 		return SkyFx.clamp(p == null ? DEFAULT_LEVEL : p);
@@ -336,12 +336,12 @@ public final class RealmEvents {
 	/** Niveau de dégâts (1 à 7 : 10 à 1000). */
 	public static int swordDamage(ItemStack stack) {
 		Integer p = stack.get(com.diamondaltar.ModComponents.SWORD_DAMAGE);
-		return SkyFx.clamp(p == null ? DEFAULT_LEVEL : p);
+		return SkyFx.clampDamage(p == null ? DEFAULT_LEVEL : p);
 	}
 
 	/** Touche Y : portée suivante ; touche U : dégâts suivants (on revient au début après le maximum). */
 	public static void switchSwordSetting(ServerPlayer player, ItemStack stack, boolean damage) {
-		int max = SkyFx.RANGES.length;
+		int max = damage ? SkyFx.DAMAGES.length : SkyFx.RANGES.length;
 		int next = (damage ? swordDamage(stack) : swordRange(stack)) % max + 1;
 		stack.set(damage ? com.diamondaltar.ModComponents.SWORD_DAMAGE : com.diamondaltar.ModComponents.SWORD_POWER, next);
 		Component bar = Component.literal("■".repeat(next) + "□".repeat(max - next)).withStyle(next == max ? ChatFormatting.RED : ChatFormatting.GOLD);

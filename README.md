@@ -147,8 +147,8 @@ son **minerai**, son **boss unique** et son **armure légendaire**.
      au-dessus du bloc visé ; une **lance surpuissante** tourne autour de Jupiter de plus en plus vite, puis **fonce sur
      la Terre** : énorme explosion, éclairs, cratère et onde de choc.
 
-   Réglages des deux grandes attaques : **Y** = portée (10, 25, 50, 75, 100, 150 ou **200 blocs**),
-   **U** = dégâts (10, 25, 50, 100, 200, 500 ou 1000). Recharge de 12 s (10 blocs) à 36 s (200 blocs). Le sol est
+   Réglages des deux grandes attaques : **Y** = portée (10, 25, 50, 75, 100, 150, 200, 300, 500, 750 ou **1000 blocs**),
+   **U** = dégâts (10, 25, 50, 100, 200, 500 ou 1000). Recharge de 12 s (10 blocs) à 52 s (1000 blocs). Le sol est
    labouré par les lasers à partir de 75 blocs de portée. Les joueurs ne sont jamais touchés, la bedrock et les
    coffres (et autres blocs à contenu) ne sont jamais détruits.
 

@@ -26,7 +26,7 @@ import java.util.UUID;
  * s'y fondent, la lumière converge vers elle, et un cercle-cible suit le bloc que le joueur vise ;</li>
  * <li><b>Tir</b> : un laser rond gigantesque part de la main du joueur jusqu'au bloc visé, une colonne de lumière
  * monte au ciel au point d'impact, un cratère se creuse, une onde de choc ronde et 7 lasers ronds tournants détruisent
- * tout jusqu'à la portée choisie (touche Y, jusqu'à 200 blocs), avec les dégâts choisis (touche U) ;</li>
+ * tout jusqu'à la portée choisie (touche Y, jusqu'à 1000 blocs), avec les dégâts choisis (touche U) ;</li>
  * <li><b>Fin</b> : tout s'éteint, le joueur redescend en douceur.</li>
  * </ol>
  * Les joueurs ne sont jamais touchés ; la bedrock et les coffres (et autres blocs à contenu) ne sont jamais détruits.
@@ -35,7 +35,7 @@ public final class CelestialAnnihilation extends TimedEffect {
 	private static final int RISE = 20;
 	private static final int CHARGE = 40;
 	private static final int FIRE = 44;
-	private static final int RING = 40;
+	private static final int RING = 28;
 	private static final int TARGET = 24;
 
 	private final ServerPlayer player;
@@ -72,7 +72,7 @@ public final class CelestialAnnihilation extends TimedEffect {
 		level.playSound(null, player.blockPosition(), SoundEvents.ENDER_DRAGON_GROWL, SoundSource.PLAYERS, 1.5f, 1.5f - this.rangeLevel * 0.1f);
 	}
 
-	/** Recharge selon la portée : de 12 s (10 blocs) à 36 s (200 blocs). */
+	/** Recharge selon la portée : de 12 s (10 blocs) à 52 s (1000 blocs). */
 	public static int cooldown(int rangeLevel) {
 		return 160 + SkyFx.clamp(rangeLevel) * 80;
 	}
@@ -155,7 +155,10 @@ public final class CelestialAnnihilation extends TimedEffect {
 			lift.discard();
 			lift = null;
 		}
-		impact = SkyFx.aim(level, player, start);
+		// On ne recalcule la visée que tous les 4 ticks (moins de calculs).
+		if (t % 4 == 0) {
+			impact = SkyFx.aim(level, player, start);
+		}
 		Vec3 hand = hand();
 		if (orb == null) {
 			orb = keep(SkyFx.sphere(level, hand, RealmContent.ORB[LaserBlock.WHITE], 0.4f));
@@ -183,7 +186,7 @@ public final class CelestialAnnihilation extends TimedEffect {
 		double tr = Math.max(width, radius * (1 - progress) * 0.5 + width);
 		SkyFx.ring(target, impact.add(0, 0.2, 0), tr, t * 0.05, 0.35f + rangeLevel * 0.05f);
 		// La lumière converge vers la sphère.
-		for (int k = 0; k < 10 + rangeLevel * 2; k++) {
+		for (int k = 0; k < 12; k++) {
 			double a = level.getRandom().nextDouble() * Math.PI * 2;
 			double d = 6 + level.getRandom().nextDouble() * 20;
 			Vec3 from = hand.add(Math.cos(a) * d, (level.getRandom().nextDouble() - 0.5) * 10, Math.sin(a) * d);
@@ -222,6 +225,7 @@ public final class CelestialAnnihilation extends TimedEffect {
 		SkyFx.beam(beam[2], hand, impact, width * 0.3f * pulse * fade);
 		// Une colonne de lumière monte au ciel au point d'impact.
 		SkyFx.beam(sky, impact, impact.add(0, 120, 0), width * 0.8f * pulse * fade);
+		boolean full = t % 2 == 0 || t == FIRE - 1;
 		// Le cratère se creuse.
 		if (t < 12) {
 			double r = SkyFx.crater(rangeLevel) * (t + 1) / 12.0;
@@ -229,32 +233,37 @@ public final class CelestialAnnihilation extends TimedEffect {
 			carved = r;
 		}
 		// L'onde de choc ronde et les 7 lasers ronds tournants.
-		double reach = Math.min(radius, (t + 1) * radius / 26.0);
-		SkyFx.ring(ring, impact.add(0, 0.6, 0), reach, t * 0.03, (1.0f + rangeLevel * 0.3f) * fade);
+		// Pour ne pas laguer : l'onde, les lasers, la destruction et les dégâts sont mis à jour un tick sur deux
+		// (les formes glissent en douceur entre deux mises à jour).
+		double reach = Math.min(radius, (t + 2) * radius / 26.0);
+		if (!full) {
+			return;
+		}
+		SkyFx.ring(ring, impact.add(0, 0.6, 0), reach, t * 0.03, (1.0f + rangeLevel * 0.3f) * fade, 2);
 		int trench = SkyFx.trench(rangeLevel);
 		for (int i = 0; i < 7; i++) {
 			double a = t * 0.11 + i * Math.PI * 2 / 7;
 			Vec3 dir = new Vec3(Math.cos(a), 0, Math.sin(a));
 			Vec3 from = impact.add(0, 0.8, 0);
 			lasers[i].setPos(from);
-			SkyFx.beam(lasers[i], from, from.add(dir.scale(reach)), (0.8f + rangeLevel * 0.25f) * fade);
-			for (int k = 0; k < 4; k++) {
-				Vec3 p = from.add(dir.scale(level.getRandom().nextDouble() * reach));
+			SkyFx.beam(lasers[i], from, from.add(dir.scale(reach)), (0.8f + rangeLevel * 0.25f) * fade, 2);
+			for (int k = 0; k < 2; k++) {
+				Vec3 p = from.add(dir.scale(level.getRandom().nextDouble() * Math.min(reach, 60)));
 				level.sendParticles(SkyFx.glow(i), p.x, p.y, p.z, 1, 0.3, 0.3, 0.3, 0.02);
 			}
 			if (trench > 0 && fade > 0.5f) {
 				SkyFx.plough(level, impact, dir, SkyFx.crater(rangeLevel), reach, trench);
 			}
 		}
-		// Explosions le long de l'onde.
-		int n = Math.max(6, (int) (reach * 0.3));
+		// Explosions le long de l'onde (nombre limité).
+		int n = Math.max(6, Math.min(36, (int) (reach * 0.3)));
 		for (int i = 0; i < n; i++) {
 			double a = Math.PI * 2 * i / n + t;
 			level.sendParticles(i % 3 == 0 ? ParticleTypes.EXPLOSION : ModParticles.GLOW_WHITE,
 					impact.x + Math.cos(a) * reach, impact.y + 1, impact.z + Math.sin(a) * reach, 1, 0.3, 0.3, 0.3, 0);
 		}
 		Vec3 along = impact.subtract(hand);
-		for (int k = 0; k < 12; k++) {
+		for (int k = 0; k < 6; k++) {
 			Vec3 p = hand.add(along.scale(level.getRandom().nextDouble()));
 			level.sendParticles(ModParticles.GLOW_WHITE, p.x, p.y, p.z, 1, width * 0.3, width * 0.3, width * 0.3, 0.05);
 		}

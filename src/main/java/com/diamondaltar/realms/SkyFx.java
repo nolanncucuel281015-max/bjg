@@ -36,11 +36,15 @@ import java.util.UUID;
  */
 public final class SkyFx {
 	/** Portées réglables avec la touche Y (en blocs). */
-	public static final int[] RANGES = {10, 25, 50, 75, 100, 150, 200};
+	public static final int[] RANGES = {10, 25, 50, 75, 100, 150, 200, 300, 500, 750, 1000};
 	/** Dégâts réglables avec la touche U. */
 	public static final int[] DAMAGES = {10, 25, 50, 100, 200, 500, 1000};
-	private static final int[] CRATER = {2, 4, 6, 8, 10, 13, 16};
-	private static final float[] WIDTH = {1.5f, 2.5f, 3.5f, 4.5f, 5.5f, 7f, 9f};
+	private static final int[] CRATER = {2, 4, 6, 8, 10, 13, 16, 18, 20, 22, 24};
+	private static final float[] WIDTH = {1.5f, 2.5f, 3.5f, 4.5f, 5.5f, 7f, 9f, 10f, 11f, 12f, 13f};
+	/** Blocs détruits sans prévenir les voisins (bien moins de calculs, donc moins de lag). */
+	private static final int QUIET = 2 | 16;
+	/** On ne vise jamais plus loin que ça (au-delà, les tronçons ne sont pas chargés de toute façon). */
+	private static final int MAX_AIM = 320;
 
 	private SkyFx() {
 	}
@@ -52,7 +56,11 @@ public final class SkyFx {
 	}
 
 	public static float damage(int level) {
-		return DAMAGES[clamp(level) - 1];
+		return DAMAGES[clampDamage(level) - 1];
+	}
+
+	public static int clampDamage(int level) {
+		return Math.max(1, Math.min(DAMAGES.length, level));
 	}
 
 	public static int crater(int level) {
@@ -74,10 +82,21 @@ public final class SkyFx {
 
 	// ---------------------------------------------------------------- visée
 
-	/** Le bloc visé (jusqu'à 220 blocs), sinon le sol sous {@code fallback}. */
+	/**
+	 * Le bloc visé, sinon le sol sous {@code fallback}. Le rayon s'arrête au premier tronçon non chargé :
+	 * on ne force jamais le chargement (ni la génération) de terrain lointain, qui ferait laguer.
+	 */
 	public static Vec3 aim(ServerLevel level, ServerPlayer player, Vec3 fallback) {
 		Vec3 eye = player.getEyePosition();
-		Vec3 end = eye.add(player.getLookAngle().scale(RANGES[RANGES.length - 1] + 20));
+		Vec3 look = player.getLookAngle();
+		double dist = 0;
+		while (dist < MAX_AIM && level.isLoaded(BlockPos.containing(eye.add(look.scale(dist + 8))))) {
+			dist += 8;
+		}
+		if (dist <= 0) {
+			return groundBelow(level, fallback);
+		}
+		Vec3 end = eye.add(look.scale(dist));
 		HitResult hit = level.clip(new ClipContext(eye, end, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player));
 		if (hit.getType() == HitResult.Type.BLOCK) {
 			return hit.getLocation();
@@ -102,6 +121,11 @@ public final class SkyFx {
 
 	/** Cylindre de diamètre w, de la position de l'entité jusqu'à {@code to} (n'importe quelle direction). */
 	public static void beam(Display d, Vec3 from, Vec3 to, float w) {
+		beam(d, from, to, w, 1);
+	}
+
+	/** Pareil, avec une animation fluide sur {@code ticks} ticks (moins de mises à jour = moins de lag). */
+	public static void beam(Display d, Vec3 from, Vec3 to, float w, int ticks) {
 		Vec3 dir = to.subtract(from);
 		float len = (float) dir.length();
 		if (len < 0.01f) {
@@ -112,7 +136,7 @@ public final class SkyFx {
 		Quaternionf q = new Quaternionf().rotationTo(0, 1, 0, (float) n.x, (float) n.y, (float) n.z);
 		float ww = Math.max(0.001f, w);
 		Vector3f t = new Vector3f(-ww / 2, 0, -ww / 2).rotate(q);
-		Visuals.transform(d, t, q, new Vector3f(ww, len, ww), 1);
+		Visuals.transform(d, t, q, new Vector3f(ww, len, ww), ticks);
 	}
 
 	/** Une sphère (sprite rond toujours face à la caméra) : planète, noyau d'énergie… */
@@ -129,6 +153,10 @@ public final class SkyFx {
 
 	/** Anneau rond de morceaux de laser (rayon r, épaisseur w) à plat autour du centre. */
 	public static void ring(Display.BlockDisplay[] segments, Vec3 center, double r, double spin, float w) {
+		ring(segments, center, r, spin, w, 1);
+	}
+
+	public static void ring(Display.BlockDisplay[] segments, Vec3 center, double r, double spin, float w, int ticks) {
 		int n = segments.length;
 		for (int i = 0; i < n; i++) {
 			double a0 = spin + Math.PI * 2 * i / n;
@@ -137,7 +165,7 @@ public final class SkyFx {
 			Vec3 p1 = center.add(Math.cos(a1) * r, 0, Math.sin(a1) * r);
 			Vec3 ext = p1.subtract(p0).normalize().scale(w * 0.5);
 			segments[i].setPos(p0.subtract(ext));
-			beam(segments[i], p0.subtract(ext), p1.add(ext), w);
+			beam(segments[i], p0.subtract(ext), p1.add(ext), w, ticks);
 		}
 	}
 
@@ -153,6 +181,7 @@ public final class SkyFx {
 	}
 
 	public static void particleRing(ServerLevel level, ParticleOptions p, Vec3 c, double r, int n, double spin) {
+		n = Math.min(n, 64);
 		for (int i = 0; i < n; i++) {
 			double a = spin + Math.PI * 2 * i / n;
 			level.sendParticles(p, c.x + Math.cos(a) * r, c.y, c.z + Math.sin(a) * r, 1, 0.2, 0.2, 0.2, 0);
@@ -196,7 +225,7 @@ public final class SkyFx {
 					}
 					BlockPos p = c.offset(dx, dy, dz);
 					if (level.isLoaded(p) && breakable(level, p)) {
-						level.setBlock(p, Blocks.AIR.defaultBlockState(), 2);
+						level.setBlock(p, Blocks.AIR.defaultBlockState(), QUIET);
 						if (level.getRandom().nextInt(30) == 0) {
 							level.sendParticles(ParticleTypes.LAVA, p.getX() + 0.5, p.getY() + 0.5, p.getZ() + 0.5, 1, 0, 0, 0, 0);
 						}
@@ -206,9 +235,13 @@ public final class SkyFx {
 		}
 	}
 
-	/** Pulvérise les blocs de surface le long d'une ligne (les lasers qui balaient le sol). */
+	/**
+	 * Pulvérise les blocs de surface le long d'une ligne (les lasers qui balaient le sol). Pour ne pas laguer,
+	 * on traite au plus ~120 colonnes par laser et par tick (un pas plus grand quand la ligne est très longue).
+	 */
 	public static void plough(ServerLevel level, Vec3 center, Vec3 dir, double from, double to, int depth) {
-		for (double k = from; k < to; k += 1.0) {
+		double step = Math.max(1.0, (to - from) / 120.0);
+		for (double k = from; k < to; k += step) {
 			int x = (int) Math.floor(center.x + dir.x * k);
 			int z = (int) Math.floor(center.z + dir.z * k);
 			if (!level.isLoaded(new BlockPos(x, (int) center.y, z))) {
@@ -221,7 +254,7 @@ public final class SkyFx {
 			for (int d = -1; d < depth; d++) {
 				BlockPos p = new BlockPos(x, top - d, z);
 				if (breakable(level, p)) {
-					level.setBlock(p, Blocks.AIR.defaultBlockState(), 2);
+					level.setBlock(p, Blocks.AIR.defaultBlockState(), QUIET);
 				}
 			}
 		}
@@ -232,11 +265,24 @@ public final class SkyFx {
 	 * @return le nombre de nouvelles créatures touchées
 	 */
 	public static int strike(ServerLevel level, ServerPlayer attacker, Vec3 center, double reach, float damage, Set<UUID> hit) {
-		double h = Math.min(reach, 64) * 2 + 20;
+		double h = Math.min(reach, 64) + 10;
+		java.util.List<LivingEntity> victims = new java.util.ArrayList<>();
+		if (reach <= 64) {
+			victims.addAll(level.getEntitiesOfClass(LivingEntity.class, AABB.ofSize(center, reach * 2 + 2, h * 2, reach * 2 + 2), e -> true));
+		} else {
+			// Très grande portée : on parcourt les créatures chargées plutôt que toute la zone (bien plus rapide).
+			for (var entity : level.getAllEntities()) {
+				if (entity instanceof LivingEntity living) {
+					victims.add(living);
+				}
+			}
+		}
 		int n = 0;
-		for (LivingEntity e : level.getEntitiesOfClass(LivingEntity.class, AABB.ofSize(center, reach * 2 + 2, h, reach * 2 + 2),
-				e -> e.isAlive() && !(e instanceof Player) && e.distanceToSqr(center.x, e.getY(), center.z) <= reach * reach
-						&& !hit.contains(e.getUUID()))) {
+		for (LivingEntity e : victims) {
+			if (!e.isAlive() || e instanceof Player || hit.contains(e.getUUID()) || Math.abs(e.getY() - center.y) > h
+					|| e.distanceToSqr(center.x, e.getY(), center.z) > reach * reach) {
+				continue;
+			}
 			hit.add(e.getUUID());
 			n++;
 			e.hurtServer(level, level.damageSources().playerAttack(attacker), damage);

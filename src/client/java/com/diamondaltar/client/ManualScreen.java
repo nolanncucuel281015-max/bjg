@@ -415,7 +415,7 @@ public class ManualScreen extends Screen {
 		gear.add(text("• Jugement des Sept Royaumes : sept colonnes, une par royaume, jaillissent autour de toi puis explosent (recharge 8 s)."));
 		gear.add(text("• Anéantissement Céleste : tu t'élèves, une sphère d'énergie grossit dans ta main, puis un laser rond gigantesque tire sur le bloc que tu vises, creuse un cratère, et une onde de choc et 7 lasers détruisent tout sur leur passage."));
 		gear.add(text("• Lance de Jupiter : Jupiter apparaît dans le ciel, une lance surpuissante tourne autour d'elle de plus en plus vite, puis fonce sur la Terre (au-dessus du bloc visé) : énorme explosion."));
-		gear.add(text("Y : portée (10, 25, 50, 75, 100, 150 ou 200 blocs) · U : dégâts (10, 25, 50, 100, 200, 500 ou 1000). Les joueurs, la bedrock et les coffres sont épargnés.", MUTED));
+		gear.add(text("Y : portée (10, 25, 50, 75, 100, 150, 200, 300, 500, 750 ou 1000 blocs) · U : dégâts (10, 25, 50, 100, 200, 500 ou 1000). Les joueurs, la bedrock et les coffres sont épargnés.", MUTED));
 		chapters.add(new Chapter("Armures et épée ultime", gear));
 
 		List<Element> loot = new ArrayList<>();
