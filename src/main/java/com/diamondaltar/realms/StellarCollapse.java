@@ -153,10 +153,8 @@ public final class StellarCollapse extends TimedEffect {
 			for (LivingEntity e : SkyFx.creatures(level, target, radius)) {
 				Vec3 to = core.subtract(e.position());
 				double d = to.length();
-				if (d < 1) {
-					continue;
-				}
-				Vec3 v = to.normalize().scale(Math.min(2.2, 0.35 + d * 0.04 + p));
+				// Plus la créature est proche, plus elle ralentit : elle reste piégée autour du trou noir au lieu de le dépasser.
+				Vec3 v = d < 3 ? to.scale(0.3) : to.normalize().scale(Math.min(Math.min(2.2, d * 0.3), 0.35 + d * 0.04 + p));
 				e.setDeltaMovement(v);
 				e.fallDistance = 0;
 				Compat.markHurt(e);
@@ -245,6 +243,6 @@ public final class StellarCollapse extends TimedEffect {
 		}
 		SkyFx.strike(level, player, target, reach, damage, hit);
 		// Les créatures aspirées autour du trou noir (en l'air) sont aussi pulvérisées.
-		SkyFx.strike(level, player, core, Math.min(reach, 40), damage, hit);
+		SkyFx.strike(level, player, core, Math.min(radius, 16 + t * 2.0), damage, hit);
 	}
 }
