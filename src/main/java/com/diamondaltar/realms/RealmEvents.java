@@ -767,7 +767,7 @@ public final class RealmEvents {
 		boolean collapseOk = collapse.hitCount() >= targets.size() && collapseHit == targets.size() && !targets.isEmpty();
 		report.append(collapseOk ? "OK" : "FAIL").append(" Effondrement Stellaire : impact en ").append(BlockPos.containing(collapse.impactPoint()))
 				.append(", ").append(collapseHit).append("/").append(targets.size()).append(" squelettes aspires et pulverises, ")
-				.append(collapse.hitCount()).append(" touche(s)");
+				.append(collapse.hitCount()).append(" touche(s), ").append(collapse.debug());
 		for (LivingEntity e : targets) {
 			report.append(" [").append(e.blockPosition()).append(" vivant=").append(e.isAlive()).append(" retire=").append(e.isRemoved())
 					.append(" PV=").append(e.getHealth()).append("]");
