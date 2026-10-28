@@ -137,7 +137,12 @@ son **minerai**, son **boss unique** et son **armure légendaire**.
    (jusqu'à +8 PV et 15 d'armure par pièce pour le Soleil).
 7. **Épée des Sept Royaumes** : les **7 éclats** autour d'une **épée en netherite**, une **étoile du Nether** en bas
    au milieu. 30 dégâts, incassable ; chaque coup brûle, gèle, empoisonne, flétrit et parfois foudroie.
-   **Clic droit** : *Jugement des Sept Royaumes*, sept colonnes de lumière qui explosent autour de toi (recharge 8 s).
+   **Clic droit** pour lancer l'attaque choisie, **K** pour changer d'attaque :
+   - *Jugement des Sept Royaumes* : sept colonnes de lumière qui explosent autour de toi (recharge 8 s) ;
+   - *Anéantissement Céleste* : tu t'élèves de 15 blocs, tu charges une sphère d'énergie pendant que la lumière
+     converge vers toi, puis un **rayon géant** frappe le sol et **7 lasers** balaient tout dans un rayon de
+     **50 blocs** (80 dégâts à chaque créature, les joueurs et les blocs sont épargnés). Tu redescends en douceur
+     (recharge 30 s).
 
 ### Récompenses : plus le boss est fort, plus le butin l'est
 

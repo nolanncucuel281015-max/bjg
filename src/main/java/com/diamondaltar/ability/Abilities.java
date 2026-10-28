@@ -135,6 +135,10 @@ public final class Abilities {
 	/** Touche « changer de capacité » (K) : capacité suivante de l'objet en main. */
 	public static void switchTool(ServerPlayer player) {
 		ItemStack stack = player.getMainHandItem();
+		if (stack.is(com.diamondaltar.realms.RealmContent.SEVEN_REALMS_SWORD)) {
+			com.diamondaltar.realms.RealmEvents.switchSwordMode(player, stack);
+			return;
+		}
 		List<Ability> list = of(stack.getItem());
 		if (list.isEmpty() || !ModComponents.isInfused(stack)) {
 			return;

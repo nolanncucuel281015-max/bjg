@@ -411,7 +411,9 @@ public class ManualScreen extends Screen {
 				st(RealmContent.SHARD[5]), st(Items.NETHER_STAR), st(RealmContent.SHARD[6])}, st(RealmContent.SEVEN_REALMS_SWORD)));
 		gear.add(text("Les 7 éclats des boss + une épée en netherite + une étoile du Nether. 30 dégâts, incassable, portée +1,5."));
 		gear.add(text("Chaque coup : feu, gel, poison, flétrissement, lumière, et parfois la foudre.", GOLD));
-		gear.add(text("Clic droit : Jugement des Sept Royaumes. Sept colonnes, une par royaume, jaillissent autour de toi puis explosent (recharge 8 s).", GOLD));
+		gear.add(text("Clic droit pour lancer l'attaque, K pour en changer :", GOLD));
+		gear.add(text("• Jugement des Sept Royaumes : sept colonnes, une par royaume, jaillissent autour de toi puis explosent (recharge 8 s)."));
+		gear.add(text("• Anéantissement Céleste : tu t'élèves de 15 blocs, tu charges une sphère d'énergie, puis un rayon géant frappe le sol et 7 lasers anéantissent toutes les créatures à 50 blocs autour (80 dégâts, recharge 30 s). Les joueurs et les blocs sont épargnés."));
 		chapters.add(new Chapter("Armures et épée ultime", gear));
 
 		List<Element> loot = new ArrayList<>();

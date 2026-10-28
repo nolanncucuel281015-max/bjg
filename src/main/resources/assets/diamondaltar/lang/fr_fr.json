@@ -280,9 +280,9 @@
 	"diamondaltar.sigil.desc": "Clic droit dans son royaume : invoque le boss.",
 	"diamondaltar.key.desc": "Clic droit dans le cadre du portail de ce royaume : ouvre le portail.",
 	"diamondaltar.realm_armor.set": "Armure complète :",
-	"diamondaltar.seven_realms.cooldown": "Jugement des Sept Royaumes : encore %s s",
+	"diamondaltar.seven_realms.cooldown": "%s : encore %s s",
 	"diamondaltar.seven_realms.hit": "Chaque coup : feu, gel, poison, flétrissement, lumière, et parfois la foudre",
-	"diamondaltar.seven_realms.use": "Clic droit : Jugement des Sept Royaumes (7 colonnes, recharge 8 s)",
+	"diamondaltar.seven_realms.use": "Clic droit : lancer l'attaque · %s : changer d'attaque",
 	"item.diamondaltar.aetherite_ingot": "Lingot d'Aetherite",
 	"item.diamondaltar.aetherite_helmet": "Casque en Aetherite",
 	"item.diamondaltar.aetherite_chestplate": "Plastron en Aetherite",
@@ -311,5 +311,10 @@
 	"diamondaltar.key.wrong_frame": "Ce cadre s'ouvre avec la %s",
 	"item.diamondaltar.portal_guide": "Guide des Portails",
 	"diamondaltar.portal_guide.desc": "Clic droit : comment construire et allumer chaque portail",
-	"block.diamondaltar.realm_altar": "Autel du Sanctuaire"
+	"block.diamondaltar.realm_altar": "Autel du Sanctuaire",
+	"diamondaltar.seven_realms.selected": "Attaque : %s (%s/%s)",
+	"diamondaltar.seven_realms.judgement.name": "Jugement des Sept Royaumes",
+	"diamondaltar.seven_realms.judgement.desc": "7 colonnes jaillissent autour de toi puis explosent (recharge 8 s)",
+	"diamondaltar.seven_realms.annihilation.name": "Anéantissement Céleste",
+	"diamondaltar.seven_realms.annihilation.desc": "Tu t'élèves, tu charges, puis un rayon géant et 7 lasers anéantissent tout sur 50 blocs (recharge 30 s)"
 }

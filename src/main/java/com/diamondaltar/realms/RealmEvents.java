@@ -90,7 +90,7 @@ public final class RealmEvents {
 			}
 			if (stack.is(RealmContent.SEVEN_REALMS_SWORD)) {
 				if (level instanceof ServerLevel sl && player instanceof ServerPlayer sp) {
-					useSword(sl, sp);
+					useSword(sl, sp, stack);
 				}
 				return InteractionResult.SUCCESS;
 			}
@@ -297,15 +297,36 @@ public final class RealmEvents {
 		}
 	}
 
-	private static void useSword(ServerLevel level, ServerPlayer player) {
-		Long until = SWORD_COOLDOWN.get(player.getUUID());
-		if (until != null && level.getGameTime() < until) {
+	/** Les attaques de l'épée (touche K pour changer) : 0 = Jugement des Sept Royaumes, 1 = Anéantissement Céleste. */
+	public static final String[] SWORD_MODES = {"judgement", "annihilation"};
+	private static final int[] SWORD_COOLDOWNS = {SWORD_COOLDOWN_TICKS, 600};
+
+	public static int swordMode(ItemStack stack) {
+		return Math.floorMod(com.diamondaltar.ModComponents.getSelected(stack), SWORD_MODES.length);
+	}
+
+	/** Touche K avec l'épée en main : attaque suivante. */
+	public static void switchSwordMode(ServerPlayer player, ItemStack stack) {
+		int next = (swordMode(stack) + 1) % SWORD_MODES.length;
+		com.diamondaltar.ModComponents.setSelected(stack, next);
+		Compat.overlay(player, Component.translatable("diamondaltar.seven_realms.selected",
+				Component.translatable("diamondaltar.seven_realms." + SWORD_MODES[next] + ".name").withStyle(ChatFormatting.GOLD),
+				next + 1, SWORD_MODES.length).withStyle(ChatFormatting.AQUA));
+		player.level().playSound(null, player.blockPosition(), SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 1f, 1.2f + next * 0.3f);
+	}
+
+	private static void useSword(ServerLevel level, ServerPlayer player, ItemStack stack) {
+		int mode = swordMode(stack);
+		UUID key = new UUID(player.getUUID().getMostSignificantBits(), player.getUUID().getLeastSignificantBits() ^ mode);
+		Long until = SWORD_COOLDOWN.get(key);
+		if (until != null && level.getGameTime() < until && !player.getAbilities().instabuild) {
 			Compat.overlay(player, Component.translatable("diamondaltar.seven_realms.cooldown",
+					Component.translatable("diamondaltar.seven_realms." + SWORD_MODES[mode] + ".name"),
 					String.format("%.1f", (until - level.getGameTime()) / 20.0)).withStyle(ChatFormatting.GRAY));
 			return;
 		}
-		SWORD_COOLDOWN.put(player.getUUID(), level.getGameTime() + SWORD_COOLDOWN_TICKS);
-		EffectManager.start(new SevenRealmsJudgement(level, player));
+		SWORD_COOLDOWN.put(key, level.getGameTime() + SWORD_COOLDOWNS[mode]);
+		EffectManager.start(mode == 1 ? new CelestialAnnihilation(level, player) : new SevenRealmsJudgement(level, player));
 	}
 
 	/**
@@ -522,6 +543,7 @@ public final class RealmEvents {
 			report.append(safe ? "OK" : "FAIL").append(" Perle des Royaumes : arrivee sure en ").append(spot).append('\n');
 			ok &= safe;
 		}
+		ok &= testAnnihilation(server, report);
 		ok &= testAllCrafts(server, report);
 		var learner = net.fabricmc.fabric.api.entity.FakePlayer.get(server.overworld());
 		var recipeKeys = modRecipes(server);
@@ -581,6 +603,49 @@ public final class RealmEvents {
 			report.append(frame ? "OK" : "FAIL").append(" portail de retour en Cadres de Portail de Givre\n");
 			ok &= frame;
 		}
+		return ok;
+	}
+
+	/** Anéantissement Céleste : des squelettes à 10, 30 et 45 blocs doivent tous être touchés. */
+	private static boolean testAnnihilation(MinecraftServer server, StringBuilder report) {
+		ServerLevel level = server.getLevel(Realm.SOLAR.dimension);
+		if (level == null) {
+			return false;
+		}
+		int y = level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING, 8, 8);
+		if (y <= level.getMinY() + 2 || y > level.getMaxY() - 30) {
+			y = 120;
+		}
+		// Une grande dalle pour que les squelettes tiennent debout.
+		for (int x = 0; x <= 60; x++) {
+			for (int dz = -2; dz <= 2; dz++) {
+				level.setBlockAndUpdate(new BlockPos(x, y - 1, 8 + dz), RealmContent.STONE[Realm.SOLAR.ordinal()].defaultBlockState());
+				for (int dy = 0; dy < 3; dy++) {
+					level.setBlockAndUpdate(new BlockPos(x, y + dy, 8 + dz), net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
+				}
+			}
+		}
+		var caster = net.fabricmc.fabric.api.entity.FakePlayer.get(level);
+		caster.setPos(8.5, y, 8.5);
+		java.util.List<LivingEntity> targets = new java.util.ArrayList<>();
+		for (int d : new int[]{10, 30, 45}) {
+			var mob = Compat.SKELETON.create(level, net.minecraft.world.entity.EntitySpawnReason.TRIGGERED);
+			if (mob != null) {
+				mob.setPos(8.5 + d, y, 8.5);
+				level.addFreshEntity(mob);
+				targets.add(mob);
+			}
+		}
+		CelestialAnnihilation effect = new CelestialAnnihilation(level, caster);
+		EffectManager.start(effect);
+		for (int i = 0; i < 110; i++) {
+			EffectManager.tickAll();
+		}
+		long dead = targets.stream().filter(e -> !e.isAlive() || e.getHealth() < e.getMaxHealth()).count();
+		boolean ok = effect.hitCount() >= targets.size() && dead == targets.size() && !targets.isEmpty();
+		report.append(ok ? "OK" : "FAIL").append(" Aneantissement Celeste : ").append(effect.hitCount()).append(" touche(s), ")
+				.append(dead).append("/").append(targets.size()).append(" squelettes a 10, 30 et 45 blocs blesses ou morts\n");
+		targets.forEach(e -> e.discard());
 		return ok;
 	}
 

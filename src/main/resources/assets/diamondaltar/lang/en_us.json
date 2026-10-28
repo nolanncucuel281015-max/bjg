@@ -280,9 +280,9 @@
 	"diamondaltar.sigil.desc": "Right-click in its realm: summons the boss.",
 	"diamondaltar.key.desc": "Right-click inside this realm's portal frame: opens the portal.",
 	"diamondaltar.realm_armor.set": "Full set:",
-	"diamondaltar.seven_realms.cooldown": "Judgement of the Seven Realms: %s s left",
+	"diamondaltar.seven_realms.cooldown": "%s: %s s left",
 	"diamondaltar.seven_realms.hit": "Every hit: fire, frost, poison, wither, light, and sometimes lightning",
-	"diamondaltar.seven_realms.use": "Right-click: Judgement of the Seven Realms (7 pillars, 8 s cooldown)",
+	"diamondaltar.seven_realms.use": "Right-click: use the attack · %s: switch attack",
 	"item.diamondaltar.aetherite_ingot": "Aetherite Ingot",
 	"item.diamondaltar.aetherite_helmet": "Aetherite Helmet",
 	"item.diamondaltar.aetherite_chestplate": "Aetherite Chestplate",
@@ -311,5 +311,10 @@
 	"diamondaltar.key.wrong_frame": "This frame opens with the %s",
 	"item.diamondaltar.portal_guide": "Portal Guide",
 	"diamondaltar.portal_guide.desc": "Right-click: how to build and light every portal",
-	"block.diamondaltar.realm_altar": "Shrine Altar"
+	"block.diamondaltar.realm_altar": "Shrine Altar",
+	"diamondaltar.seven_realms.selected": "Attack: %s (%s/%s)",
+	"diamondaltar.seven_realms.judgement.name": "Judgement of the Seven Realms",
+	"diamondaltar.seven_realms.judgement.desc": "7 pillars rise around you and explode (8 s cooldown)",
+	"diamondaltar.seven_realms.annihilation.name": "Celestial Annihilation",
+	"diamondaltar.seven_realms.annihilation.desc": "You rise, charge up, then a giant beam and 7 lasers wipe out everything within 50 blocks (30 s cooldown)"
 }

@@ -45,6 +45,9 @@ public class DiamondAltarClient implements ClientModInitializer {
 	private static final KeyMapping ARMOR_SWITCH_KEY = KeyBindingHelper.registerKeyBinding(new KeyMapping(
 			"key.diamondaltar.switch_armor", InputConstants.Type.KEYSYM, InputConstants.KEY_J, CATEGORY));
 
+	/** Nom de la touche « changer de capacité » (K par défaut), pour les infobulles. */
+	private static final java.util.function.Supplier<Component> SWORD_KEY_HINT = () -> SWITCH_KEY.getTranslatedKeyMessage();
+
 	/** Pour détecter le moment où le clic droit est enfoncé (Shift + clic droit = capacité d'armure). */
 	private static boolean useWasDown;
 
@@ -92,8 +95,9 @@ public class DiamondAltarClient implements ClientModInitializer {
 			ScreenShake.tick(client);
 			ScreenFlash.tick();
 			while (SWITCH_KEY.consumeClick()) {
-				if (client.player != null && ModComponents.isInfused(client.player.getMainHandItem())
-						&& !Abilities.of(client.player.getMainHandItem().getItem()).isEmpty()) {
+				if (client.player != null && (client.player.getMainHandItem().is(RealmContent.SEVEN_REALMS_SWORD)
+						|| ModComponents.isInfused(client.player.getMainHandItem())
+						&& !Abilities.of(client.player.getMainHandItem().getItem()).isEmpty())) {
 					ClientPlayNetworking.send(new SwitchAbilityPayload());
 				}
 			}
@@ -153,7 +157,17 @@ public class DiamondAltarClient implements ClientModInitializer {
 			}
 			if (stack.is(RealmContent.SEVEN_REALMS_SWORD)) {
 				lines.add(Component.translatable("diamondaltar.seven_realms.hit").withStyle(ChatFormatting.GRAY));
-				lines.add(Component.translatable("diamondaltar.seven_realms.use").withStyle(ChatFormatting.GOLD));
+				int mode = com.diamondaltar.realms.RealmEvents.swordMode(stack);
+				for (int i = 0; i < com.diamondaltar.realms.RealmEvents.SWORD_MODES.length; i++) {
+					String k = "diamondaltar.seven_realms." + com.diamondaltar.realms.RealmEvents.SWORD_MODES[i];
+					boolean on = i == mode;
+					lines.add(Component.literal(on ? "▶ " : "  ").append(Component.translatable(k + ".name"))
+							.withStyle(on ? ChatFormatting.GOLD : ChatFormatting.DARK_GRAY));
+					if (on) {
+						lines.add(Component.literal("    ").append(Component.translatable(k + ".desc")).withStyle(ChatFormatting.GRAY));
+					}
+				}
+				lines.add(Component.translatable("diamondaltar.seven_realms.use", SWORD_KEY_HINT.get()).withStyle(ChatFormatting.DARK_AQUA));
 			}
 			for (Realm r : Realm.values()) {
 				if (stack.is(RealmContent.KEY[r.ordinal()]) || stack.is(RealmContent.SIGIL[r.ordinal()])) {
