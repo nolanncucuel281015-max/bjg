@@ -661,16 +661,15 @@ public final class RealmEvents {
 		if (level == null) {
 			return false;
 		}
-		int y = level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING, 8, 8);
-		if (y <= level.getMinY() + 2 || y > level.getMaxY() - 30) {
-			y = 120;
-		}
-		// Une grande dalle pour que les squelettes tiennent debout.
-		for (int x = 0; x <= 60; x++) {
-			for (int dz = -2; dz <= 2; dz++) {
-				level.setBlockAndUpdate(new BlockPos(x, y - 1, 8 + dz), RealmContent.STONE[Realm.SOLAR.ordinal()].defaultBlockState());
-				for (int dy = 0; dy < 3; dy++) {
-					level.setBlockAndUpdate(new BlockPos(x, y + dy, 8 + dz), net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
+		// Deux dalles en plein ciel (au-dessus des îles), bien dégagées : une pour le laser, une pour la lance.
+		int y = Math.min(215, level.getMaxY() - 40);
+		for (int row : new int[]{8, 40}) {
+			for (int x = 0; x <= 60; x++) {
+				for (int dz = -2; dz <= 2; dz++) {
+					level.setBlockAndUpdate(new BlockPos(x, y - 1, row + dz), RealmContent.STONE[Realm.SOLAR.ordinal()].defaultBlockState());
+					for (int dy = 0; dy < 30; dy++) {
+						level.setBlockAndUpdate(new BlockPos(x, y + dy, row + dz), net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
+					}
 				}
 			}
 		}
@@ -715,12 +714,13 @@ public final class RealmEvents {
 		for (int d : new int[]{12, 40}) {
 			var mob = Compat.SKELETON.create(level, net.minecraft.world.entity.EntitySpawnReason.TRIGGERED);
 			if (mob != null) {
-				mob.setPos(8.5 + d, y, 8.5);
+				mob.setPos(8.5 + d, y, 40.5);
 				level.addFreshEntity(mob);
 				targets.add(mob);
 			}
 		}
-		caster.setPos(8.5, y, 8.5);
+		caster.setPos(8.5, y, 40.5);
+		caster.setXRot(90);
 		JupiterSpear spear = new JupiterSpear(level, caster, DEFAULT_LEVEL, DEFAULT_LEVEL);
 		EffectManager.start(spear);
 		for (int i = 0; i < 170; i++) {
