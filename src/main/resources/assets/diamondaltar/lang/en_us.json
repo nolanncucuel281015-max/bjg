@@ -339,6 +339,6 @@
 	"diamondaltar.seven_realms.collapse.name": "Stellar Collapse",
 	"diamondaltar.seven_realms.collapse.desc": "A giant star collapses into a black hole that sucks in every creature, then explodes into a supernova: double damage",
 	"diamondaltar.seven_realms.comets.name": "Comet Storm",
-	"diamondaltar.seven_realms.comets.desc": "A rift of the 7 realms opens in the sky: comets hunt down every creature, then the Mother Comet crashes down: triple damage",
+	"diamondaltar.seven_realms.comets.desc": "A rift of the 7 realms opens in the sky: comets hunt down every creature, then the Mother Comet slams down: red flash and huge explosion, triple damage",
 	"diamondaltar.sword_settings.blast": "→ giant crater, %s block radius"
 }

@@ -35,7 +35,10 @@ import java.util.UUID;
 public final class CometStorm extends TimedEffect {
 	private static final int RIFT = 30;
 	private static final int RAIN = 80;
-	private static final int MOTHER = 30;
+	/** La Comète Mère tombe d'un coup (très vite). */
+	private static final int MOTHER = 12;
+	/** Flash rouge au contact du sol, juste avant la grosse explosion. */
+	private static final int FLASH = 8;
 	private static final int BOOM = 45;
 	/** Durée de chute d'une comète. */
 	private static final int FALL = 14;
@@ -93,7 +96,7 @@ public final class CometStorm extends TimedEffect {
 		Vec3 ahead = player.position().add(player.getLookAngle().multiply(1, 0, 1).normalize().scale(30));
 		this.target = SkyFx.aim(level, player, ahead, radius);
 		this.rift = target.add(0, SKY, 0);
-		player.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, RIFT + RAIN + MOTHER + BOOM + FALL, 4, false, false));
+		player.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, RIFT + RAIN + MOTHER + FLASH + BOOM + FALL, 4, false, false));
 		level.playSound(null, player.blockPosition(), SoundEvents.END_PORTAL_SPAWN, SoundSource.PLAYERS, 4f, 0.6f);
 		level.playSound(null, player.blockPosition(), SoundEvents.BEACON_ACTIVATE, SoundSource.PLAYERS, 4f, 0.4f);
 	}
@@ -120,8 +123,10 @@ public final class CometStorm extends TimedEffect {
 			rain(age - RIFT);
 		} else if (age < RIFT + RAIN + MOTHER) {
 			motherFalls(age - RIFT - RAIN);
-		} else if (age < RIFT + RAIN + MOTHER + BOOM) {
-			boom(age - RIFT - RAIN - MOTHER);
+		} else if (age < RIFT + RAIN + MOTHER + FLASH) {
+			redFlash(age - RIFT - RAIN - MOTHER);
+		} else if (age < RIFT + RAIN + MOTHER + FLASH + BOOM) {
+			boom(age - RIFT - RAIN - MOTHER - FLASH);
 		} else {
 			return comets.isEmpty();
 		}
@@ -241,22 +246,23 @@ public final class CometStorm extends TimedEffect {
 			motherTrail = track(SkyFx.laser(level, rift, 0));
 			level.playSound(null, BlockPos.containing(player.position()), SoundEvents.ENDER_DRAGON_GROWL, SoundSource.PLAYERS, 5f, 0.3f);
 		}
+		// Elle fonce d'un coup vers le sol, le laser derrière elle.
 		Vec3 pos = rift.add(target.subtract(rift).scale(p * p));
 		mother.setPos(pos);
-		SkyFx.resize(mother, MOTHER_SIZE * Math.min(1f, p * 2.5f), 1);
+		SkyFx.resize(mother, MOTHER_SIZE * Math.min(1f, p * 3f), 1);
 		motherTrail.setPos(rift);
-		SkyFx.beam(motherTrail, rift, pos, 6f * Math.min(1f, p * 2f), 1);
-		level.sendParticles(ModParticles.GLOW_FIRE, pos.x, pos.y, pos.z, 12, 6, 6, 6, 0.1);
-		if (t % 5 == 0) {
+		SkyFx.beam(motherTrail, rift, pos, 9f * Math.min(1f, p * 3f), 1);
+		level.sendParticles(ModParticles.GLOW_FIRE, pos.x, pos.y, pos.z, 16, 6, 6, 6, 0.15);
+		if (t % 3 == 0) {
 			level.playSound(null, BlockPos.containing(player.position()), SoundEvents.FIREWORK_ROCKET_LARGE_BLAST_FAR, SoundSource.PLAYERS, 4f, 0.3f + p * 0.3f);
 		}
 	}
 
-	// ================================================================ 4. l'impact
+	// ================================================================ 4. le flash rouge
 
-	private void boom(int t) {
+	/** La Comète Mère touche le sol : tout devient rouge un instant, l'énergie se concentre… */
+	private void redFlash(int t) {
 		if (t == 0) {
-			GiantCrater.start(level, target, damageLevel);
 			for (int i = 0; i < RING; i++) {
 				riftRing[i].discard();
 			}
@@ -264,6 +270,31 @@ public final class CometStorm extends TimedEffect {
 				orbs[i].discard();
 			}
 			motherTrail.discard();
+			mother.discard();
+			mother = track(SkyFx.sphere(level, target, RealmContent.ORB[0], MOTHER_SIZE * 0.6f));
+			SkyFx.flash(level, target, radius + 200, 0xFF0000, 1.0f, 16);
+			SkyFx.shake(level, target, radius + 200, 1.0f, 10);
+			BlockPos at = BlockPos.containing(target);
+			level.playSound(null, at, SoundEvents.WARDEN_SONIC_BOOM, SoundSource.PLAYERS, 8f, 0.5f);
+			level.playSound(null, at, SoundEvents.BEACON_DEACTIVATE, SoundSource.PLAYERS, 8f, 0.4f);
+		}
+		// La boule rouge gonfle et pulse, une couronne rouge se resserre au sol.
+		float p = (t + 1) / (float) FLASH;
+		SkyFx.resize(mother, MOTHER_SIZE * (0.6f + p * 0.9f) * (1 + 0.15f * (float) Math.sin(t * 2.5)), 1);
+		SkyFx.particleRing(level, ModParticles.GLOW_FIRE, target.add(0, 1, 0), (1 - p) * 30 + 3, 48, t * 0.4);
+		level.sendParticles(ModParticles.GLOW_FIRE, target.x, target.y + 2, target.z, 30, 4, 4, 4, 0.4);
+		if (t == FLASH / 2) {
+			SkyFx.flash(level, target, radius + 200, 0xFF0000, 0.8f, 10);
+		}
+	}
+
+	// ================================================================ 5. la grosse explosion
+
+	private void boom(int t) {
+		if (t == 0) {
+			GiantCrater.start(level, target, damageLevel);
+			mother.discard();
+			mother = track(SkyFx.sphere(level, target, RealmContent.ORB[LaserBlock.WHITE], MOTHER_SIZE));
 			for (int i = 0; i < WAVE; i++) {
 				wave[i] = track(SkyFx.laser(level, target, i % 2 == 0 ? LaserBlock.WHITE : i % 7));
 			}
@@ -272,12 +303,14 @@ public final class CometStorm extends TimedEffect {
 			level.playSound(null, at, SoundEvents.DRAGON_FIREBALL_EXPLODE, SoundSource.PLAYERS, 8f, 0.3f);
 			level.playSound(null, at, SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.PLAYERS, 8f, 0.4f);
 			level.playSound(null, at, SoundEvents.WARDEN_SONIC_BOOM, SoundSource.PLAYERS, 8f, 0.4f);
-			level.sendParticles(ParticleTypes.EXPLOSION_EMITTER, target.x, target.y + 2, target.z, 16, 8, 3, 8, 0);
-			SkyFx.flash(level, target, radius + 200, 0xFFE8C0, 1.0f, 30);
-			SkyFx.shake(level, target, radius + 200, 2.0f + rangeLevel * 0.2f, 40);
+			level.playSound(null, at, SoundEvents.DRAGON_FIREBALL_EXPLODE, SoundSource.PLAYERS, 8f, 0.6f);
+			level.sendParticles(ParticleTypes.EXPLOSION_EMITTER, target.x, target.y + 2, target.z, 30, 12, 4, 12, 0);
+			level.sendParticles(ModParticles.GLOW_FIRE, target.x, target.y + 4, target.z, 120, 10, 8, 10, 0.8);
+			SkyFx.flash(level, target, radius + 200, 0xFFB060, 1.0f, 30);
+			SkyFx.shake(level, target, radius + 200, 2.5f + rangeLevel * 0.2f, 50);
 		}
 		float fade = t > BOOM - 12 ? (BOOM - t) / 12f : 1f;
-		SkyFx.resize(mother, (MOTHER_SIZE + t * 2.5f) * fade, 1);
+		SkyFx.resize(mother, (MOTHER_SIZE + t * 4f) * fade, 1);
 		if (t < 14) {
 			double r = (SkyFx.crater(rangeLevel) + 8) * (t + 1) / 14.0;
 			SkyFx.carve(level, target, r, carved);

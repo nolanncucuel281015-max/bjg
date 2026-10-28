@@ -153,7 +153,7 @@ son **minerai**, son **boss unique** et son **armure légendaire**.
      **dégâts doublés** (recharge une fois et demie plus longue).
    - *Pluie de Comètes* : une **faille aux couleurs des 7 royaumes** s'ouvre dans le ciel au-dessus du bloc visé, sept
      orbes tournent autour ; des **dizaines de comètes** (sphères avec traînée laser) en tombent et **traquent chaque
-     créature** de la portée, puis la **Comète Mère**, gigantesque, s'écrase : énorme cratère, onde de choc ronde et
+     créature** de la portée, puis la **Comète Mère**, gigantesque, **fonce d'un coup** vers le sol : **flash rouge** au contact, puis **énorme explosion**, cratère, onde de choc ronde et
      **dégâts triplés** (recharge deux fois plus longue que l'Anéantissement).
 
    **Y** ouvre l'**interface de réglages** de l'épée : on y clique sur l'attaque, la portée et la puissance voulues.

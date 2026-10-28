@@ -416,7 +416,7 @@ public class ManualScreen extends Screen {
 		gear.add(text("• Anéantissement Céleste : tu t'élèves, une sphère d'énergie grossit dans ta main, puis un laser rond gigantesque tire sur le bloc que tu vises, creuse un cratère, et une onde de choc et 7 lasers détruisent tout sur leur passage."));
 		gear.add(text("• Lance de Jupiter : Jupiter apparaît dans le ciel, une lance surpuissante tourne autour d'elle de plus en plus vite, puis fonce sur la Terre (au-dessus du bloc visé) : énorme explosion."));
 		gear.add(text("• Effondrement Stellaire : une étoile géante s'effondre en trou noir qui aspire toutes les créatures, puis explose en supernova : dégâts doublés."));
-		gear.add(text("• Pluie de Comètes (la plus forte) : une faille des 7 royaumes s'ouvre dans le ciel, des comètes traquent chaque créature, puis la Comète Mère s'écrase : dégâts triplés."));
+		gear.add(text("• Pluie de Comètes (la plus forte) : une faille des 7 royaumes s'ouvre dans le ciel, des comètes traquent chaque créature, puis la Comète Mère fonce au sol : flash rouge, puis énorme explosion. Dégâts triplés."));
 		gear.add(text("Y ouvre l'interface de réglages : clique sur l'attaque, la portée (10 à 100 000 blocs) et la puissance (10 à 1 000 000 dégâts). Dès 5000 de puissance, un cratère géant : 10 000 → 40 blocs, 25 000 → 75, 50 000 → 120, 100 000 → 180, 1 000 000 → 250 de rayon. U : dégâts suivants. Les joueurs, la bedrock et les coffres sont épargnés.", MUTED));
 		chapters.add(new Chapter("Armures et épée ultime", gear));
 
