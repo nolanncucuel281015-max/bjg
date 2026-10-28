@@ -874,44 +874,44 @@ public final class RealmEvents {
 			caster.setXRot(90);
 			String name;
 			java.util.function.IntSupplier hits;
-			Vec3 impact;
+			Vec3 hitAt;
 			if (attack == 0) {
 				SevenConvergence conv = new SevenConvergence(level, caster, DEFAULT_LEVEL, DEFAULT_LEVEL);
 				EffectManager.start(conv);
 				name = "Convergence des Sept Royaumes";
 				hits = conv::hitCount;
-				impact = conv.impactPoint();
+				hitAt = conv.impactPoint();
 			} else if (attack == 1) {
 				BigBang bang = new BigBang(level, caster, DEFAULT_LEVEL, DEFAULT_LEVEL);
 				EffectManager.start(bang);
 				name = "Big Bang";
 				hits = bang::hitCount;
-				impact = bang.impactPoint();
+				hitAt = bang.impactPoint();
 			} else if (attack == 2) {
 				CelestialTornado tornado = new CelestialTornado(level, caster, DEFAULT_LEVEL, DEFAULT_LEVEL);
 				EffectManager.start(tornado);
 				name = "Tornade Celeste";
 				hits = tornado::hitCount;
-				impact = tornado.impactPoint();
+				hitAt = tornado.impactPoint();
 			} else if (attack == 3) {
 				ThousandSwords swords = new ThousandSwords(level, caster, DEFAULT_LEVEL, DEFAULT_LEVEL);
 				EffectManager.start(swords);
 				name = "Mille Epees";
 				hits = swords::hitCount;
-				impact = swords.impactPoint();
+				hitAt = swords.impactPoint();
 			} else {
 				TotalEclipse eclipse = new TotalEclipse(level, caster, DEFAULT_LEVEL, DEFAULT_LEVEL);
 				EffectManager.start(eclipse);
 				name = "Eclipse Totale";
 				hits = eclipse::hitCount;
-				impact = eclipse.impactPoint();
+				hitAt = eclipse.impactPoint();
 			}
 			for (int i = 0; i < 220; i++) {
 				EffectManager.tickAll();
 			}
 			long struck = targets.stream().filter(e -> !e.isAlive() || e.getHealth() < e.getMaxHealth()).count();
 			boolean attackOk = hits.getAsInt() >= targets.size() && struck == targets.size() && !targets.isEmpty();
-			report.append(attackOk ? "OK" : "FAIL").append(' ').append(name).append(" : impact en ").append(BlockPos.containing(impact))
+			report.append(attackOk ? "OK" : "FAIL").append(' ').append(name).append(" : impact en ").append(BlockPos.containing(hitAt))
 					.append(", ").append(struck).append("/").append(targets.size()).append(" squelettes touches, ")
 					.append(hits.getAsInt()).append(" touche(s)\n");
 			ok &= attackOk;
