@@ -139,8 +139,17 @@ public final class AstralEvents {
 								}
 							}
 						}
-						int ground = astral.getHeight(Heightmap.Types.WORLD_SURFACE, c.getX(), c.getZ());
-						boolean onSurface = altars > 0 && Math.abs(altarY - ground) <= 30;
+						// Le sol se mesure AUTOUR du château (au centre, on tomberait sur le haut d'une tour).
+						int ground = Integer.MIN_VALUE;
+						int bestDiff = Integer.MAX_VALUE;
+						for (int[] o : new int[][]{{36, 0}, {-36, 0}, {0, 36}, {0, -36}, {26, 26}, {-26, 26}, {26, -26}, {-26, -26}}) {
+							int gy = astral.getHeight(Heightmap.Types.WORLD_SURFACE, c.getX() + o[0], c.getZ() + o[1]);
+							if (gy > astral.getMinY() + 4 && Math.abs(gy - altarY) < bestDiff) {
+								bestDiff = Math.abs(gy - altarY);
+								ground = gy;
+							}
+						}
+						boolean onSurface = altars > 0 && bestDiff <= 30;
 						report.append(onSurface ? "OK" : "FAIL").append(" chateau a la surface : sol y=").append(ground)
 								.append(", autel y=").append(altarY).append('\n');
 						ok &= onSurface;
