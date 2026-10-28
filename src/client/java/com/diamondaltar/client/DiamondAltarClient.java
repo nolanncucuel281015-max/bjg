@@ -42,6 +42,10 @@ public class DiamondAltarClient implements ClientModInitializer {
 	private static final KeyMapping SWITCH_KEY = KeyBindingHelper.registerKeyBinding(new KeyMapping(
 			"key.diamondaltar.switch_ability", InputConstants.Type.KEYSYM, InputConstants.KEY_K, CATEGORY));
 
+	/** Touche Y : puissance de l'Anéantissement Céleste (Épée des Sept Royaumes). */
+	private static final KeyMapping POWER_KEY = KeyBindingHelper.registerKeyBinding(new KeyMapping(
+			"key.diamondaltar.sword_power", InputConstants.Type.KEYSYM, InputConstants.KEY_Y, CATEGORY));
+
 	private static final KeyMapping ARMOR_SWITCH_KEY = KeyBindingHelper.registerKeyBinding(new KeyMapping(
 			"key.diamondaltar.switch_armor", InputConstants.Type.KEYSYM, InputConstants.KEY_J, CATEGORY));
 
@@ -60,6 +64,7 @@ public class DiamondAltarClient implements ClientModInitializer {
 		BlockRenderLayerMap.putBlock(AstralContent.ASTRAL_LEAVES, ChunkSectionLayer.CUTOUT);
 		BlockRenderLayerMap.putBlock(RealmContent.REALM_PORTAL, ChunkSectionLayer.TRANSLUCENT);
 		BlockRenderLayerMap.putBlock(RealmContent.SYLVAN_LEAVES, ChunkSectionLayer.CUTOUT);
+		BlockRenderLayerMap.putBlock(RealmContent.LASER, ChunkSectionLayer.TRANSLUCENT);
 		// #endif
 
 		// Manuel : clic droit pour l'ouvrir.
@@ -99,6 +104,11 @@ public class DiamondAltarClient implements ClientModInitializer {
 						|| ModComponents.isInfused(client.player.getMainHandItem())
 						&& !Abilities.of(client.player.getMainHandItem().getItem()).isEmpty())) {
 					ClientPlayNetworking.send(new SwitchAbilityPayload());
+				}
+			}
+			while (POWER_KEY.consumeClick()) {
+				if (client.player != null && client.player.getMainHandItem().is(RealmContent.SEVEN_REALMS_SWORD)) {
+					ClientPlayNetworking.send(new com.diamondaltar.realms.SwordPowerPayload());
 				}
 			}
 			// Touche J : changer la capacité de l'armure. Shift + clic droit : la lancer.
@@ -167,7 +177,12 @@ public class DiamondAltarClient implements ClientModInitializer {
 						lines.add(Component.literal("    ").append(Component.translatable(k + ".desc")).withStyle(ChatFormatting.GRAY));
 					}
 				}
+				int power = com.diamondaltar.realms.RealmEvents.swordPower(stack);
+				lines.add(Component.translatable("diamondaltar.seven_realms.power",
+						Component.literal("★".repeat(power) + "☆".repeat(com.diamondaltar.realms.RealmEvents.MAX_POWER - power)),
+						Component.translatable("diamondaltar.seven_realms.power." + power)).withStyle(ChatFormatting.RED));
 				lines.add(Component.translatable("diamondaltar.seven_realms.use", SWORD_KEY_HINT.get()).withStyle(ChatFormatting.DARK_AQUA));
+				lines.add(Component.translatable("diamondaltar.seven_realms.power_hint", POWER_KEY.getTranslatedKeyMessage()).withStyle(ChatFormatting.DARK_AQUA));
 			}
 			for (Realm r : Realm.values()) {
 				if (stack.is(RealmContent.KEY[r.ordinal()]) || stack.is(RealmContent.SIGIL[r.ordinal()])) {

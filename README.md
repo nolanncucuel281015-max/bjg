@@ -139,10 +139,21 @@ son **minerai**, son **boss unique** et son **armure légendaire**.
    au milieu. 30 dégâts, incassable ; chaque coup brûle, gèle, empoisonne, flétrit et parfois foudroie.
    **Clic droit** pour lancer l'attaque choisie, **K** pour changer d'attaque :
    - *Jugement des Sept Royaumes* : sept colonnes de lumière qui explosent autour de toi (recharge 8 s) ;
-   - *Anéantissement Céleste* : tu t'élèves de 15 blocs, tu charges une sphère d'énergie pendant que la lumière
-     converge vers toi, puis un **rayon géant** frappe le sol et **7 lasers** balaient tout dans un rayon de
-     **50 blocs** (80 dégâts à chaque créature, les joueurs et les blocs sont épargnés). Tu redescends en douceur
-     (recharge 30 s).
+   - *Anéantissement Céleste* : une colonne de lumière t'élève, un noyau d'énergie grossit dans ta main pendant que
+     7 éclats (un par royaume) s'y fondent et que la lumière de toute la zone converge vers toi ; puis un **rayon
+     gigantesque** (du ciel jusqu'au sol) s'abat, creuse un **cratère**, et une **onde de choc** et **7 lasers
+     tournants** détruisent tout sur leur passage. Les rayons sont faits d'une matière d'énergie animée créée pour le mod.
+     **Y** change la puissance :
+
+     | Puissance | Portée | Dégâts | Destruction | Recharge |
+     |---|---|---|---|---|
+     | ★ | 12 blocs | 25 | aucune | 15 s |
+     | ★★ | 22 blocs | 45 | petit cratère | 20 s |
+     | ★★★ | 32 blocs | 70 | cratère | 25 s |
+     | ★★★★ | 42 blocs | 100 | grand cratère + les lasers labourent le sol | 30 s |
+     | ★★★★★ | 50 blocs | 150 | énorme cratère + tout le sol pulvérisé sur le passage des lasers | 35 s |
+
+     Les joueurs ne sont jamais touchés, la bedrock et les coffres (et autres blocs à contenu) ne sont jamais détruits.
 
 ### Récompenses : plus le boss est fort, plus le butin l'est
 

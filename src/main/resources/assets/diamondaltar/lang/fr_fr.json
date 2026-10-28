@@ -316,5 +316,14 @@
 	"diamondaltar.seven_realms.judgement.name": "Jugement des Sept Royaumes",
 	"diamondaltar.seven_realms.judgement.desc": "7 colonnes jaillissent autour de toi puis explosent (recharge 8 s)",
 	"diamondaltar.seven_realms.annihilation.name": "Anéantissement Céleste",
-	"diamondaltar.seven_realms.annihilation.desc": "Tu t'élèves, tu charges, puis un rayon géant et 7 lasers anéantissent tout sur 50 blocs (recharge 30 s)"
+	"diamondaltar.seven_realms.annihilation.desc": "Tu t'élèves, tu charges, puis un rayon gigantesque, une onde de choc et 7 lasers détruisent tout sur leur passage (jusqu'à 50 blocs)",
+	"diamondaltar.seven_realms.power": "Puissance : %s %s",
+	"diamondaltar.seven_realms.power.1": "(étincelle, 12 blocs)",
+	"diamondaltar.seven_realms.power.2": "(rayon, 22 blocs, petit cratère)",
+	"diamondaltar.seven_realms.power.3": "(tempête, 32 blocs, cratère)",
+	"diamondaltar.seven_realms.power.4": "(cataclysme, 42 blocs, laboure le sol)",
+	"diamondaltar.seven_realms.power.5": "(ANÉANTISSEMENT, 50 blocs, détruit tout)",
+	"diamondaltar.seven_realms.power_hint": "%s : changer la puissance de l'Anéantissement",
+	"key.diamondaltar.sword_power": "Puissance de l'épée",
+	"block.diamondaltar.celestial_laser": "Laser Céleste"
 }

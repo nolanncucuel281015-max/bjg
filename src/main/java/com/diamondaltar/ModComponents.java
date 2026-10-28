@@ -38,6 +38,12 @@ public final class ModComponents {
 			DiamondAltar.id("selected_ability"),
 			DataComponentType.<Integer>builder().persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT).build());
 
+	/** Puissance de l'Anéantissement Céleste de l'Épée des Sept Royaumes (1 à 5, touche Y). */
+	public static final DataComponentType<Integer> SWORD_POWER = Registry.register(
+			BuiltInRegistries.DATA_COMPONENT_TYPE,
+			DiamondAltar.id("sword_power"),
+			DataComponentType.<Integer>builder().persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT).build());
+
 	/** Apparence de l'armure infusée quand on la porte : assets/diamondaltar/equipment/infused_diamond.json */
 	public static final ResourceKey<EquipmentAsset> INFUSED_ARMOR = ResourceKey.create(EquipmentAssets.ROOT_ID, DiamondAltar.id("infused_diamond"));
 

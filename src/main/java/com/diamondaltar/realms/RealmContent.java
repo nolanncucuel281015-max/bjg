@@ -88,6 +88,11 @@ public final class RealmContent {
 			net.minecraft.core.Registry.register(net.minecraft.core.registries.BuiltInRegistries.BLOCK_ENTITY_TYPE, DiamondAltar.id("realm_altar"),
 					net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder.create(RealmAltarBlockEntity::new, REALM_ALTAR).build());
 
+	/** Matière des rayons de l'Anéantissement Céleste (jamais posée, seulement affichée). */
+	public static final Block LASER = AstralContent.blockNoItem("celestial_laser", LaserBlock::new, BlockBehaviour.Properties.of()
+			.noCollision().strength(-1f, 3600000f).sound(SoundType.GLASS).lightLevel(s -> 15).noLootTable().noOcclusion()
+			.pushReaction(Compat.PUSH_BLOCKED));
+
 	public static final Block REALM_PORTAL = AstralContent.blockNoItem("realm_portal", RealmPortalBlock::new, BlockBehaviour.Properties.of()
 			.noCollision().strength(-1f, 3600000f).sound(SoundType.GLASS).lightLevel(s -> 13).noLootTable().pushReaction(Compat.PUSH_BLOCKED));
 	public static final Block SYLVAN_LOG = AstralContent.block("sylvan_log", RotatedPillarBlock::new, BlockBehaviour.Properties.of()

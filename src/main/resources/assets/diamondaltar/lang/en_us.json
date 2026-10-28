@@ -316,5 +316,14 @@
 	"diamondaltar.seven_realms.judgement.name": "Judgement of the Seven Realms",
 	"diamondaltar.seven_realms.judgement.desc": "7 pillars rise around you and explode (8 s cooldown)",
 	"diamondaltar.seven_realms.annihilation.name": "Celestial Annihilation",
-	"diamondaltar.seven_realms.annihilation.desc": "You rise, charge up, then a giant beam and 7 lasers wipe out everything within 50 blocks (30 s cooldown)"
+	"diamondaltar.seven_realms.annihilation.desc": "You rise, charge up, then a gigantic beam, a shockwave and 7 lasers destroy everything in their path (up to 50 blocks)",
+	"diamondaltar.seven_realms.power": "Power: %s %s",
+	"diamondaltar.seven_realms.power.1": "(spark, 12 blocks)",
+	"diamondaltar.seven_realms.power.2": "(beam, 22 blocks, small crater)",
+	"diamondaltar.seven_realms.power.3": "(storm, 32 blocks, crater)",
+	"diamondaltar.seven_realms.power.4": "(cataclysm, 42 blocks, ploughs the ground)",
+	"diamondaltar.seven_realms.power.5": "(ANNIHILATION, 50 blocks, destroys everything)",
+	"diamondaltar.seven_realms.power_hint": "%s: change the Annihilation's power",
+	"key.diamondaltar.sword_power": "Sword power",
+	"block.diamondaltar.celestial_laser": "Celestial Laser"
 }

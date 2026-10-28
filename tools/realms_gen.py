@@ -245,10 +245,38 @@ def textures():
         for face in ("top", "side"):
             save(recolor(TEX / f"block/guardian_altar_{face}.png", [(10, 6, 14), r["metal"][1], r["metal"][2]]),
                  f"block/realm_altar_{r['id']}_{face}.png")
+    laser_textures()
     save(recolor(TEX / "item/diamond_manual.png", [(40, 15, 10), (200, 120, 50), (255, 230, 150)]), "item/portal_guide.png")
 
 
 AETHER = [(40, 50, 90), (150, 225, 255), (255, 250, 225)]
+
+
+def laser_textures():
+    """Matière du laser : énergie translucide animée (16 images), stries qui montent, cœur blanc éblouissant."""
+    import math
+    colors = [r["metal"][1] for r in REALMS] + [(235, 245, 255)]
+    rnd = random.Random(7)
+    seeds = [(rnd.random() * 6.28, rnd.uniform(0.6, 1.4)) for _ in range(16)]
+    for ci, col in enumerate(colors):
+        frames = 16
+        img = Image.new("RGBA", (16, 16 * frames))
+        for f in range(frames):
+            for y in range(16):
+                for x in range(16):
+                    ph, sp = seeds[x]
+                    streak = 0.5 + 0.5 * math.sin((y + f * 2 * sp) * 0.8 + ph)
+                    spark = 1.0 if rnd.random() < 0.015 else 0.0
+                    edge = abs(x - 7.5) / 7.5
+                    core = max(0.0, 1 - edge * 1.4)
+                    light = min(1.0, 0.62 + 0.3 * streak + 0.45 * core + spark)
+                    white = min(1.0, core * 0.8 + spark + (0.3 if streak > 0.92 else 0))
+                    c = tuple(int(min(255, col[i] * light + (255 - col[i] * light) * white)) for i in range(3))
+                    a = int(150 + 90 * light)
+                    img.putpixel((x, f * 16 + y), c + (min(255, a),))
+        name = f"block/laser_{ci}.png"
+        save(img, name)
+        (TEX / (name + ".mcmeta")).write_text('{"animation": {"frametime": 1}}')
 
 
 def extra_textures():
@@ -354,6 +382,11 @@ def assets():
             "top": f"{NS}:block/{name}_top", "bottom": f"{NS}:block/{name}_side", "side": f"{NS}:block/{name}_side"}})
         variants[f"realm={i}"] = {"model": f"{NS}:block/{name}"}
     dump(ASSETS / "blockstates/realm_altar.json", {"variants": variants})
+    lasers = {}
+    for ci in range(8):
+        dump(ASSETS / f"models/block/laser_{ci}.json", {"parent": "minecraft:block/cube_all", "textures": {"all": f"{NS}:block/laser_{ci}"}})
+        lasers[f"color={ci}"] = {"model": f"{NS}:block/laser_{ci}"}
+    dump(ASSETS / "blockstates/celestial_laser.json", {"variants": lasers})
     cube("sylvan_leaves")
     dump(ASSETS / "models/block/sylvan_log.json", {"parent": "minecraft:block/cube_column", "textures": {
         "end": f"{NS}:block/sylvan_log_top", "side": f"{NS}:block/sylvan_log"}})
@@ -565,10 +598,19 @@ def lang():
                 f"{NS}.realm_armor.set": "Armure complète :",
                 f"{NS}.seven_realms.cooldown": "%s : encore %s s",
                 f"{NS}.seven_realms.selected": "Attaque : %s (%s/%s)",
+                f"{NS}.seven_realms.power": "Puissance : %s %s",
+                f"{NS}.seven_realms.power.1": "(étincelle, 12 blocs)",
+                f"{NS}.seven_realms.power.2": "(rayon, 22 blocs, petit cratère)",
+                f"{NS}.seven_realms.power.3": "(tempête, 32 blocs, cratère)",
+                f"{NS}.seven_realms.power.4": "(cataclysme, 42 blocs, laboure le sol)",
+                f"{NS}.seven_realms.power.5": "(ANÉANTISSEMENT, 50 blocs, détruit tout)",
+                f"{NS}.seven_realms.power_hint": "%s : changer la puissance de l'Anéantissement",
+                f"key.{NS}.sword_power": "Puissance de l'épée",
+                f"block.{NS}.celestial_laser": "Laser Céleste",
                 f"{NS}.seven_realms.judgement.name": "Jugement des Sept Royaumes",
                 f"{NS}.seven_realms.judgement.desc": "7 colonnes jaillissent autour de toi puis explosent (recharge 8 s)",
                 f"{NS}.seven_realms.annihilation.name": "Anéantissement Céleste",
-                f"{NS}.seven_realms.annihilation.desc": "Tu t'élèves, tu charges, puis un rayon géant et 7 lasers anéantissent tout sur 50 blocs (recharge 30 s)",
+                f"{NS}.seven_realms.annihilation.desc": "Tu t'élèves, tu charges, puis un rayon gigantesque, une onde de choc et 7 lasers détruisent tout sur leur passage (jusqu'à 50 blocs)",
                 f"{NS}.seven_realms.hit": "Chaque coup : feu, gel, poison, flétrissement, lumière, et parfois la foudre",
                 f"{NS}.seven_realms.use": "Clic droit : lancer l'attaque · %s : changer d'attaque",
                 f"item.{NS}.aetherite_ingot": "Lingot d'Aetherite",
@@ -612,10 +654,19 @@ def lang():
                 f"{NS}.realm_armor.set": "Full set:",
                 f"{NS}.seven_realms.cooldown": "%s: %s s left",
                 f"{NS}.seven_realms.selected": "Attack: %s (%s/%s)",
+                f"{NS}.seven_realms.power": "Power: %s %s",
+                f"{NS}.seven_realms.power.1": "(spark, 12 blocks)",
+                f"{NS}.seven_realms.power.2": "(beam, 22 blocks, small crater)",
+                f"{NS}.seven_realms.power.3": "(storm, 32 blocks, crater)",
+                f"{NS}.seven_realms.power.4": "(cataclysm, 42 blocks, ploughs the ground)",
+                f"{NS}.seven_realms.power.5": "(ANNIHILATION, 50 blocks, destroys everything)",
+                f"{NS}.seven_realms.power_hint": "%s: change the Annihilation's power",
+                f"key.{NS}.sword_power": "Sword power",
+                f"block.{NS}.celestial_laser": "Celestial Laser",
                 f"{NS}.seven_realms.judgement.name": "Judgement of the Seven Realms",
                 f"{NS}.seven_realms.judgement.desc": "7 pillars rise around you and explode (8 s cooldown)",
                 f"{NS}.seven_realms.annihilation.name": "Celestial Annihilation",
-                f"{NS}.seven_realms.annihilation.desc": "You rise, charge up, then a giant beam and 7 lasers wipe out everything within 50 blocks (30 s cooldown)",
+                f"{NS}.seven_realms.annihilation.desc": "You rise, charge up, then a gigantic beam, a shockwave and 7 lasers destroy everything in their path (up to 50 blocks)",
                 f"{NS}.seven_realms.hit": "Every hit: fire, frost, poison, wither, light, and sometimes lightning",
                 f"{NS}.seven_realms.use": "Right-click: use the attack · %s: switch attack",
                 f"item.{NS}.aetherite_ingot": "Aetherite Ingot",

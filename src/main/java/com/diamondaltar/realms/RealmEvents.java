@@ -66,6 +66,14 @@ public final class RealmEvents {
 		ServerLivingEntityEvents.ALLOW_DAMAGE.register((entity, source, amount) -> !armorCancels(entity, source));
 		ServerLivingEntityEvents.AFTER_DAMAGE.register((entity, source, baseDamage, damageTaken, blocked) ->
 				swordHit(entity, source, damageTaken));
+		// Touche Y : puissance de l'Anéantissement Céleste.
+		Compat.toServer().register(SwordPowerPayload.ID, SwordPowerPayload.CODEC);
+		net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.registerGlobalReceiver(SwordPowerPayload.ID, (payload, context) -> {
+			ItemStack held = context.player().getMainHandItem();
+			if (held.is(RealmContent.SEVEN_REALMS_SWORD)) {
+				switchSwordPower(context.player(), held);
+			}
+		});
 		// Toutes les recettes du mod sont débloquées dans le livre de recettes dès la connexion.
 		net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.JOIN.register((handler, sender, server) ->
 				handler.getPlayer().awardRecipesByKey(modRecipes(server)));
@@ -315,6 +323,24 @@ public final class RealmEvents {
 		player.level().playSound(null, player.blockPosition(), SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 1f, 1.2f + next * 0.3f);
 	}
 
+	public static final int MAX_POWER = 5;
+
+	/** Puissance de l'Anéantissement Céleste (1 à 5), 5 par défaut. */
+	public static int swordPower(ItemStack stack) {
+		Integer p = stack.get(com.diamondaltar.ModComponents.SWORD_POWER);
+		return p == null ? MAX_POWER : Math.max(1, Math.min(MAX_POWER, p));
+	}
+
+	/** Touche Y avec l'épée en main : puissance suivante (1 → 2 → … → 5 → 1). */
+	public static void switchSwordPower(ServerPlayer player, ItemStack stack) {
+		int next = swordPower(stack) % MAX_POWER + 1;
+		stack.set(com.diamondaltar.ModComponents.SWORD_POWER, next);
+		Compat.overlay(player, Component.translatable("diamondaltar.seven_realms.power",
+				Component.literal("★".repeat(next) + "☆".repeat(MAX_POWER - next)).withStyle(next == MAX_POWER ? ChatFormatting.RED : ChatFormatting.GOLD),
+				Component.translatable("diamondaltar.seven_realms.power." + next)).withStyle(ChatFormatting.AQUA));
+		player.level().playSound(null, player.blockPosition(), SoundEvents.RESPAWN_ANCHOR_CHARGE, SoundSource.PLAYERS, 0.8f, 0.6f + next * 0.2f);
+	}
+
 	private static void useSword(ServerLevel level, ServerPlayer player, ItemStack stack) {
 		int mode = swordMode(stack);
 		UUID key = new UUID(player.getUUID().getMostSignificantBits(), player.getUUID().getLeastSignificantBits() ^ mode);
@@ -325,8 +351,9 @@ public final class RealmEvents {
 					String.format("%.1f", (until - level.getGameTime()) / 20.0)).withStyle(ChatFormatting.GRAY));
 			return;
 		}
-		SWORD_COOLDOWN.put(key, level.getGameTime() + SWORD_COOLDOWNS[mode]);
-		EffectManager.start(mode == 1 ? new CelestialAnnihilation(level, player) : new SevenRealmsJudgement(level, player));
+		int power = swordPower(stack);
+		SWORD_COOLDOWN.put(key, level.getGameTime() + (mode == 1 ? CelestialAnnihilation.cooldown(power) : SWORD_COOLDOWNS[mode]));
+		EffectManager.start(mode == 1 ? new CelestialAnnihilation(level, player, power) : new SevenRealmsJudgement(level, player));
 	}
 
 	/**
@@ -636,13 +663,15 @@ public final class RealmEvents {
 				targets.add(mob);
 			}
 		}
-		CelestialAnnihilation effect = new CelestialAnnihilation(level, caster);
+		CelestialAnnihilation effect = new CelestialAnnihilation(level, caster, MAX_POWER);
 		EffectManager.start(effect);
 		for (int i = 0; i < 110; i++) {
 			EffectManager.tickAll();
 		}
 		long dead = targets.stream().filter(e -> !e.isAlive() || e.getHealth() < e.getMaxHealth()).count();
-		boolean ok = effect.hitCount() >= targets.size() && dead == targets.size() && !targets.isEmpty();
+		boolean crater = level.getBlockState(new BlockPos(8, y - 1, 8)).isAir();
+		report.append(crater ? "OK" : "FAIL").append(" Aneantissement Celeste (puissance 5) : cratere creuse sous l'impact\n");
+		boolean ok = crater && effect.hitCount() >= targets.size() && dead == targets.size() && !targets.isEmpty();
 		report.append(ok ? "OK" : "FAIL").append(" Aneantissement Celeste : ").append(effect.hitCount()).append(" touche(s), ")
 				.append(dead).append("/").append(targets.size()).append(" squelettes a 10, 30 et 45 blocs blesses ou morts\n");
 		targets.forEach(e -> e.discard());
