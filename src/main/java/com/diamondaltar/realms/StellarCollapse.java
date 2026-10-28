@@ -82,13 +82,6 @@ public final class StellarCollapse extends TimedEffect {
 		return hit.size();
 	}
 
-	/** Pour l'auto-test : depuis combien de ticks l'attaque tourne, et jusqu'où l'onde de la supernova est allée. */
-	public String debug() {
-		return "age=" + age + " onde max=" + String.format("%.1f", maxReach);
-	}
-
-	private double maxReach;
-
 	@Override
 	protected boolean tick() {
 		if (age < BIRTH) {
@@ -248,7 +241,6 @@ public final class StellarCollapse extends TimedEffect {
 		if (t % 6 == 0) {
 			level.playSound(null, BlockPos.containing(target), SoundEvents.FIREWORK_ROCKET_LARGE_BLAST, SoundSource.PLAYERS, 6f, 0.3f + t * 0.01f);
 		}
-		maxReach = Math.max(maxReach, reach);
 		SkyFx.strike(level, player, target, reach, damage, hit);
 		// Les créatures aspirées autour du trou noir (en l'air) sont aussi pulvérisées.
 		SkyFx.strike(level, player, core, Math.min(radius, 16 + t * 2.0), damage, hit);

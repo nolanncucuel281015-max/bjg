@@ -317,9 +317,9 @@ public final class RealmEvents {
 
 	/**
 	 * Les attaques de l'épée (touche K pour changer) : 0 = Jugement des Sept Royaumes, 1 = Anéantissement Céleste,
-	 * 2 = Lance de Jupiter, 3 = Effondrement Stellaire. Les trois dernières se règlent avec Y (portée et puissance).
+	 * 2 = Lance de Jupiter, 3 = Effondrement Stellaire, 4 = Pluie de Comètes. Les quatre dernières se règlent avec Y (portée et puissance).
 	 */
-	public static final String[] SWORD_MODES = {"judgement", "annihilation", "jupiter", "collapse"};
+	public static final String[] SWORD_MODES = {"judgement", "annihilation", "jupiter", "collapse", "comets"};
 	/** Niveaux par défaut : portée 75 blocs, 100 dégâts. */
 	public static final int DEFAULT_LEVEL = 4;
 
@@ -337,13 +337,13 @@ public final class RealmEvents {
 		player.level().playSound(null, player.blockPosition(), SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 1f, 1.2f + next * 0.3f);
 	}
 
-	/** Niveau de portée (1 à 11 : 10 à 1000 blocs). */
+	/** Niveau de portée (1 à 19 : 10 à 100 000 blocs). */
 	public static int swordRange(ItemStack stack) {
 		Integer p = stack.get(com.diamondaltar.ModComponents.SWORD_POWER);
 		return SkyFx.clamp(p == null ? DEFAULT_LEVEL : p);
 	}
 
-	/** Niveau de dégâts (1 à 7 : 10 à 1000). */
+	/** Niveau de dégâts (1 à 13 : 10 à 1 000 000). */
 	public static int swordDamage(ItemStack stack) {
 		Integer p = stack.get(com.diamondaltar.ModComponents.SWORD_DAMAGE);
 		return SkyFx.clampDamage(p == null ? DEFAULT_LEVEL : p);
@@ -384,6 +384,10 @@ public final class RealmEvents {
 			case 3 -> {
 				SWORD_COOLDOWN.put(key, level.getGameTime() + StellarCollapse.cooldown(range));
 				EffectManager.start(new StellarCollapse(level, player, range, damage));
+			}
+			case 4 -> {
+				SWORD_COOLDOWN.put(key, level.getGameTime() + CometStorm.cooldown(range));
+				EffectManager.start(new CometStorm(level, player, range, damage));
 			}
 			default -> {
 				SWORD_COOLDOWN.put(key, level.getGameTime() + SWORD_COOLDOWN_TICKS);
@@ -767,13 +771,37 @@ public final class RealmEvents {
 		boolean collapseOk = collapse.hitCount() >= targets.size() && collapseHit == targets.size() && !targets.isEmpty();
 		report.append(collapseOk ? "OK" : "FAIL").append(" Effondrement Stellaire : impact en ").append(BlockPos.containing(collapse.impactPoint()))
 				.append(", ").append(collapseHit).append("/").append(targets.size()).append(" squelettes aspires et pulverises, ")
-				.append(collapse.hitCount()).append(" touche(s), ").append(collapse.debug());
-		for (LivingEntity e : targets) {
-			report.append(" [").append(e.blockPosition()).append(" vivant=").append(e.isAlive()).append(" retire=").append(e.isRemoved())
-					.append(" PV=").append(e.getHealth()).append("]");
-		}
-		report.append('\n');
+				.append(collapse.hitCount()).append(" touche(s)\n");
 		ok &= collapseOk;
+		// Pluie de Comètes : sur la même dalle, refaite (la supernova l'a pulvérisée).
+		targets.forEach(e -> e.discard());
+		targets.clear();
+		for (int x = 0; x <= 60; x++) {
+			for (int dz = -2; dz <= 2; dz++) {
+				level.setBlockAndUpdate(new BlockPos(x, y - 1, -24 + dz), RealmContent.STONE[Realm.SOLAR.ordinal()].defaultBlockState());
+			}
+		}
+		for (int d : new int[]{15, 45}) {
+			var mob = Compat.SKELETON.create(level, net.minecraft.world.entity.EntitySpawnReason.TRIGGERED);
+			if (mob != null) {
+				mob.setPos(8.5 + d, y, -23.5);
+				level.addFreshEntity(mob);
+				targets.add(mob);
+			}
+		}
+		caster.setPos(8.5, y, -23.5);
+		caster.setXRot(90);
+		CometStorm comets = new CometStorm(level, caster, DEFAULT_LEVEL, DEFAULT_LEVEL);
+		EffectManager.start(comets);
+		for (int i = 0; i < 220; i++) {
+			EffectManager.tickAll();
+		}
+		long cometHit = targets.stream().filter(e -> !e.isAlive() || e.getHealth() < e.getMaxHealth()).count();
+		boolean cometOk = comets.hitCount() >= targets.size() && cometHit == targets.size() && !targets.isEmpty();
+		report.append(cometOk ? "OK" : "FAIL").append(" Pluie de Cometes : impact en ").append(BlockPos.containing(comets.impactPoint()))
+				.append(", ").append(cometHit).append("/").append(targets.size()).append(" squelettes ecrases, ")
+				.append(comets.hitCount()).append(" touche(s)\n");
+		ok &= cometOk;
 		targets.forEach(e -> e.discard());
 		return ok;
 	}

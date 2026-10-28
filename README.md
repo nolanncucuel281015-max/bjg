@@ -147,15 +147,19 @@ son **minerai**, son **boss unique** et son **armure légendaire**.
      au-dessus du bloc visé ; une **lance surpuissante** tourne autour de Jupiter de plus en plus vite, puis **fonce sur
      la Terre** : énorme explosion, éclairs, cratère et onde de choc.
 
-   - *Effondrement Stellaire* (la plus forte) : une **étoile géante** naît dans le ciel au-dessus du bloc visé, s'effondre
+   - *Effondrement Stellaire* : une **étoile géante** naît dans le ciel au-dessus du bloc visé, s'effondre
      en **trou noir** entouré d'un disque de lumière qui **aspire et soulève toutes les créatures** de la zone pendant
      que la foudre tombe, puis explose en **supernova** : flash aveuglant, trois ondes de choc, énorme cratère et
      **dégâts doublés** (recharge une fois et demie plus longue).
+   - *Pluie de Comètes* : une **faille aux couleurs des 7 royaumes** s'ouvre dans le ciel au-dessus du bloc visé, sept
+     orbes tournent autour ; des **dizaines de comètes** (sphères avec traînée laser) en tombent et **traquent chaque
+     créature** de la portée, puis la **Comète Mère**, gigantesque, s'écrase : énorme cratère, onde de choc ronde et
+     **dégâts triplés** (recharge deux fois plus longue que l'Anéantissement).
 
    **Y** ouvre l'**interface de réglages** de l'épée : on y clique sur l'attaque, la portée et la puissance voulues.
-   Réglages des deux grandes attaques : portée (10 à **5000 blocs** : 10, 25, 50, 75, 100, 150, 200, 300, 500, 750, 1000, 1500, 2000, 3000, 5000 ;
+   Réglages des grandes attaques : portée (10 à **100 000 blocs** : 10, 25, 50, 75, 100, 150, 200, 300, 500, 750, 1000, 1500, 2000, 3000, 5000, 10 000, 25 000, 50 000, 100 000 ;
    au-delà de la distance de rendu, le terrain n'est pas chargé et l'attaque n'y fait rien),
-   dégâts / puissance (10 à **1 000 000** : 10, 25, 50, 100, 200, 500, 1000, 2500, 5000, 10 000, 50 000, 100 000, 1 000 000 ; **U** passe aussi au cran suivant). Recharge de 12 s (10 blocs) à 68 s (5000 blocs). Le sol est
+   dégâts / puissance (10 à **1 000 000** : 10, 25, 50, 100, 200, 500, 1000, 2500, 5000, 10 000, 50 000, 100 000, 1 000 000 ; **U** passe aussi au cran suivant). Recharge de 12 s (10 blocs) à 84 s (100 000 blocs). Le sol est
    labouré par les lasers à partir de 75 blocs de portée. Les joueurs ne sont jamais touchés, la bedrock et les
    coffres (et autres blocs à contenu) ne sont jamais détruits.
 

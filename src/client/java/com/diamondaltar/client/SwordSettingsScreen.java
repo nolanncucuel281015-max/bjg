@@ -14,12 +14,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 /**
- * Réglages de l'Épée des Sept Royaumes (touche Y) : on choisit l'attaque, la portée (10 à 1000 blocs)
- * et la puissance (dégâts, 10 à 1000) en cliquant directement sur la valeur voulue.
+ * Réglages de l'Épée des Sept Royaumes (touche Y) : on choisit l'attaque, la portée (10 à 100 000 blocs)
+ * et la puissance (dégâts, 10 à 1 000 000) en cliquant directement sur la valeur voulue.
  */
 public class SwordSettingsScreen extends Screen {
-	private static final int W = 440;
-	private static final int H = 220;
+	private static final int W = 460;
+	private static final int H = 252;
 	private static final int PAD = 12;
 	private static final int TEXT = 0xFFE8E6F4;
 	private static final int MUTED = 0xFFA7A2C6;
@@ -61,13 +61,15 @@ public class SwordSettingsScreen extends Screen {
 			addRenderableWidget(Button.builder(choice(name, i == mode), b -> set(index, range, damage))
 					.bounds(l + PAD + i * (aw + 4), t + 38, aw, 18).build());
 		}
-		// Portée
+		// Portée, sur deux lignes
 		int nr = SkyFx.RANGES.length;
-		int rw = (W - PAD * 2 - 2 * (nr - 1)) / nr;
+		int perRow = (nr + 1) / 2;
+		int rw = (W - PAD * 2 - 2 * (perRow - 1)) / perRow;
 		for (int i = 0; i < nr; i++) {
 			int level = i + 1;
+			int col = i % perRow, row = i / perRow;
 			addRenderableWidget(Button.builder(choice(Component.literal(SkyFx.shortNumber(SkyFx.RANGES[i])), level == range),
-					b -> set(mode, level, damage)).bounds(l + PAD + i * (rw + 2), t + 86, rw, 18).build());
+					b -> set(mode, level, damage)).bounds(l + PAD + col * (rw + 2), t + 86 + row * 20, rw, 18).build());
 		}
 		// Puissance (dégâts)
 		int nd = SkyFx.DAMAGES.length;
@@ -75,7 +77,7 @@ public class SwordSettingsScreen extends Screen {
 		for (int i = 0; i < nd; i++) {
 			int level = i + 1;
 			addRenderableWidget(Button.builder(choice(Component.literal(SkyFx.shortNumber(SkyFx.DAMAGES[i])), level == damage),
-					b -> set(mode, range, level)).bounds(l + PAD + i * (dw + 2), t + 134, dw, 18).build());
+					b -> set(mode, range, level)).bounds(l + PAD + i * (dw + 2), t + 154, dw, 18).build());
 		}
 		addRenderableWidget(Button.builder(Component.translatable("diamondaltar.sword_settings.done"), b -> onClose())
 				.bounds(l + W / 2 - 40, t + H - 26, 80, 18).build());
@@ -120,8 +122,8 @@ public class SwordSettingsScreen extends Screen {
 		}
 		g.drawString(font, Component.translatable("diamondaltar.sword_settings.range", SkyFx.range(range),
 				CelestialAnnihilation.cooldown(range) / 20), l + PAD, t + 76, TEXT, false);
-		g.drawString(font, Component.translatable("diamondaltar.sword_settings.damage", (int) SkyFx.damage(damage)), l + PAD, t + 122, TEXT, false);
-		int hy = t + 156;
+		g.drawString(font, Component.translatable("diamondaltar.sword_settings.damage", (int) SkyFx.damage(damage)), l + PAD, t + 142, TEXT, false);
+		int hy = t + 178;
 		for (net.minecraft.util.FormattedCharSequence line : font.split(Component.translatable("diamondaltar.sword_settings.hint"), W - PAD * 2)) {
 			g.drawString(font, line, l + PAD, hy, MUTED, false);
 			hy += 9;

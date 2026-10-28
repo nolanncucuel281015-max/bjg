@@ -332,10 +332,12 @@
 	"diamondaltar.sword_settings.attack": "Attaque :",
 	"diamondaltar.sword_settings.range": "Portée : %s blocs (recharge %s s)",
 	"diamondaltar.sword_settings.damage": "Puissance : %s dégâts",
-	"diamondaltar.sword_settings.hint": "Clique sur une valeur. La portée et la puissance servent aux trois grandes attaques. Au-delà de ta distance de rendu, le terrain n'est pas chargé : l'attaque n'y fait rien.",
+	"diamondaltar.sword_settings.hint": "Clique sur une valeur. La portée et la puissance servent aux quatre grandes attaques. Au-delà de ta distance de rendu, le terrain n'est pas chargé : l'attaque n'y fait rien.",
 	"diamondaltar.sword_settings.done": "Terminé",
 	"item.diamondaltar.sun": "Étoile",
 	"item.diamondaltar.black_hole": "Trou noir",
 	"diamondaltar.seven_realms.collapse.name": "Effondrement Stellaire",
-	"diamondaltar.seven_realms.collapse.desc": "Une étoile géante s'effondre en trou noir qui aspire toutes les créatures, puis explose en supernova : dégâts doublés"
+	"diamondaltar.seven_realms.collapse.desc": "Une étoile géante s'effondre en trou noir qui aspire toutes les créatures, puis explose en supernova : dégâts doublés",
+	"diamondaltar.seven_realms.comets.name": "Pluie de Comètes",
+	"diamondaltar.seven_realms.comets.desc": "Une faille des 7 royaumes s'ouvre dans le ciel : des comètes traquent chaque créature, puis la Comète Mère s'écrase : dégâts triplés"
 }

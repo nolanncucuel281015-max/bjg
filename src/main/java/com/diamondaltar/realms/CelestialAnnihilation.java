@@ -246,7 +246,7 @@ public final class CelestialAnnihilation extends TimedEffect {
 			Vec3 dir = new Vec3(Math.cos(a), 0, Math.sin(a));
 			Vec3 from = impact.add(0, 0.8, 0);
 			lasers[i].setPos(from);
-			SkyFx.beam(lasers[i], from, from.add(dir.scale(reach)), (0.8f + rangeLevel * 0.25f) * fade, 2);
+			SkyFx.beam(lasers[i], from, from.add(dir.scale(Math.min(reach, SkyFx.VISUAL_MAX))), (0.8f + rangeLevel * 0.25f) * fade, 2);
 			for (int k = 0; k < 2; k++) {
 				Vec3 p = from.add(dir.scale(level.getRandom().nextDouble() * Math.min(reach, 60)));
 				level.sendParticles(SkyFx.glow(i), p.x, p.y, p.z, 1, 0.3, 0.3, 0.3, 0.02);

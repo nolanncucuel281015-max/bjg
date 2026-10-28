@@ -36,13 +36,16 @@ import java.util.UUID;
  */
 public final class SkyFx {
 	/** Portées réglables avec la touche Y (en blocs). */
-	public static final int[] RANGES = {10, 25, 50, 75, 100, 150, 200, 300, 500, 750, 1000, 1500, 2000, 3000, 5000};
+	public static final int[] RANGES = {10, 25, 50, 75, 100, 150, 200, 300, 500, 750, 1000, 1500, 2000, 3000, 5000,
+			10000, 25000, 50000, 100000};
 	/** Dégâts réglables avec la touche U. */
 	public static final int[] DAMAGES = {10, 25, 50, 100, 200, 500, 1000, 2500, 5000, 10000, 50000, 100000, 1000000};
-	private static final int[] CRATER = {2, 4, 6, 8, 10, 13, 16, 18, 20, 22, 24, 26, 28, 30, 32};
-	private static final float[] WIDTH = {1.5f, 2.5f, 3.5f, 4.5f, 5.5f, 7f, 9f, 10f, 11f, 12f, 13f, 14f, 15f, 16f, 18f};
+	private static final int[] CRATER = {2, 4, 6, 8, 10, 13, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40};
+	private static final float[] WIDTH = {1.5f, 2.5f, 3.5f, 4.5f, 5.5f, 7f, 9f, 10f, 11f, 12f, 13f, 14f, 15f, 16f, 18f, 19f, 20f, 21f, 22f};
 	/** Blocs détruits sans prévenir les voisins (bien moins de calculs, donc moins de lag). */
 	private static final int QUIET = 2 | 16;
+	/** Au-delà, les anneaux et lasers ne grandissent plus à l'écran (personne ne voit si loin) ; les dégâts, eux, vont jusqu'au bout. */
+	public static final double VISUAL_MAX = 1500;
 	/** On ne vise jamais plus loin que ça (au-delà, les tronçons ne sont pas chargés de toute façon). */
 	private static final int MAX_AIM = 320;
 
@@ -158,6 +161,7 @@ public final class SkyFx {
 
 	public static void ring(Display.BlockDisplay[] segments, Vec3 center, double r, double spin, float w, int ticks) {
 		int n = segments.length;
+		r = Math.min(r, VISUAL_MAX);
 		for (int i = 0; i < n; i++) {
 			double a0 = spin + Math.PI * 2 * i / n;
 			double a1 = spin + Math.PI * 2 * (i + 1) / n;

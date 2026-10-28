@@ -332,10 +332,12 @@
 	"diamondaltar.sword_settings.attack": "Attack:",
 	"diamondaltar.sword_settings.range": "Range: %s blocks (%s s cooldown)",
 	"diamondaltar.sword_settings.damage": "Power: %s damage",
-	"diamondaltar.sword_settings.hint": "Click a value. Range and power apply to the three big attacks. Beyond your render distance the terrain isn't loaded: the attack does nothing there.",
+	"diamondaltar.sword_settings.hint": "Click a value. Range and power apply to the four big attacks. Beyond your render distance the terrain isn't loaded: the attack does nothing there.",
 	"diamondaltar.sword_settings.done": "Done",
 	"item.diamondaltar.sun": "Star",
 	"item.diamondaltar.black_hole": "Black Hole",
 	"diamondaltar.seven_realms.collapse.name": "Stellar Collapse",
-	"diamondaltar.seven_realms.collapse.desc": "A giant star collapses into a black hole that sucks in every creature, then explodes into a supernova: double damage"
+	"diamondaltar.seven_realms.collapse.desc": "A giant star collapses into a black hole that sucks in every creature, then explodes into a supernova: double damage",
+	"diamondaltar.seven_realms.comets.name": "Comet Storm",
+	"diamondaltar.seven_realms.comets.desc": "A rift of the 7 realms opens in the sky: comets hunt down every creature, then the Mother Comet crashes down: triple damage"
 }
