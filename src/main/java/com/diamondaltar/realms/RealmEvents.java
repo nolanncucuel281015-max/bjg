@@ -677,7 +677,7 @@ public final class RealmEvents {
 		}
 		// Deux dalles en plein ciel (au-dessus des îles), bien dégagées : une pour le laser, une pour la lance.
 		int y = Math.min(215, level.getMaxY() - 40);
-		for (int row : new int[]{8, 40, 72}) {
+		for (int row : new int[]{8, 40, -24}) {
 			for (int x = 0; x <= 60; x++) {
 				for (int dz = -2; dz <= 2; dz++) {
 					level.setBlockAndUpdate(new BlockPos(x, y - 1, row + dz), RealmContent.STONE[Realm.SOLAR.ordinal()].defaultBlockState());
@@ -751,12 +751,12 @@ public final class RealmEvents {
 		for (int d : new int[]{15, 45}) {
 			var mob = Compat.SKELETON.create(level, net.minecraft.world.entity.EntitySpawnReason.TRIGGERED);
 			if (mob != null) {
-				mob.setPos(8.5 + d, y, 72.5);
+				mob.setPos(8.5 + d, y, -23.5);
 				level.addFreshEntity(mob);
 				targets.add(mob);
 			}
 		}
-		caster.setPos(8.5, y, 72.5);
+		caster.setPos(8.5, y, -23.5);
 		caster.setXRot(90);
 		StellarCollapse collapse = new StellarCollapse(level, caster, DEFAULT_LEVEL, DEFAULT_LEVEL);
 		EffectManager.start(collapse);
